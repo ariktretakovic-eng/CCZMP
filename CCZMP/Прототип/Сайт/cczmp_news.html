@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCZMP — Новости</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #070a0f;
+    --bg2:       #0d1117;
+    --bg3:       #111820;
+    --border:    #1e3a2f;
+    --green:     #00ff88;
+    --green2:    #00cc66;
+    --red:       #ff3333;
+    --yellow:    #ffcc00;
+    --text:      #c8d8c8;
+    --text-dim:  #5a7a6a;
+    --glow:      0 0 12px #00ff8866;
+    --glow-red:  0 0 12px #ff333366;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Фоновый шум и сетка ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── ШАПКА ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7,10,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    position: relative;
+  }
+
+  .logo-icon svg { width: 100%; height: 100%; }
+
+  .logo-text {
+    font-family: 'Russo One', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-shadow: var(--glow);
+  }
+
+  .logo-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+
+  nav { display: flex; gap: 6px; }
+
+  nav a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  nav a:hover {
+    color: var(--green);
+    border-color: var(--border);
+    text-shadow: var(--glow);
+  }
+
+  nav a.active {
+    color: var(--green);
+    border-color: var(--green2);
+    background: rgba(0,255,136,0.05);
+  }
+
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: var(--glow);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── HERO БАННЕР ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 60px 32px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    color: #fff;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+
+  .hero-title span {
+    color: var(--green);
+    text-shadow: var(--glow);
+  }
+
+  .hero-desc {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 500px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.3s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Russo One', sans-serif;
+    font-size: 28px;
+    color: var(--green);
+    text-shadow: var(--glow);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .hero-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+    align-self: center;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── ОСНОВНОЙ КОНТЕНТ ── */
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+  }
+
+  /* ── ФИЛЬТРЫ ── */
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    color: var(--green);
+    border-color: var(--green2);
+    background: rgba(0,255,136,0.05);
+    text-shadow: var(--glow);
+  }
+
+  /* ── КАРТОЧКИ НОВОСТЕЙ ── */
+  .news-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .news-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    padding: 24px 28px;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.5s forwards;
+  }
+
+  .news-card:nth-child(1) { animation-delay: 0.1s; }
+  .news-card:nth-child(2) { animation-delay: 0.2s; }
+  .news-card:nth-child(3) { animation-delay: 0.3s; }
+  .news-card:nth-child(4) { animation-delay: 0.4s; }
+  .news-card:nth-child(5) { animation-delay: 0.5s; }
+
+  .news-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,255,136,0.03) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .news-card:hover {
+    border-left-color: var(--green);
+    background: var(--bg3);
+    transform: translateX(4px);
+  }
+
+  .news-card:hover::before { opacity: 1; }
+
+  .news-card.pinned { border-left-color: var(--yellow); }
+  .news-card.pinned:hover { border-left-color: var(--yellow); }
+  .news-card.pinned::before {
+    background: linear-gradient(90deg, rgba(255,204,0,0.04) 0%, transparent 60%);
+  }
+
+  .news-card.alert { border-left-color: var(--red); }
+  .news-card.alert:hover { border-left-color: var(--red); }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid;
+  }
+
+  .tag-dev   { color: var(--green);  border-color: var(--green2);  background: rgba(0,255,136,0.08); }
+  .tag-event { color: var(--yellow); border-color: #aa8800;        background: rgba(255,204,0,0.08); }
+  .tag-alert { color: var(--red);    border-color: #aa1111;        background: rgba(255,51,51,0.08); }
+  .tag-lore  { color: #88aaff;       border-color: #334488;        background: rgba(100,130,255,0.08); }
+
+  .card-date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  .card-pin {
+    font-size: 10px;
+    color: var(--yellow);
+  }
+
+  .card-title {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: #e8f4e8;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+
+  .news-card:hover .card-title { color: #fff; }
+
+  .card-excerpt {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .author-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Russo One', sans-serif;
+    font-size: 9px;
+    color: var(--green);
+  }
+
+  .author-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .card-read {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .news-card:hover .card-read { opacity: 1; }
+
+  /* ── САЙДБАР ── */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+  .widget {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards;
+  }
+
+  .widget:nth-child(1) { animation-delay: 0.2s; }
+  .widget:nth-child(2) { animation-delay: 0.35s; }
+  .widget:nth-child(3) { animation-delay: 0.5s; }
+
+  .widget-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Статус сервера */
+  .server-status { display: flex; flex-direction: column; gap: 10px; }
+
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .status-label { color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+
+  .status-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .status-val.online { color: var(--green); text-shadow: var(--glow); }
+  .status-val.dev    { color: var(--yellow); }
+  .status-val.num    { color: #fff; }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--bg3);
+    margin-top: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green2), var(--green));
+    box-shadow: var(--glow);
+    transition: width 1s ease;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* Фракции */
+  .factions-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .faction-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .faction-row:hover {
+    border-color: var(--border);
+    background: var(--bg3);
+  }
+
+  .faction-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .faction-name {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .faction-count {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* Последние посты */
+  .recent-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .recent-item {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .recent-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .recent-title {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .recent-title:hover { color: var(--green); }
+
+  .recent-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+
+  /* ── ТИКЕР ── */
+  .ticker {
+    position: relative;
+    z-index: 1;
+    background: rgba(0,255,136,0.05);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 60px;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+  }
+
+  .ticker-item {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .ticker-item span {
+    color: var(--green);
+    margin-right: 8px;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── ФУТЕР ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px 32px;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: 'Russo One', sans-serif;
+    font-size: 16px;
+    color: var(--green);
+    letter-spacing: 3px;
+    text-shadow: var(--glow);
+  }
+
+  .footer-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--green); }
+
+  /* ── SCAN LINE ЭФФЕКТ ── */
+  .scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,255,136,0.15), transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @keyframes scan {
+    from { top: 0; }
+    to   { top: 100vh; }
+  }
+
+  /* ── АДАПТИВ ── */
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    nav { display: none; }
+    .hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<!-- ШАПКА -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="19" cy="19" r="17" stroke="#00ff88" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="19" cy="19" r="11" stroke="#00ff88" stroke-width="1.5" opacity="0.7"/>
+          <circle cx="19" cy="19" r="4" fill="#00ff88" opacity="0.9"/>
+          <line x1="19" y1="2"  x2="19" y2="8"  stroke="#00ff88" stroke-width="1.5"/>
+          <line x1="19" y1="30" x2="19" y2="36" stroke="#00ff88" stroke-width="1.5"/>
+          <line x1="2"  y1="19" x2="8"  y2="19" stroke="#00ff88" stroke-width="1.5"/>
+          <line x1="30" y1="19" x2="36" y2="19" stroke="#00ff88" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">CCZMP</div>
+        <div class="logo-sub">Criminal Chernobyl Zone MultiPlayer</div>
+      </div>
+    </a>
+
+    <nav>
+      <a href="#" class="active">Новости</a>
+      <a href="#">Фракции</a>
+      <a href="#">Карта</a>
+      <a href="#">Форум</a>
+      <a href="#">Вики</a>
+      <a href="#">Команда</a>
+    </nav>
+
+    <div class="header-status">
+      <div class="status-dot"></div>
+      <span>В РАЗРАБОТКЕ</span>
+    </div>
+  </div>
+</header>
+
+<!-- ТИКЕР -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item"><span>►</span> CCZMP — первый онлайн РП-сервер в Зоне Отчуждения</span>
+    <span class="ticker-item"><span>►</span> НЧГ: Независимое Чернобыльское Государство основано</span>
+    <span class="ticker-item"><span>►</span> Активный набор в команду разработчиков — присоединяйся</span>
+    <span class="ticker-item"><span>►</span> Фракций в проекте: 30+ группировок, у каждой своя идеология</span>
+    <span class="ticker-item"><span>►</span> CCZMP — первый онлайн РП-сервер в Зоне Отчуждения</span>
+    <span class="ticker-item"><span>►</span> НЧГ: Независимое Чернобыльское Государство основано</span>
+    <span class="ticker-item"><span>►</span> Активный набор в команду разработчиков — присоединяйся</span>
+    <span class="ticker-item"><span>►</span> Фракций в проекте: 30+ группировок, у каждой своя идеология</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="flex:1">
+    <div class="hero-badge">// Центр связи НЧГ — Лента новостей</div>
+    <div class="hero-title">ОПЕРАТИВНАЯ<br><span>СВОДКА</span></div>
+    <div class="hero-desc">Актуальные новости разработки, события в Зоне Отчуждения и официальные сообщения Независимого Чернобыльского Государства.</div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">30+</div>
+        <div class="stat-label">Фракций</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Разработчика</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="stat">
+        <div class="stat-num">2025</div>
+        <div class="stat-label">Старт проекта</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<div class="main">
+  <div>
+    <!-- Фильтры -->
+    <div class="filters">
+      <button class="filter-btn active">Все</button>
+      <button class="filter-btn">Разработка</button>
+      <button class="filter-btn">События</button>
+      <button class="filter-btn">Лор НЧГ</button>
+      <button class="filter-btn">Тревога</button>
+    </div>
+
+    <!-- Новости -->
+    <div class="news-list">
+
+      <div class="news-card pinned">
+        <div class="card-meta">
+          <span class="card-pin">📌</span>
+          <span class="card-tag tag-dev">Разработка</span>
+          <span class="card-date">20 июня 2025</span>
+        </div>
+        <div class="card-title">Старт проекта CCZMP — первый онлайн РП-сервер в Зоне Отчуждения</div>
+        <div class="card-excerpt">Сегодня официально объявляем о начале разработки Criminal Chernobyl Zone MultiPlayer — уникального проекта, аналогов которому в мире не существует. Сталкер + онлайн РП + своё государство с законами, банком и 30+ фракциями.</div>
+        <div class="card-footer">
+          <div class="card-author">
+            <div class="author-avatar">АЛ</div>
+            <span class="author-name">Александр // Основатель</span>
+          </div>
+          <span class="card-read">Читать →</span>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-meta">
+          <span class="card-tag tag-dev">Разработка</span>
+          <span class="card-date">04 марта 2026</span>
+        </div>
+        <div class="card-title">Система отношений фракций НЧГ — матрица завершена</div>
+        <div class="card-excerpt">Полностью настроена матрица отношений для всех 30+ группировок. Государственные структуры, ОПГ и нейтральные фракции теперь имеют корректную логику взаимодействия в движке X-Ray. МВД ненавидит Синдикат, МЧС воюет с Искрой.</div>
+        <div class="card-footer">
+          <div class="card-author">
+            <div class="author-avatar">АЛ</div>
+            <span class="author-name">Александр // Основатель</span>
+          </div>
+          <span class="card-read">Читать →</span>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-meta">
+          <span class="card-tag tag-lore">Лор НЧГ</span>
+          <span class="card-date">01 марта 2026</span>
+        </div>
+        <div class="card-title">НЧГ подписывает торговые соглашения — экономика Зоны выходит на мировой уровень</div>
+        <div class="card-excerpt">Независимое Чернобыльское Государство заключило торговые договоры с Индией, Китаем, Эстонией и рядом стран ЕС. Производство энергии на базе аномалий становится главным экспортным продуктом НЧГ.</div>
+        <div class="card-footer">
+          <div class="card-author">
+            <div class="author-avatar">НЧГ</div>
+            <span class="author-name">Пресс-служба НЧГ</span>
+          </div>
+          <span class="card-read">Читать →</span>
+        </div>
+      </div>
+
+      <div class="news-card alert">
+        <div class="card-meta">
+          <span class="card-tag tag-alert">Тревога</span>
+          <span class="card-date">28 февраля 2026</span>
+        </div>
+        <div class="card-title">Сектор "0" взломал часть коммуникаций ComNet — СЧС начало расследование</div>
+        <div class="card-excerpt">Хакерская группировка Сектор "0" провела успешную атаку на ретрансляторы ComNet в южном районе. Вымпел и СЧС начали совместную операцию по локализации серверного узла противника. Гражданам рекомендуется проверить шифрование ПДА.</div>
+        <div class="card-footer">
+          <div class="card-author">
+            <div class="author-avatar">СЧС</div>
+            <span class="author-name">СЧС НЧГ // Контрразведка</span>
+          </div>
+          <span class="card-read">Читать →</span>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="card-meta">
+          <span class="card-tag tag-dev">Разработка</span>
+          <span class="card-date">20 февраля 2026</span>
+        </div>
+        <div class="card-title">Персонажи и диалоги для 8 фракций — первый рабочий билд</div>
+        <div class="card-excerpt">Завершена работа над character_desc, деревьями диалогов и гулагами для МВД, ОМОН, Вымпел, МЧС, СК НЧГ, СТО Кабан, Чётких пацанов и ЧВК Х-Солдаты. Каждый NPC имеет уникальный характер и квестовую линию.</div>
+        <div class="card-footer">
+          <div class="card-author">
+            <div class="author-avatar">АЛ</div>
+            <span class="author-name">Александр // Основатель</span>
+          </div>
+          <span class="card-read">Читать →</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- САЙДБАР -->
+  <aside class="sidebar">
+
+    <div class="widget">
+      <div class="widget-title">// Статус проекта</div>
+      <div class="server-status">
+        <div class="status-row">
+          <span class="status-label">Состояние</span>
+          <span class="status-val dev">В РАЗРАБОТКЕ</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Старт</span>
+          <span class="status-val num">20.06.2025</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Команда</span>
+          <span class="status-val num">4 человека</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Фракций готово</span>
+          <span class="status-val online">8 / 30+</span>
+        </div>
+        <div style="margin-top:12px">
+          <div class="progress-label">
+            <span>Прогресс разработки</span>
+            <span style="color:var(--green)">~15%</span>
+          </div>
+          <div class="progress-bar" style="margin-top:6px">
+            <div class="progress-fill" style="width:15%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-title">// Активные фракции</div>
+      <div class="factions-list">
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#4488ff"></div>
+          <span class="faction-name">МВД НЧГ</span>
+          <span class="faction-count">ГОС</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#00ff88"></div>
+          <span class="faction-name">ОМОН</span>
+          <span class="faction-count">ГОС</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#ff4444"></div>
+          <span class="faction-name">Вымпел</span>
+          <span class="faction-count">ГОС</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#ff8800"></div>
+          <span class="faction-name">МЧС</span>
+          <span class="faction-count">ГОС</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#ffcc00"></div>
+          <span class="faction-name">СТО "Кабан"</span>
+          <span class="faction-count">НЕЙ</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#aa44ff"></div>
+          <span class="faction-name">Сектор "0"</span>
+          <span class="faction-count">ОПГ</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#ff3366"></div>
+          <span class="faction-name">Чёткие пацаны</span>
+          <span class="faction-count">ОПГ</span>
+        </div>
+        <div class="faction-row">
+          <div class="faction-dot" style="background:#888"></div>
+          <span class="faction-name">ЧВК Х-Солдаты</span>
+          <span class="faction-count">НЕЙ</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-title">// Последние события</div>
+      <div class="recent-list">
+        <div class="recent-item">
+          <div class="recent-title">Баррикада захватила станцию метро — ОМОН выдвигается</div>
+          <div class="recent-meta">04.03.2026 // СОБЫТИЕ</div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-title">НБЗ заморозил счета трёх подозреваемых в отмывании</div>
+          <div class="recent-meta">03.03.2026 // НБЗ</div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-title">Технобандиты похитили образцы из лаборатории Янов</div>
+          <div class="recent-meta">02.03.2026 // ТРЕВОГА</div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-title">Сабберы открыли новый звуковой центр у депо</div>
+          <div class="recent-meta">01.03.2026 // БИЗНЕС</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- ФУТЕР -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">CCZMP</div>
+    <div class="footer-text">© 2025–2026 CCZMP DEV TEAM // ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
+    <div class="footer-links">
+      <a href="#">Telegram</a>
+      <a href="#">Discord</a>
+      <a href="#">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Фильтры
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Живые часы в тикере
+  function updateTime() {
+    const now = new Date();
+    const t = now.toLocaleTimeString('ru-RU');
+    document.querySelectorAll('.ticker-item').forEach((el, i) => {
+      if (i === 0) el.querySelector('span').textContent = `[${t}] `;
+    });
+  }
+  setInterval(updateTime, 1000);
+</script>
+
+</body>
+</html>

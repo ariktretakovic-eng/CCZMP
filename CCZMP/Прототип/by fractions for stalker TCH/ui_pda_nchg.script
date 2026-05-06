@@ -1,0 +1,7 @@
+function open_cabinet()
+    -- Проверка: не открыто ли окно уже?
+    local spawner = ui_pda_nchg_cabinet.cabinet_ui() -- Ссылка на класс окна
+    if spawner then
+       level.start_stop_menu(spawner, true)
+    end
+end

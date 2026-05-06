@@ -1,0 +1,723 @@
+<?xml version='1.0' encoding="windows-1251"?>
+
+<!-- =====================================================================
+     ДИАЛОГИ ФРАКЦИЙ НЧГ — CCZMP MOD
+     
+     Структура:
+       - Каждый диалог состоит из фраз <phrase_list>
+       - Ветви управляются через <action> и <precondition>
+       - Для квестов: используй has_info / give_info / dont_has_info
+     ===================================================================== -->
+
+<dialog_manager>
+
+<!-- ================================================================== -->
+<!--                        МВД — ДИАЛОГИ                               -->
+<!-- ================================================================== -->
+
+	<!-- Начальный диалог начальника МВД -->
+	<dialog id="nchg_mvd_chief_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_mvd_chief_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_mvd_chief_start_1_job</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_mvd_chief_start_2_info</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_mvd_chief_start_3_bye</text>
+			</phrase>
+			<!-- ---- ВЕТКА: ЗАДАНИЕ ---- -->
+			<phrase id="10">
+				<text>nchg_mvd_chief_job_0</text>
+				<next>11</next>
+				<next>12</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_mvd_chief_job_accept</text>
+				<action>nchg_mvd.accept_patrol_quest</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_mvd_chief_job_decline</text>
+				<next>14</next>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_mvd_chief_job_accepted</text>
+			</phrase>
+			<phrase id="14">
+				<text>nchg_mvd_chief_job_declined</text>
+			</phrase>
+			<!-- ---- ВЕТКА: ИНФОРМАЦИЯ ---- -->
+			<phrase id="20">
+				<text>nchg_mvd_chief_info_0</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_mvd_chief_info_nchg</text>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_mvd_chief_info_criminals</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<!-- Диалог приказов МВД -->
+	<dialog id="nchg_mvd_chief_orders">
+		<precondition>nchg_mvd.has_active_quest</precondition>
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_mvd_orders_0</text>
+				<next>1</next>
+				<next>2</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_mvd_orders_report</text>
+				<precondition>nchg_mvd.quest_done</precondition>
+				<action>nchg_mvd.complete_quest</action>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_mvd_orders_ask_hint</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="10">
+				<text>nchg_mvd_orders_reward</text>
+			</phrase>
+			<phrase id="20">
+				<text>nchg_mvd_orders_hint</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--                   ОМОН — БЛОКПОСТ                                  -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_omon_commander_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_omon_commander_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_omon_start_pass</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_omon_start_job</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_omon_start_bye</text>
+			</phrase>
+			<!-- ---- ВЕТКА: ПРОПУСК ---- -->
+			<phrase id="10">
+				<text>nchg_omon_pass_check</text>
+				<next>11</next>
+				<next>12</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_omon_pass_ok</text>
+				<precondition>nchg_omon.actor_has_pass</precondition>
+				<action>nchg_omon.let_through</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_omon_pass_denied</text>
+				<precondition>nchg_omon.actor_no_pass</precondition>
+				<next>14</next>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_omon_pass_welcome</text>
+			</phrase>
+			<phrase id="14">
+				<text>nchg_omon_pass_turn_back</text>
+			</phrase>
+			<!-- ---- ВЕТКА: ЗАДАНИЕ ---- -->
+			<phrase id="20">
+				<text>nchg_omon_job_desc</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_omon_job_accept</text>
+				<action>nchg_omon.give_patrol_task</action>
+				<next>23</next>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_omon_job_decline</text>
+			</phrase>
+			<phrase id="23">
+				<text>nchg_omon_job_goodluck</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<dialog id="nchg_omon_blockpost_dialog">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_omon_blockpost_0</text>
+				<next>1</next>
+				<next>2</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_omon_blockpost_riot_quest</text>
+				<precondition>nchg_omon.riot_quest_available</precondition>
+				<action>nchg_omon.start_riot_quest</action>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_omon_blockpost_bye</text>
+			</phrase>
+			<phrase id="10">
+				<text>nchg_omon_blockpost_riot_briefing</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--                  ВЫМПЕЛ — СПЕЦОПЕРАЦИИ                             -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_vympel_lead_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_vympel_lead_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_vympel_start_mission</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_vympel_start_intel</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_vympel_start_bye</text>
+			</phrase>
+			<!-- ---- ОПЕРАЦИЯ ---- -->
+			<phrase id="10">
+				<text>nchg_vympel_mission_brief</text>
+				<next>11</next>
+				<next>12</next>
+				<next>13</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_vympel_mission_eliminate</text>
+				<action>nchg_vympel.start_eliminate_quest</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_vympel_mission_recon</text>
+				<action>nchg_vympel.start_recon_quest</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_vympel_mission_escort</text>
+				<action>nchg_vympel.start_escort_quest</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="14">
+				<text>nchg_vympel_mission_accepted</text>
+			</phrase>
+			<!-- ---- РАЗВЕДДАННЫЕ ---- -->
+			<phrase id="20">
+				<text>nchg_vympel_intel_0</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_vympel_intel_cobra</text>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_vympel_intel_sector0</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<dialog id="nchg_vympel_mission_dialog">
+		<precondition>nchg_vympel.has_active_mission</precondition>
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_vympel_mission_status_0</text>
+				<next>1</next>
+				<next>2</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_vympel_mission_complete_report</text>
+				<precondition>nchg_vympel.mission_done</precondition>
+				<action>nchg_vympel.complete_mission</action>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_vympel_mission_abort</text>
+				<action>nchg_vympel.abort_mission</action>
+				<next>11</next>
+			</phrase>
+			<phrase id="10">
+				<text>nchg_vympel_mission_reward</text>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_vympel_mission_aborted</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--                  МЧС — СПАСАТЕЛЬНЫЕ ОПЕРАЦИИ                       -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_mchs_chief_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_mchs_chief_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_mchs_start_rescue</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_mchs_start_supplies</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_mchs_start_bye</text>
+			</phrase>
+			<!-- ---- СПАСАТЕЛЬНАЯ МИССИЯ ---- -->
+			<phrase id="10">
+				<text>nchg_mchs_rescue_desc</text>
+				<next>11</next>
+				<next>12</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_mchs_rescue_accept</text>
+				<action>nchg_mchs.start_rescue_quest</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_mchs_rescue_decline</text>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_mchs_rescue_briefing</text>
+			</phrase>
+			<!-- ---- СНАРЯЖЕНИЕ ---- -->
+			<phrase id="20">
+				<text>nchg_mchs_supplies_offer</text>
+				<next>21</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_mchs_supplies_list</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<dialog id="nchg_mchs_rescue_dialog">
+		<precondition>nchg_mchs.has_rescue_quest</precondition>
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_mchs_rescue_status_0</text>
+				<next>1</next>
+				<next>2</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_mchs_rescue_done</text>
+				<precondition>nchg_mchs.rescue_quest_done</precondition>
+				<action>nchg_mchs.complete_rescue</action>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_mchs_rescue_hint_ask</text>
+				<next>11</next>
+			</phrase>
+			<phrase id="10">
+				<text>nchg_mchs_rescue_reward</text>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_mchs_rescue_hint</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--               СЛЕДСТВЕННЫЙ КОМИТЕТ — РАССЛЕДОВАНИЯ                 -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_sk_head_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_sk_head_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_sk_start_case</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_sk_start_info</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_sk_start_bye</text>
+			</phrase>
+			<!-- ---- НОВОЕ ДЕЛО ---- -->
+			<phrase id="10">
+				<text>nchg_sk_case_list</text>
+				<next>11</next>
+				<next>12</next>
+				<next>13</next>
+			</phrase>
+			<!-- Дело 1: Отмывание денег -->
+			<phrase id="11">
+				<text>nchg_sk_case_laundering</text>
+				<precondition>nchg_sk.case_laundering_available</precondition>
+				<action>nchg_sk.start_laundering_case</action>
+				<next>14</next>
+			</phrase>
+			<!-- Дело 2: Убийство -->
+			<phrase id="12">
+				<text>nchg_sk_case_murder</text>
+				<precondition>nchg_sk.case_murder_available</precondition>
+				<action>nchg_sk.start_murder_case</action>
+				<next>14</next>
+			</phrase>
+			<!-- Дело 3: Диверсия -->
+			<phrase id="13">
+				<text>nchg_sk_case_sabotage</text>
+				<precondition>nchg_sk.case_sabotage_available</precondition>
+				<action>nchg_sk.start_sabotage_case</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="14">
+				<text>nchg_sk_case_assigned</text>
+			</phrase>
+			<!-- ---- ИНФОРМАЦИЯ ---- -->
+			<phrase id="20">
+				<text>nchg_sk_info_0</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_sk_info_corruption</text>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_sk_info_blackmarket</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<dialog id="nchg_sk_investigate_dialog">
+		<precondition>nchg_sk.has_active_case</precondition>
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_sk_investigate_0</text>
+				<next>1</next>
+				<next>2</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_sk_investigate_submit</text>
+				<precondition>nchg_sk.has_evidence</precondition>
+				<action>nchg_sk.submit_evidence</action>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_sk_investigate_ask_leads</text>
+				<next>11</next>
+			</phrase>
+			<phrase id="10">
+				<text>nchg_sk_investigate_evidence_accepted</text>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_sk_investigate_lead</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<dialog id="nchg_sk_give_case_dialog">
+		<precondition>nchg_sk.case_closed</precondition>
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_sk_give_case_0</text>
+				<next>1</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_sk_give_case_reward</text>
+				<action>nchg_sk.close_case_reward</action>
+				<next>2</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_sk_give_case_end</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--                  СТО "КАБАН" — СЕРВИС                              -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_sto_kaban_boss_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_sto_boss_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+				<next>4</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_sto_start_repair</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_sto_start_upgrade</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_sto_start_blackmarket</text>
+				<next>30</next>
+			</phrase>
+			<phrase id="4">
+				<text>nchg_sto_start_bye</text>
+			</phrase>
+			<!-- ---- РЕМОНТ ---- -->
+			<phrase id="10">
+				<text>nchg_sto_repair_pricelist</text>
+				<next>11</next>
+				<next>12</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_sto_repair_weapon</text>
+				<action>nchg_sto.open_repair_weapon</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_sto_repair_armor</text>
+				<action>nchg_sto.open_repair_armor</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_sto_repair_done</text>
+			</phrase>
+			<!-- ---- АПГРЕЙД ---- -->
+			<phrase id="20">
+				<text>nchg_sto_upgrade_desc</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_sto_upgrade_weapon</text>
+				<action>nchg_sto.open_upgrade_weapon</action>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_sto_upgrade_nevermind</text>
+			</phrase>
+			<!-- ---- ЧЁРНЫЙ РЫНОК ---- -->
+			<phrase id="30">
+				<text>nchg_sto_blackmarket_intro</text>
+				<next>31</next>
+				<next>32</next>
+			</phrase>
+			<phrase id="31">
+				<text>nchg_sto_blackmarket_open</text>
+				<precondition>nchg_sto.actor_trusted</precondition>
+				<action>nchg_sto.open_blackmarket</action>
+				<next>33</next>
+			</phrase>
+			<phrase id="32">
+				<text>nchg_sto_blackmarket_denied</text>
+				<precondition>nchg_sto.actor_not_trusted</precondition>
+			</phrase>
+			<phrase id="33">
+				<text>nchg_sto_blackmarket_welcome</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--               "ЧЕТКИЕ ПАЦАНЫ" — КРИМ. ДИАЛОГИ                      -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_chetkie_boss_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_chetkie_boss_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_chetkie_start_job</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_chetkie_start_racket</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_chetkie_start_bye</text>
+			</phrase>
+			<!-- ---- РАБОТА ---- -->
+			<phrase id="10">
+				<text>nchg_chetkie_job_offer</text>
+				<next>11</next>
+				<next>12</next>
+				<next>13</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_chetkie_job_courier</text>
+				<action>nchg_chetkie.start_courier_job</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_chetkie_job_hit</text>
+				<precondition>nchg_chetkie.actor_proven</precondition>
+				<action>nchg_chetkie.start_hit_job</action>
+				<next>14</next>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_chetkie_job_refuse</text>
+			</phrase>
+			<phrase id="14">
+				<text>nchg_chetkie_job_deal</text>
+			</phrase>
+			<!-- ---- РЭКЕТ ---- -->
+			<phrase id="20">
+				<text>nchg_chetkie_racket_desc</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_chetkie_racket_pay</text>
+				<precondition>nchg_chetkie.actor_can_pay</precondition>
+				<action>nchg_chetkie.take_payment</action>
+				<next>23</next>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_chetkie_racket_refuse</text>
+				<action>nchg_chetkie.start_attack</action>
+			</phrase>
+			<phrase id="23">
+				<text>nchg_chetkie_racket_paid</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+
+<!-- ================================================================== -->
+<!--               ЧВК Х-СОЛДАТЫ — КОНТРАКТЫ                           -->
+<!-- ================================================================== -->
+
+	<dialog id="nchg_xsoldiers_colonel_start">
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_xsoldiers_colonel_start_0</text>
+				<next>1</next>
+				<next>2</next>
+				<next>3</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_xsoldiers_start_contract</text>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_xsoldiers_start_join</text>
+				<next>20</next>
+			</phrase>
+			<phrase id="3">
+				<text>nchg_xsoldiers_start_bye</text>
+			</phrase>
+			<!-- ---- КОНТРАКТ ---- -->
+			<phrase id="10">
+				<text>nchg_xsoldiers_contract_list</text>
+				<next>11</next>
+				<next>12</next>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_xsoldiers_contract_vip_guard</text>
+				<action>nchg_xsoldiers.start_vip_guard</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="12">
+				<text>nchg_xsoldiers_contract_zone_clear</text>
+				<action>nchg_xsoldiers.start_zone_clear</action>
+				<next>13</next>
+			</phrase>
+			<phrase id="13">
+				<text>nchg_xsoldiers_contract_accepted</text>
+			</phrase>
+			<!-- ---- ВСТУПЛЕНИЕ ---- -->
+			<phrase id="20">
+				<text>nchg_xsoldiers_join_conditions</text>
+				<next>21</next>
+				<next>22</next>
+			</phrase>
+			<phrase id="21">
+				<text>nchg_xsoldiers_join_agree</text>
+				<precondition>nchg_xsoldiers.actor_eligible</precondition>
+				<action>nchg_xsoldiers.recruit_actor</action>
+				<next>23</next>
+			</phrase>
+			<phrase id="22">
+				<text>nchg_xsoldiers_join_notready</text>
+				<precondition>nchg_xsoldiers.actor_not_eligible</precondition>
+			</phrase>
+			<phrase id="23">
+				<text>nchg_xsoldiers_join_welcome</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+	<dialog id="nchg_xsoldiers_contract_dialog">
+		<precondition>nchg_xsoldiers.has_active_contract</precondition>
+		<phrase_list>
+			<phrase id="0">
+				<text>nchg_xsoldiers_contract_status_0</text>
+				<next>1</next>
+				<next>2</next>
+			</phrase>
+			<phrase id="1">
+				<text>nchg_xsoldiers_contract_report</text>
+				<precondition>nchg_xsoldiers.contract_done</precondition>
+				<action>nchg_xsoldiers.complete_contract</action>
+				<next>10</next>
+			</phrase>
+			<phrase id="2">
+				<text>nchg_xsoldiers_contract_cancel</text>
+				<action>nchg_xsoldiers.cancel_contract</action>
+				<next>11</next>
+			</phrase>
+			<phrase id="10">
+				<text>nchg_xsoldiers_contract_reward</text>
+			</phrase>
+			<phrase id="11">
+				<text>nchg_xsoldiers_contract_cancelled</text>
+			</phrase>
+		</phrase_list>
+	</dialog>
+
+</dialog_manager>

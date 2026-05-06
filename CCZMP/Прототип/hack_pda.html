@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CCZMP // ХАКЕРСКИЙ ТЕРМИНАЛ // KALI LINUX STYLE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0c0a, #010101);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            padding: 20px;
+        }
+        /* Главный терминал */
+        
+        .terminal {
+            width: 1100px;
+            max-width: 100%;
+            background: #0a0e0a;
+            border: 1px solid #2eff7a;
+            box-shadow: 0 0 20px rgba(46, 255, 122, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+        }
+        /* Верхняя панель (like kali) */
+        
+        .term-header {
+            background: #1a1f1a;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #2eff7a;
+            color: #2eff7a;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        
+        .mode-badge {
+            background: #2eff7a20;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        /* Окно с выводом команд */
+        
+        .term-output {
+            background: #030603;
+            color: #2eff7a;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            padding: 20px;
+            height: 450px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border-bottom: 1px solid #2eff7a40;
+        }
+        
+        .term-output p {
+            margin: 6px 0;
+            line-height: 1.4;
+        }
+        
+        .term-output .cmd-line {
+            color: #f0f0f0;
+        }
+        
+        .term-output .success {
+            color: #2eff7a;
+            text-shadow: 0 0 3px #00cc44;
+        }
+        
+        .term-output .error {
+            color: #ff5555;
+        }
+        
+        .term-output .info {
+            color: #55aaff;
+        }
+        /* Строка ввода */
+        
+        .term-input-line {
+            display: flex;
+            background: #0a0e0a;
+            border-top: 1px solid #2eff7a40;
+            padding: 12px 20px;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .prompt {
+            color: #2eff7a;
+            font-weight: bold;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+        
+        #commandInput {
+            flex: 1;
+            background: #000000aa;
+            border: 1px solid #2eff7a;
+            color: #2eff7a;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            outline: none;
+            border-radius: 6px;
+        }
+        
+        .term-input-line button {
+            background: #2eff7a20;
+            border: 1px solid #2eff7a;
+            color: #2eff7a;
+            padding: 6px 14px;
+            font-family: monospace;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .term-input-line button:hover {
+            background: #2eff7a;
+            color: black;
+        }
+        /* Панель инструментов (sidebar) */
+        
+        .tools-panel {
+            display: flex;
+            background: #0a0c0a;
+            border-top: 1px solid #2eff7a30;
+            padding: 8px 15px;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.7rem;
+        }
+        
+        .tool-item {
+            color: #88ffaa;
+            background: #1a2a1a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        
+        .tool-item:hover {
+            background: #2eff7a;
+            color: black;
+        }
+        /* Модалка подсказок */
+        
+        .help-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #111;
+            border: 1px solid #2eff7a;
+            padding: 10px 15px;
+            font-size: 0.7rem;
+            color: #ccc;
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        @keyframes glitch {
+            0% {
+                text-shadow: -2px 0 red, 2px 0 blue;
+                opacity: 0.8;
+            }
+            100% {
+                text-shadow: 2px 0 red, -2px 0 blue;
+                opacity: 1;
+            }
+        }
+        
+        .glitch-effect {
+            animation: glitch 0.15s infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="terminal">
+        <div class="term-header">
+            <span>┌─[ CCZMP::HACK ] ───  КАЛИ-НЧГ v6.9</span>
+            <span class="mode-badge" id="modeBadge">РЕЖИМ: ЛЕГКИЙ</span>
+        </div>
+        <div class="term-output" id="termOutput">
+            <p>╔══════════════════════════════════════════════════════════════╗</p>
+            <p>║ ХАКЕРСКИЙ ТЕРМИНАЛ v2.0 (Инструменты: nmap, john, wireshark, wifite, hydra, metasploit) ║</p>
+            <p>║ Цель: взломать ПДА цели (4-значный PIN / hash). Для взлома используйте команды. ║</p>
+            <p>╚══════════════════════════════════════════════════════════════╝</p>
+            <p class="info">🔍 Система готова. Введите 'help' для списка команд.</p>
+            <p>&nbsp;</p>
+        </div>
+        <div class="term-input-line">
+            <span class="prompt">root@kali-nchg:~$</span>
+            <input type="text" id="commandInput" autocomplete="off" spellcheck="false" placeholder="Введите команду... (help)">
+            <button id="sendCmd">⏎</button>
+        </div>
+        <div class="tools-panel" id="toolsPanel">
+            <div class="tool-item" data-cmd="nmap -sV 192.168.1.45">🔍 nmap</div>
+            <div class="tool-item" data-cmd="john --format=raw-md5 pda_hash.txt">🔑 john</div>
+            <div class="tool-item" data-cmd="wireshark -i eth0 -k">📡 wireshark</div>
+            <div class="tool-item" data-cmd="wifite --pda">📶 wifite</div>
+            <div class="tool-item" data-cmd="hydra -l admin -P pda_passlist.txt ssh://192.168.1.45">🐉 hydra</div>
+            <div class="tool-item" data-cmd="msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/meterpreter/reverse_tcp; run'">💀 msfconsole</div>
+            <div class="tool-item" data-cmd="sqlmap -u http://pda.local/login --dbs">🗄️ sqlmap</div>
+        </div>
+    </div>
+    <div class="help-hint">💡 Клик по инструменту → вставит команду | Взломайте ПДА до истечения попыток</div>
+
+    <script>
+        // ---------- ИГРОВАЯ ЛОГИКА (СИМУЛЯЦИЯ ВЗЛОМА ЧЕРЕЗ КОМАНДЫ) ----------
+        // Режимы сложности влияют на количество подсказок и сложность взлома
+        let gameActive = true;
+        let currentMode = "easy"; // easy, medium, hard, expert
+        let pdaPin = "";
+        let hashMd5 = ""; // симуляция хэша
+        let attemptsLeft = 0;
+        let progress = 0; // прогресс взлома (0-100)
+        let phase = "scan"; // scan, brute, exploit, final
+        let successFlag = false;
+
+        // DOM
+        const outputDiv = document.getElementById("termOutput");
+        const cmdInput = document.getElementById("commandInput");
+        const modeBadge = document.getElementById("modeBadge");
+
+        // Генерация нового ПДА (случайный 4-значный PIN)
+        function generateNewPDA() {
+            let pin = "";
+            for (let i = 0; i < 4; i++) pin += Math.floor(Math.random() * 10).toString();
+            pdaPin = pin;
+            // Симуляция хэша (MD5 первых 4 символов — для john)
+            hashMd5 = btoa(pin).substring(0, 16).toLowerCase(); // псевдохэш, но для атмосферы
+            console.log(`[DEV] PIN: ${pdaPin} | Hash: ${hashMd5}`);
+        }
+
+        // Установка режима
+        function setMode(mode) {
+            currentMode = mode;
+            if (mode === "easy") attemptsLeft = 8;
+            else if (mode === "medium") attemptsLeft = 5;
+            else if (mode === "hard") attemptsLeft = 3;
+            else if (mode === "expert") attemptsLeft = 2;
+            modeBadge.innerText = `РЕЖИМ: ${mode.toUpperCase()}`;
+            resetGame();
+        }
+
+        // Сброс игры (новый ПДА)
+        function resetGame() {
+            generateNewPDA();
+            gameActive = true;
+            progress = 0;
+            phase = "scan";
+            successFlag = false;
+            addOutputLine(`<span class="info">🔄 НОВАЯ ЦЕЛЬ: ПДА с IP 192.168.1.45 (MAC: 2A:3F:4E:11:22:33)</span>`);
+            addOutputLine(`<span class="info">🛡️ СЧС активна. Осталось попыток: ${attemptsLeft}. Введите 'help' для команд.</span>`);
+            updateProgressBar();
+        }
+
+        function addOutputLine(html, isError = false) {
+            const p = document.createElement("p");
+            if (isError) p.className = "error";
+            p.innerHTML = html;
+            outputDiv.appendChild(p);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        function updateProgressBar() {
+            let percent = Math.min(100, Math.floor(progress));
+            addOutputLine(`<span class="info">[ ПРОГРЕСС ВЗЛОМА: ${percent}% ]</span>`);
+            if (percent >= 100 && !successFlag && gameActive) {
+                success();
+            }
+        }
+
+        // Успешный взлом
+        function success() {
+            if (!gameActive) return;
+            successFlag = true;
+            gameActive = false;
+            addOutputLine(`<span class="success">✅ ДОСТУП ПРЕДОСТАВЛЕН! ПДА взломан. Получены данные: логин, пароль, координаты схрона.</span>`);
+            addOutputLine(`<span class="success">💰 Награда: +5000₽, +50 репутации у Сектора "0".</span>`);
+            addOutputLine(`<span class="info">Для новой цели введите 'new_target' или смените режим через 'mode [easy/medium/hard/expert]'</span>`);
+            disableInput(false);
+        }
+
+        // Провал (превышение попыток или критическая ошибка)
+        function fail(reason = "СЧС засекла взлом!") {
+            if (!gameActive) return;
+            gameActive = false;
+            addOutputLine(`<span class="error">❌ ${reason} Система ПДА заблокирована. Доступ потерян.</span>`, true);
+            addOutputLine(`<span class="error">Ваш IP внесён в чёрный список. СЧС инициирует обратное соединение...</span>`);
+            disableInput(true);
+        }
+
+        function disableInput(disabled) {
+            cmdInput.disabled = disabled;
+            document.getElementById("sendCmd").disabled = disabled;
+            if (disabled) cmdInput.style.opacity = "0.5";
+            else cmdInput.style.opacity = "1";
+        }
+
+        // Обработка команд
+        function processCommand(cmd) {
+            if (!gameActive && cmd !== "new_target" && !cmd.startsWith("mode ")) {
+                addOutputLine(`<span class="error">Система заблокирована. Введите 'new_target' для новой цели.</span>`);
+                return;
+            }
+            const lower = cmd.trim().toLowerCase();
+            // Команды
+            if (lower === "help") {
+                addOutputLine(`<span class="info">Доступные команды:</span>`);
+                addOutputLine(`<span class="info">  nmap -sV [ip]            → сканирование портов и версий</span>`);
+                addOutputLine(`<span class="info">  john --format=raw-md5 [file] → брутфорс хэша (угадайте PIN)</span>`);
+                addOutputLine(`<span class="info">  wireshark -i eth0 -k      → перехват пакетов (увеличивает прогресс)</span>`);
+                addOutputLine(`<span class="info">  wifite --pda              → атака на беспроводной интерфейс ПДА</span>`);
+                addOutputLine(`<span class="info">  hydra -l admin -P [list] ssh://ip → брутфорс логина/пароля</span>`);
+                addOutputLine(`<span class="info">  msfconsole                → запуск эксплойта (требует прогресс >50%)</span>`);
+                addOutputLine(`<span class="info">  sqlmap --dbs              → инъекция (шанс получить PIN)</span>`);
+                addOutputLine(`<span class="info">  mode [easy/medium/hard/expert] → сменить сложность</span>`);
+                addOutputLine(`<span class="info">  new_target                → сгенерировать новый ПДА</span>`);
+                addOutputLine(`<span class="info">  status                    → текущий прогресс и фаза</span>`);
+                return;
+            }
+            if (lower === "status") {
+                addOutputLine(`<span class="info">Фаза: ${phase}, Прогресс: ${progress}%, Попыток осталось: ${attemptsLeft}</span>`);
+                return;
+            }
+            if (lower.startsWith("mode ")) {
+                let newMode = lower.split(" ")[1];
+                if (["easy", "medium", "hard", "expert"].includes(newMode)) {
+                    setMode(newMode);
+                    addOutputLine(`<span class="success">Режим изменён на ${newMode.toUpperCase()}. Игра перезапущена.</span>`);
+                } else {
+                    addOutputLine(`<span class="error">Неверный режим. Доступны: easy, medium, hard, expert</span>`);
+                }
+                return;
+            }
+            if (lower === "new_target") {
+                resetGame();
+                return;
+            }
+
+            // Обработка хакерских команд (симуляция)
+            let usedAttempt = false;
+            let progressGain = 0;
+            let specialMessage = "";
+
+            // nmap
+            if (lower.includes("nmap")) {
+                addOutputLine(`<span class="cmd-line">[nmap] Сканирование портов: открыт 22/tcp (SSH), 8080/tcp (HTTP-PDA), 4444/tcp (SOCKs)</span>`);
+                progressGain = 15;
+                usedAttempt = true;
+                specialMessage = "Обнаружена уязвимость на порту 8080.";
+            }
+            // john the ripper
+            else if (lower.includes("john")) {
+                // Симуляция: угадать PIN? На самом деле John подбирает, мы даём шанс угадать
+                let guess = prompt("Введите предполагаемый 4-значный PIN (или отмена):");
+                if (guess && guess.length === 4 && /^\d+$/.test(guess)) {
+                    if (guess === pdaPin) {
+                        addOutputLine(`<span class="success">John the Ripper успешно подобрал хэш! PIN: ${pdaPin}</span>`);
+                        progress = 100;
+                        updateProgressBar();
+                        return;
+                    } else {
+                        addOutputLine(`<span class="error">John не смог подобрать хэш (неверный PIN). Попытка сожжена.</span>`);
+                        attemptsLeft--;
+                        addOutputLine(`<span class="info">Осталось попыток: ${attemptsLeft}</span>`);
+                        if (attemptsLeft <= 0) fail("Превышено количество попыток взлома.");
+                        return;
+                    }
+                } else {
+                    addOutputLine(`<span class="error">John требует ввода предполагаемого PIN (число 4 цифры). Попытка не засчитана.</span>`);
+                    return;
+                }
+            }
+            // wireshark
+            else if (lower.includes("wireshark")) {
+                addOutputLine(`<span class="cmd-line">[wireshark] Захвачен пакет: ARP-ответ, содержит фрагмент сессии.</span>`);
+                progressGain = 10;
+                usedAttempt = true;
+            }
+            // wifite
+            else if (lower.includes("wifite")) {
+                addOutputLine(`<span class="cmd-line">[wifite] Деаутентификация клиента, захвачен handshake.</span>`);
+                progressGain = 12;
+                usedAttempt = true;
+            }
+            // hydra
+            else if (lower.includes("hydra")) {
+                addOutputLine(`<span class="cmd-line">[hydra] Брутфорс SSH: пароль "pda123" оказался верным для пользователя admin.</span>`);
+                progressGain = 20;
+                usedAttempt = true;
+                specialMessage = "Учётные данные: admin / pda123";
+            }
+            // msfconsole (эксплойт)
+            else if (lower.includes("msfconsole") || lower.includes("msf")) {
+                if (progress >= 50) {
+                    addOutputLine(`<span class="cmd-line">[msfconsole] Эксплойт отправлен! Уязвимость через порт 4444.</span>`);
+                    progressGain = 35;
+                    usedAttempt = true;
+                } else {
+                    addOutputLine(`<span class="error">Недостаточно информации для эксплойта. Сначала проведите разведку (nmap, wireshark).</span>`);
+                    return;
+                }
+            }
+            // sqlmap
+            else if (lower.includes("sqlmap")) {
+                addOutputLine(`<span class="cmd-line">[sqlmap] Инъекция обнаружена, получена база данных 'pda_users'.</span>`);
+                progressGain = 18;
+                usedAttempt = true;
+                specialMessage = "Обнаружена строка с PIN? Возможно, стоит применить john.";
+            } else {
+                addOutputLine(`<span class="error">Неизвестная команда: ${cmd}. Введите 'help'.</span>`);
+                return;
+            }
+
+            if (usedAttempt) {
+                attemptsLeft--;
+                progress = Math.min(100, progress + progressGain);
+                if (specialMessage) addOutputLine(`<span class="info">✨ ${specialMessage}</span>`);
+                addOutputLine(`<span class="info">📈 Прогресс +${progressGain}%. Осталось попыток: ${attemptsLeft}</span>`);
+                if (attemptsLeft <= 0 && progress < 100) {
+                    fail("Исчерпаны все попытки. СЧС перехватила трафик.");
+                    return;
+                }
+                updateProgressBar();
+                // Если прогресс достиг 100, success() уже вызовется из updateProgressBar
+            }
+        }
+
+        // События
+        document.getElementById("sendCmd").addEventListener("click", () => {
+            let cmd = cmdInput.value;
+            if (cmd.trim() === "") return;
+            addOutputLine(`<span class="cmd-line">root@kali-nchg:~$ ${cmd}</span>`);
+            processCommand(cmd);
+            cmdInput.value = "";
+            cmdInput.focus();
+        });
+        cmdInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("sendCmd").click();
+            }
+        });
+        // Клик по инструментам
+        document.querySelectorAll(".tool-item").forEach(el => {
+            el.addEventListener("click", () => {
+                let cmd = el.getAttribute("data-cmd");
+                if (cmd) {
+                    cmdInput.value = cmd;
+                    cmdInput.focus();
+                }
+            });
+        });
+
+        // Инициализация
+        setMode("easy");
+        // Добавим красивую анимацию
+        setInterval(() => {
+            if (gameActive && Math.random() > 0.95) {
+                addOutputLine(`<span class="info">⚡ [СЧС] Обнаружена активность на порту 443... Продолжайте атаку.</span>`);
+            }
+        }, 15000);
+
+        // Фокус на ввод
+        cmdInput.focus();
+    </script>
+</body>
+
+</html>

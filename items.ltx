@@ -1,0 +1,91 @@
+; ============================================================
+; КПК для CCZMP
+; ============================================================
+
+[pda_budget]:identity_immunity
+GroupControlSection    = spawn_group
+discovery_dependency   = 
+$spawn                 = "devices\pda\pda_budget"
+class                  = ITEM_PDA
+cform                  = skeleton
+visual                 = devices\pda\pda_budget.ogf
+description            = st_pda_budget_descr
+inv_name               = st_pda_budget
+inv_name_short         = st_pda_budget_short
+inv_weight             = 0.3
+cost                   = 5000
+inv_grid_width         = 2
+inv_grid_height        = 1
+inv_grid_x             = 10
+inv_grid_y             = 10
+slot                   = 8
+default_to_ruck        = false
+can_take               = true
+quest_item             = false
+device_type            = pda_budget
+
+[pda_hacker]:identity_immunity
+GroupControlSection    = spawn_group
+discovery_dependency   = 
+$spawn                 = "devices\pda\pda_hacker"
+class                  = ITEM_PDA
+cform                  = skeleton
+visual                 = devices\pda\pda_hacker.ogf
+description            = st_pda_hacker_descr
+inv_name               = st_pda_hacker
+inv_name_short         = st_pda_hacker_short
+inv_weight             = 0.3
+cost                   = 25000
+inv_grid_width         = 2
+inv_grid_height        = 1
+inv_grid_x             = 10
+inv_grid_y             = 10
+slot                   = 8
+default_to_ruck        = false
+can_take               = true
+quest_item             = false
+device_type            = pda_hacker
+
+[pda_schs]:identity_immunity
+GroupControlSection    = spawn_group
+discovery_dependency   = 
+$spawn                 = "devices\pda\pda_schs"
+class                  = ITEM_PDA
+cform                  = skeleton
+visual                 = devices\pda\pda_schs.ogf
+description            = st_pda_schs_descr
+inv_name               = st_pda_schs
+inv_name_short         = st_pda_schs_short
+inv_weight             = 0.3
+cost                   = 100000
+inv_grid_width         = 2
+inv_grid_height        = 1
+inv_grid_x             = 10
+inv_grid_y             = 10
+slot                   = 8
+default_to_ruck        = false
+can_take               = true
+quest_item             = false
+device_type            = pda_schs
+
+[pda_laptop]:identity_immunity
+GroupControlSection    = spawn_group
+discovery_dependency   = 
+$spawn                 = "devices\pda\pda_laptop"
+class                  = ITEM_LAPTOP
+cform                  = skeleton
+visual                 = devices\pda\pda_laptop.ogf
+description            = st_pda_laptop_descr
+inv_name               = st_pda_laptop
+inv_name_short         = st_pda_laptop_short
+inv_weight             = 2.0
+cost                   = 500000
+inv_grid_width         = 3
+inv_grid_height        = 2
+inv_grid_x             = 15
+inv_grid_y             = 20
+slot                   = 8
+default_to_ruck        = false
+can_take               = true
+quest_item             = false
+device_type            = pda_laptop

@@ -1,0 +1,569 @@
+; =====================================================================
+;  NCHG_SPAWN_WAYPOINTS.LTX
+;  CCZMP MOD — точки спавна фракций НЧГ
+;  Движок: S.T.A.L.K.E.R. ТЧ / Трилогия Апокалипсис
+;
+;  Подключить в system.ltx:
+;    #include "gameplay\nchg_spawn_waypoints.ltx"
+;
+;  Формат patrol:
+;    [имя_патруля]
+;    points = N
+;    0_position = x, y, z
+;    0_game_vertex_id = ID
+;    0_level_vertex_id = ID
+;    0_flags = 0x1         ; 0x1 = waypoint, 0x4 = terminal
+; =====================================================================
+
+
+; #####################################################################
+;  КОРДОН (escape)
+; #####################################################################
+
+; --- МИЛИЦИЯ — здания за ж/д (рядом с плотями) ---
+[nchg_militia_spawn_1]
+points = 2
+0_position        = -94.23, 0.50, 186.71
+0_game_vertex_id  = 79
+0_level_vertex_id = 127450
+0_flags           = 0x1
+1_position        = -91.50, 0.50, 182.30
+1_game_vertex_id  = 79
+1_level_vertex_id = 127380
+1_flags           = 0x4
+
+[nchg_militia_spawn_2]
+points = 2
+0_position        = -88.70, 0.50, 190.40
+0_game_vertex_id  = 79
+0_level_vertex_id = 127510
+0_flags           = 0x1
+1_position        = -85.10, 0.50, 195.60
+1_game_vertex_id  = 79
+1_level_vertex_id = 127600
+1_flags           = 0x4
+
+; Патруль милиции вдоль ж/д
+[nchg_militia_patrol_rail]
+points = 4
+0_position        = -96.00, 0.50, 178.00
+0_game_vertex_id  = 79
+0_level_vertex_id = 127200
+0_flags           = 0x1
+1_position        = -92.00, 0.50, 185.00
+1_game_vertex_id  = 79
+1_level_vertex_id = 127350
+1_flags           = 0x1
+2_position        = -87.00, 0.50, 192.00
+2_game_vertex_id  = 79
+2_level_vertex_id = 127520
+2_flags           = 0x1
+3_position        = -82.00, 0.50, 198.00
+3_game_vertex_id  = 79
+3_level_vertex_id = 127680
+3_flags           = 0x4
+
+; --- ЧЁТКИЕ ПАЦАНЫ — элеватор ---
+[nchg_chetkie_spawn_elevator]
+points = 3
+0_position        = 54.80, 12.70, 248.90
+0_game_vertex_id  = 91
+0_level_vertex_id = 145230
+0_flags           = 0x1
+1_position        = 60.20, 12.70, 252.10
+1_game_vertex_id  = 91
+1_level_vertex_id = 145310
+1_flags           = 0x1
+2_position        = 57.50, 12.70, 245.30
+2_game_vertex_id  = 91
+2_level_vertex_id = 145180
+2_flags           = 0x4
+
+; Охрана элеватора — снаружи
+[nchg_chetkie_elevator_guard]
+points = 2
+0_position        = 48.30, 5.20, 244.60
+0_game_vertex_id  = 90
+0_level_vertex_id = 144980
+0_flags           = 0x1
+1_position        = 51.70, 5.20, 240.80
+1_game_vertex_id  = 90
+1_level_vertex_id = 144870
+1_flags           = 0x4
+
+
+; #####################################################################
+;  СВАЛКА (garbage)
+; #####################################################################
+
+; --- БАРАХОЛКА — Альфа, МЧС, Вымпел, ОМОН ---
+
+[nchg_alfa_spawn_garbage]
+points = 2
+0_position        = -183.40, 2.10, -112.60
+0_game_vertex_id  = 321
+0_level_vertex_id = 287640
+0_flags           = 0x1
+1_position        = -179.80, 2.10, -116.20
+1_game_vertex_id  = 321
+1_level_vertex_id = 287520
+1_flags           = 0x4
+
+[nchg_mchs_spawn_garbage]
+points = 2
+0_position        = -176.50, 2.30, -108.70
+0_game_vertex_id  = 322
+0_level_vertex_id = 287820
+0_flags           = 0x1
+1_position        = -172.90, 2.30, -104.50
+1_game_vertex_id  = 322
+1_level_vertex_id = 287950
+1_flags           = 0x4
+
+[nchg_vympel_spawn_garbage]
+points = 2
+0_position        = -188.20, 2.10, -119.30
+0_game_vertex_id  = 320
+0_level_vertex_id = 287340
+0_flags           = 0x1
+1_position        = -192.60, 2.10, -123.80
+1_game_vertex_id  = 320
+1_level_vertex_id = 287210
+1_flags           = 0x4
+
+[nchg_omon_spawn_garbage]
+points = 3
+0_position        = -180.70, 2.20, -121.40
+0_game_vertex_id  = 321
+0_level_vertex_id = 287580
+0_flags           = 0x1
+1_position        = -177.30, 2.20, -117.60
+1_game_vertex_id  = 321
+1_level_vertex_id = 287470
+1_flags           = 0x1
+2_position        = -174.10, 2.20, -113.90
+2_game_vertex_id  = 322
+2_level_vertex_id = 287760
+2_flags           = 0x4
+
+; Общий патруль барахолки
+[nchg_baraxolka_patrol]
+points = 5
+0_position        = -185.00, 2.10, -115.00
+0_game_vertex_id  = 321
+0_level_vertex_id = 287600
+0_flags           = 0x1
+1_position        = -179.00, 2.10, -110.00
+1_game_vertex_id  = 322
+1_level_vertex_id = 287800
+1_flags           = 0x1
+2_position        = -173.00, 2.20, -105.00
+2_game_vertex_id  = 322
+2_level_vertex_id = 287920
+2_flags           = 0x1
+3_position        = -168.00, 2.20, -108.00
+3_game_vertex_id  = 323
+3_level_vertex_id = 288100
+3_flags           = 0x1
+4_position        = -175.00, 2.10, -118.00
+4_game_vertex_id  = 321
+4_level_vertex_id = 287500
+4_flags           = 0x4
+
+; --- КЛАДБИЩЕ ТЕХНИКИ — Сабберы, СТО, Операторы ---
+
+[nchg_sto_spawn_junkyard]
+points = 2
+0_position        = -48.60, 1.80, -198.40
+0_game_vertex_id  = 298
+0_level_vertex_id = 268350
+0_flags           = 0x1
+1_position        = -52.30, 1.80, -202.70
+1_game_vertex_id  = 298
+1_level_vertex_id = 268240
+1_flags           = 0x4
+
+[nchg_sabbers_spawn_junkyard]
+points = 2
+0_position        = -44.80, 1.90, -194.20
+0_game_vertex_id  = 299
+0_level_vertex_id = 268510
+0_flags           = 0x1
+1_position        = -41.20, 1.90, -190.60
+1_game_vertex_id  = 299
+1_level_vertex_id = 268640
+1_flags           = 0x4
+
+[nchg_operators_spawn_junkyard]
+points = 2
+0_position        = -55.40, 1.70, -205.80
+0_game_vertex_id  = 297
+0_level_vertex_id = 268080
+0_flags           = 0x1
+1_position        = -59.10, 1.70, -209.30
+1_game_vertex_id  = 297
+1_level_vertex_id = 267950
+1_flags           = 0x4
+
+; Кладбище — патруль между техникой
+[nchg_junkyard_patrol]
+points = 4
+0_position        = -50.00, 1.80, -200.00
+0_game_vertex_id  = 298
+0_level_vertex_id = 268300
+0_flags           = 0x1
+1_position        = -44.00, 1.90, -193.00
+1_game_vertex_id  = 299
+1_level_vertex_id = 268550
+1_flags           = 0x1
+2_position        = -58.00, 1.70, -207.00
+2_game_vertex_id  = 297
+2_level_vertex_id = 268020
+2_flags           = 0x1
+3_position        = -63.00, 1.70, -213.00
+3_game_vertex_id  = 296
+3_level_vertex_id = 267780
+3_flags           = 0x4
+
+
+; #####################################################################
+;  БАР / МЕСТО ОТДЫХА СТАЛКЕРОВ (bar)
+; #####################################################################
+
+; --- Налоговая ---
+[nchg_nalogs_spawn_bar]
+points = 2
+0_position        = 221.40, 4.60, -170.20
+0_game_vertex_id  = 512
+0_level_vertex_id = 423680
+0_flags           = 0x1
+1_position        = 225.80, 4.60, -166.50
+1_game_vertex_id  = 512
+1_level_vertex_id = 423810
+1_flags           = 0x4
+
+; --- Госдеп ---
+[nchg_gosdep_spawn_bar]
+points = 2
+0_position        = 216.90, 4.50, -174.80
+0_game_vertex_id  = 511
+0_level_vertex_id = 423430
+0_flags           = 0x1
+1_position        = 212.60, 4.50, -178.30
+1_game_vertex_id  = 511
+1_level_vertex_id = 423280
+1_flags           = 0x4
+
+; --- Прокуратура ---
+[nchg_prokuratura_spawn_bar]
+points = 2
+0_position        = 228.70, 4.70, -163.60
+0_game_vertex_id  = 513
+0_level_vertex_id = 424020
+0_flags           = 0x1
+1_position        = 232.10, 4.70, -160.40
+1_game_vertex_id  = 513
+1_level_vertex_id = 424160
+1_flags           = 0x4
+
+; Патруль трёх контролирующих фракций по бару
+[nchg_bar_control_patrol]
+points = 5
+0_position        = 220.00, 4.60, -172.00
+0_game_vertex_id  = 511
+0_level_vertex_id = 423500
+0_flags           = 0x1
+1_position        = 225.00, 4.60, -167.00
+1_game_vertex_id  = 512
+1_level_vertex_id = 423750
+1_flags           = 0x1
+2_position        = 230.00, 4.70, -162.00
+2_game_vertex_id  = 513
+2_level_vertex_id = 424080
+2_flags           = 0x1
+3_position        = 235.00, 4.70, -157.00
+3_game_vertex_id  = 514
+3_level_vertex_id = 424320
+3_flags           = 0x1
+4_position        = 228.00, 4.70, -155.00
+4_game_vertex_id  = 514
+4_level_vertex_id = 424400
+4_flags           = 0x4
+
+
+; #####################################################################
+;  АГРОПРОМ (agroprom)
+; #####################################################################
+; Государственные структуры: МВД, ОМОН, Вымпел, МЧС, СК,
+;   СБУ, Альфа, ФСИН, Минздрав, Прокуратура, Госдеп, Налоговая
+
+; --- МВД — административный корпус ---
+[nchg_mvd_spawn_agroprom]
+points = 3
+0_position        = 18.40, 6.20, 42.80
+0_game_vertex_id  = 413
+0_level_vertex_id = 356200
+0_flags           = 0x1
+1_position        = 22.70, 6.20, 46.30
+1_game_vertex_id  = 413
+1_level_vertex_id = 356340
+1_flags           = 0x1
+2_position        = 26.10, 6.20, 50.70
+2_game_vertex_id  = 414
+2_level_vertex_id = 356520
+2_flags           = 0x4
+
+; --- ОМОН — ворота агропрома ---
+[nchg_omon_spawn_agroprom]
+points = 2
+0_position        = 8.60, 5.80, 35.20
+0_game_vertex_id  = 411
+0_level_vertex_id = 355780
+0_flags           = 0x1
+1_position        = 4.30, 5.80, 31.50
+1_game_vertex_id  = 411
+1_level_vertex_id = 355640
+1_flags           = 0x4
+
+; --- ВЫМПЕЛ — периметр ---
+[nchg_vympel_spawn_agroprom]
+points = 2
+0_position        = 32.80, 6.50, 58.40
+0_game_vertex_id  = 416
+0_level_vertex_id = 356870
+0_flags           = 0x1
+1_position        = 37.20, 6.50, 62.80
+1_game_vertex_id  = 416
+1_level_vertex_id = 357010
+1_flags           = 0x4
+
+; --- МЧС — медпункт / склад ---
+[nchg_mchs_spawn_agroprom]
+points = 2
+0_position        = 14.20, 6.10, 55.60
+0_game_vertex_id  = 412
+0_level_vertex_id = 356080
+0_flags           = 0x1
+1_position        = 10.80, 6.10, 59.30
+1_game_vertex_id  = 412
+1_level_vertex_id = 355940
+1_flags           = 0x4
+
+; --- СК — следственная группа, цех ---
+[nchg_sk_spawn_agroprom]
+points = 2
+0_position        = 42.50, 6.80, 48.20
+0_game_vertex_id  = 417
+0_level_vertex_id = 357240
+0_flags           = 0x1
+1_position        = 46.90, 6.80, 44.70
+1_game_vertex_id  = 417
+1_level_vertex_id = 357380
+1_flags           = 0x4
+
+; --- СБУ — внутренний двор ---
+[nchg_sbu_spawn_agroprom]
+points = 2
+0_position        = 28.30, 6.30, 38.60
+0_game_vertex_id  = 415
+0_level_vertex_id = 356680
+0_flags           = 0x1
+1_position        = 24.70, 6.30, 34.90
+1_game_vertex_id  = 415
+1_level_vertex_id = 356550
+1_flags           = 0x4
+
+; --- АЛЬФА — крыша / наблюдательный пост ---
+[nchg_alfa_spawn_agroprom]
+points = 2
+0_position        = 52.10, 12.40, 42.50
+0_game_vertex_id  = 418
+0_level_vertex_id = 357580
+0_flags           = 0x1
+1_position        = 56.40, 12.40, 38.80
+1_game_vertex_id  = 418
+1_level_vertex_id = 357720
+1_flags           = 0x4
+
+; --- ФСИН — конвойный блок ---
+[nchg_fsin_spawn_agroprom]
+points = 2
+0_position        = 6.70, 5.90, 62.40
+0_game_vertex_id  = 410
+0_level_vertex_id = 355510
+0_flags           = 0x1
+1_position        = 2.30, 5.90, 66.80
+1_game_vertex_id  = 410
+1_level_vertex_id = 355370
+1_flags           = 0x4
+
+; --- МИНЗДРАВ — изолятор ---
+[nchg_mz_spawn_agroprom]
+points = 2
+0_position        = 20.60, 6.10, 68.30
+0_game_vertex_id  = 414
+0_level_vertex_id = 356430
+0_flags           = 0x1
+1_position        = 24.90, 6.10, 72.60
+1_game_vertex_id  = 414
+1_level_vertex_id = 356570
+1_flags           = 0x4
+
+; Общий патруль гос. структур по агропрому
+[nchg_agroprom_gov_patrol]
+points = 6
+0_position        = 10.00, 5.80, 36.00
+0_game_vertex_id  = 411
+0_level_vertex_id = 355800
+0_flags           = 0x1
+1_position        = 18.00, 6.20, 44.00
+1_game_vertex_id  = 413
+1_level_vertex_id = 356250
+1_flags           = 0x1
+2_position        = 28.00, 6.30, 52.00
+2_game_vertex_id  = 415
+2_level_vertex_id = 356700
+2_flags           = 0x1
+3_position        = 40.00, 6.70, 58.00
+3_game_vertex_id  = 417
+3_level_vertex_id = 357300
+3_flags           = 0x1
+4_position        = 50.00, 6.90, 50.00
+4_game_vertex_id  = 418
+4_level_vertex_id = 357500
+4_flags           = 0x1
+5_position        = 35.00, 6.50, 40.00
+5_game_vertex_id  = 416
+5_level_vertex_id = 356900
+5_flags           = 0x4
+
+
+; #####################################################################
+;  ТЁМНАЯ ДОЛИНА (dark_valley)
+; #####################################################################
+; Криминальные: tok, tszv, korsin, tb, tochk, sekz, gisk,
+;               Чёткие Пацаны (доп. база), Технобандиты
+
+; --- ТО КАРАТЕЛИ (tok) — заброшенный завод, цех 1 ---
+[nchg_tok_spawn_dv]
+points = 3
+0_position        = -142.30, 3.40, -78.60
+0_game_vertex_id  = 621
+0_level_vertex_id = 498350
+0_flags           = 0x1
+1_position        = -138.80, 3.40, -74.20
+1_game_vertex_id  = 621
+1_level_vertex_id = 498480
+1_flags           = 0x1
+2_position        = -135.40, 3.40, -70.80
+2_game_vertex_id  = 622
+2_level_vertex_id = 498670
+2_flags           = 0x4
+
+; --- ТЮРЕМНЫЙ СОЮЗ (tszv) — бункер / подвалы ---
+[nchg_tszv_spawn_dv]
+points = 2
+0_position        = -158.70, 2.90, -92.40
+0_game_vertex_id  = 618
+0_level_vertex_id = 497820
+0_flags           = 0x1
+1_position        = -162.30, 2.90, -96.80
+1_game_vertex_id  = 618
+1_level_vertex_id = 497680
+1_flags           = 0x4
+
+; --- КОРРУПЦИОННЫЙ СИНДИКАТ (korsin) — офисный блок ---
+[nchg_korsin_spawn_dv]
+points = 2
+0_position        = -128.60, 3.80, -64.30
+0_game_vertex_id  = 624
+0_level_vertex_id = 499050
+0_flags           = 0x1
+1_position        = -124.20, 3.80, -60.70
+1_game_vertex_id  = 624
+1_level_vertex_id = 499200
+1_flags           = 0x4
+
+; --- ТЕХНОБАНДИТЫ (tb) — цех с техникой ---
+[nchg_tb_spawn_dv]
+points = 3
+0_position        = -148.90, 3.50, -85.20
+0_game_vertex_id  = 619
+0_level_vertex_id = 498050
+0_flags           = 0x1
+1_position        = -145.50, 3.50, -81.70
+1_game_vertex_id  = 620
+1_level_vertex_id = 498200
+1_flags           = 0x1
+2_position        = -152.30, 3.40, -88.60
+2_game_vertex_id  = 619
+2_level_vertex_id = 497940
+2_flags           = 0x4
+
+; --- ЧЁРНАЯ КОБРА (tochk) — внешний периметр ---
+[nchg_tochk_spawn_dv]
+points = 2
+0_position        = -118.40, 4.10, -56.80
+0_game_vertex_id  = 626
+0_level_vertex_id = 499560
+0_flags           = 0x1
+1_position        = -114.70, 4.10, -52.40
+1_game_vertex_id  = 626
+1_level_vertex_id = 499720
+1_flags           = 0x4
+
+; --- СЕКТОР 0 (sekz) — центр завода ---
+[nchg_sekz_spawn_dv]
+points = 3
+0_position        = -136.20, 3.60, -68.50
+0_game_vertex_id  = 622
+0_level_vertex_id = 498580
+0_flags           = 0x1
+1_position        = -132.80, 3.60, -64.90
+1_game_vertex_id  = 623
+1_level_vertex_id = 498740
+1_flags           = 0x1
+2_position        = -129.50, 3.70, -61.30
+2_game_vertex_id  = 623
+2_level_vertex_id = 498890
+2_flags           = 0x4
+
+; --- ГРУППА ИСКРА (gisk) — восточный блок ---
+[nchg_gisk_spawn_dv]
+points = 2
+0_position        = -165.80, 2.80, -100.30
+0_game_vertex_id  = 617
+0_level_vertex_id = 497510
+0_flags           = 0x1
+1_position        = -169.40, 2.80, -104.60
+1_game_vertex_id  = 617
+1_level_vertex_id = 497360
+1_flags           = 0x4
+
+; Общий патруль криминала по тёмной долине
+[nchg_dark_valley_crim_patrol]
+points = 6
+0_position        = -140.00, 3.40, -76.00
+0_game_vertex_id  = 621
+0_level_vertex_id = 498400
+0_flags           = 0x1
+1_position        = -150.00, 3.50, -86.00
+1_game_vertex_id  = 619
+1_level_vertex_id = 498100
+1_flags           = 0x1
+2_position        = -160.00, 2.90, -94.00
+2_game_vertex_id  = 618
+2_level_vertex_id = 497750
+2_flags           = 0x1
+3_position        = -167.00, 2.80, -102.00
+3_game_vertex_id  = 617
+3_level_vertex_id = 497430
+3_flags           = 0x1
+4_position        = -130.00, 3.70, -63.00
+4_game_vertex_id  = 623
+4_level_vertex_id = 498820
+4_flags           = 0x1
+5_position        = -120.00, 4.10, -55.00
+5_game_vertex_id  = 626
+5_level_vertex_id = 499640
+5_flags           = 0x4

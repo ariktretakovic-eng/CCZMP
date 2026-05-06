@@ -1,0 +1,582 @@
+; =====================================================================
+;  ГУЛАГИ ФРАКЦИЙ НЧГ — CCZMP MOD
+;  Файл: gulag_nchg_factions.ltx
+;
+;  Структура гулага:
+;    [имя_гулага]           — основной блок
+;    [имя_гулага_job_N]     — конкретные задачи (работа, патруль, охрана)
+;    jobs = ...             — список задач
+;    npc_info               — фильтр по рангу/фракции
+; =====================================================================
+
+
+; =====================================================================
+;  МВД — ПАТРУЛЬНЫЙ ПОСТ В НАСЕЛЁННОМ ПУНКТЕ
+; =====================================================================
+
+[gulag_mvd_komissariat]
+	type		= mvd
+	begin_job	= 1
+
+	npc_info	= {=npc_community(mvd)} true
+
+	jobs = gulag_mvd_komissariat_job_1, gulag_mvd_komissariat_job_2, gulag_mvd_komissariat_job_3, gulag_mvd_komissariat_job_4
+
+	[gulag_mvd_komissariat_job_1]
+		type 		= walker
+		active		= mvd_patrol_route_1
+		priority	= 50
+		;  Патрульный маршрут вокруг комиссариата
+		[mvd_patrol_route_1]
+			path_walk		= mvd_kom_patrol_walk_1
+			path_look		= mvd_kom_patrol_look_1
+			combat_ignore	= {=surge_complete} false, true
+
+	[gulag_mvd_komissariat_job_2]
+		type 		= walker
+		active		= mvd_patrol_route_2
+		priority	= 45
+		[mvd_patrol_route_2]
+			path_walk		= mvd_kom_patrol_walk_2
+			path_look		= mvd_kom_patrol_look_2
+			combat_ignore	= {=surge_complete} false, true
+
+	[gulag_mvd_komissariat_job_3]
+		; Охранник у входа — стоит на месте
+		type		= camper
+		active		= mvd_guard_door
+		priority	= 60
+		[mvd_guard_door]
+			path_walk		= mvd_kom_guard_pos_1
+			path_look		= mvd_kom_guard_look_1
+			sniper			= false
+
+	[gulag_mvd_komissariat_job_4]
+		; Охранник второго поста
+		type		= camper
+		active		= mvd_guard_door_2
+		priority	= 55
+		[mvd_guard_door_2]
+			path_walk		= mvd_kom_guard_pos_2
+			path_look		= mvd_kom_guard_look_2
+			sniper			= false
+
+
+; =====================================================================
+;  МВД — ПАТРУЛЬ ПО УЛИЦЕ (выезд на маршрут, 2 НПС)
+; =====================================================================
+
+[gulag_mvd_street_patrol]
+	type		= mvd
+	begin_job	= 1
+
+	npc_info	= {=npc_community(mvd)} true
+
+	jobs = gulag_mvd_street_job_1, gulag_mvd_street_job_2
+
+	[gulag_mvd_street_job_1]
+		type		= walker
+		active		= mvd_street_patrol_a
+		priority	= 50
+		[mvd_street_patrol_a]
+			path_walk		= mvd_street_walk_a
+			path_look		= mvd_street_look_a
+			combat_ignore	= false
+
+	[gulag_mvd_street_job_2]
+		type		= walker
+		active		= mvd_street_patrol_b
+		priority	= 50
+		[mvd_street_patrol_b]
+			path_walk		= mvd_street_walk_b
+			path_look		= mvd_street_look_b
+			combat_ignore	= false
+
+
+; =====================================================================
+;  ОМОН — БЛОКПОСТ (3 охранника + 1 командир)
+; =====================================================================
+
+[gulag_omon_blockpost]
+	type		= omon
+	begin_job	= 1
+
+	npc_info	= {=npc_community(omon)} true
+
+	jobs = gulag_omon_blockpost_job_1, gulag_omon_blockpost_job_2, gulag_omon_blockpost_job_3, gulag_omon_blockpost_job_4
+
+	[gulag_omon_blockpost_job_1]
+		; Командир — стоит у шлагбаума, не уходит
+		type		= camper
+		active		= omon_blockpost_commander_pos
+		priority	= 80
+		[omon_blockpost_commander_pos]
+			path_walk		= omon_bp_commander_walk
+			path_look		= omon_bp_commander_look
+			sniper			= false
+
+	[gulag_omon_blockpost_job_2]
+		; Боец у шлагбаума — проверяет проходящих
+		type		= camper
+		active		= omon_blockpost_soldier_1
+		priority	= 70
+		[omon_blockpost_soldier_1]
+			path_walk		= omon_bp_soldier_1_walk
+			path_look		= omon_bp_soldier_1_look
+			sniper			= false
+
+	[gulag_omon_blockpost_job_3]
+		; Боец с другой стороны дороги
+		type		= camper
+		active		= omon_blockpost_soldier_2
+		priority	= 65
+		[omon_blockpost_soldier_2]
+			path_walk		= omon_bp_soldier_2_walk
+			path_look		= omon_bp_soldier_2_look
+			sniper			= false
+
+	[gulag_omon_blockpost_job_4]
+		; Патруль в 50м от блокпоста
+		type		= walker
+		active		= omon_blockpost_patrol
+		priority	= 40
+		[omon_blockpost_patrol]
+			path_walk		= omon_bp_patrol_walk
+			path_look		= omon_bp_patrol_look
+			combat_ignore	= false
+
+
+; =====================================================================
+;  ВЫМПЕЛ — МОБИЛЬНАЯ ОПЕРАТИВНАЯ ГРУППА (4 бойца)
+; =====================================================================
+
+[gulag_vympel_mobile_squad]
+	type		= vympel
+	begin_job	= 1
+
+	npc_info	= {=npc_community(vympel)} true
+
+	jobs = gulag_vympel_squad_job_1, gulag_vympel_squad_job_2, gulag_vympel_squad_job_3, gulag_vympel_squad_job_4
+
+	[gulag_vympel_squad_job_1]
+		; Лидер группы — патруль с остановками
+		type		= walker
+		active		= vympel_squad_lead_route
+		priority	= 90
+		[vympel_squad_lead_route]
+			path_walk		= vympel_mob_lead_walk
+			path_look		= vympel_mob_lead_look
+			combat_ignore	= false
+
+	[gulag_vympel_squad_job_2]
+		type		= walker
+		active		= vympel_squad_member_1
+		priority	= 80
+		[vympel_squad_member_1]
+			path_walk		= vympel_mob_m1_walk
+			path_look		= vympel_mob_m1_look
+			combat_ignore	= false
+
+	[gulag_vympel_squad_job_3]
+		type		= walker
+		active		= vympel_squad_member_2
+		priority	= 80
+		[vympel_squad_member_2]
+			path_walk		= vympel_mob_m2_walk
+			path_look		= vympel_mob_m2_look
+			combat_ignore	= false
+
+	[gulag_vympel_squad_job_4]
+		; Снайпер прикрытия
+		type		= camper
+		active		= vympel_squad_sniper
+		priority	= 85
+		[vympel_squad_sniper]
+			path_walk		= vympel_mob_sniper_walk
+			path_look		= vympel_mob_sniper_look
+			sniper			= true
+
+
+; =====================================================================
+;  ВЫМПЕЛ — СТАЦИОНАРНЫЙ ПОСТ НАБЛЮДЕНИЯ
+; =====================================================================
+
+[gulag_vympel_observe_post]
+	type		= vympel
+	begin_job	= 1
+
+	npc_info	= {=npc_community(vympel)} true
+
+	jobs = gulag_vympel_obs_job_1, gulag_vympel_obs_job_2
+
+	[gulag_vympel_obs_job_1]
+		; Наблюдатель на высоте
+		type		= camper
+		active		= vympel_obs_watcher
+		priority	= 80
+		[vympel_obs_watcher]
+			path_walk		= vympel_obs_walk_1
+			path_look		= vympel_obs_look_1
+			sniper			= true
+
+	[gulag_vympel_obs_job_2]
+		; Охрана поста внизу
+		type		= camper
+		active		= vympel_obs_guard
+		priority	= 70
+		[vympel_obs_guard]
+			path_walk		= vympel_obs_walk_2
+			path_look		= vympel_obs_look_2
+			sniper			= false
+
+
+; =====================================================================
+;  МЧС — СПАСАТЕЛЬНАЯ БАЗА (5 спасателей)
+; =====================================================================
+
+[gulag_mchs_rescue_base]
+	type		= mchs
+	begin_job	= 1
+
+	npc_info	= {=npc_community(mchs)} true
+
+	jobs = gulag_mchs_base_job_1, gulag_mchs_base_job_2, gulag_mchs_base_job_3, gulag_mchs_base_job_4, gulag_mchs_base_job_5
+
+	[gulag_mchs_base_job_1]
+		; Начальник — стоит у штаба
+		type		= camper
+		active		= mchs_base_chief_pos
+		priority	= 80
+		[mchs_base_chief_pos]
+			path_walk		= mchs_base_chief_walk
+			path_look		= mchs_base_chief_look
+			sniper			= false
+
+	[gulag_mchs_base_job_2]
+		; Патруль по территории базы
+		type		= walker
+		active		= mchs_base_patrol_1
+		priority	= 50
+		[mchs_base_patrol_1]
+			path_walk		= mchs_base_patrol_walk_1
+			path_look		= mchs_base_patrol_look_1
+			combat_ignore	= {=surge_complete} false, true
+
+	[gulag_mchs_base_job_3]
+		type		= walker
+		active		= mchs_base_patrol_2
+		priority	= 45
+		[mchs_base_patrol_2]
+			path_walk		= mchs_base_patrol_walk_2
+			path_look		= mchs_base_patrol_look_2
+			combat_ignore	= {=surge_complete} false, true
+
+	[gulag_mchs_base_job_4]
+		; Механик у машины (стоит на месте)
+		type		= camper
+		active		= mchs_base_mechanic
+		priority	= 40
+		[mchs_base_mechanic]
+			path_walk		= mchs_base_mech_walk
+			path_look		= mchs_base_mech_look
+			sniper			= false
+
+	[gulag_mchs_base_job_5]
+		; Дежурный у радиостанции
+		type		= camper
+		active		= mchs_base_radio_op
+		priority	= 60
+		[mchs_base_radio_op]
+			path_walk		= mchs_base_radio_walk
+			path_look		= mchs_base_radio_look
+			sniper			= false
+
+
+; =====================================================================
+;  МЧС — ПАТРУЛЬ ВЫБРОСА (ищет выживших после выброса)
+; =====================================================================
+
+[gulag_mchs_outpost_patrol]
+	type		= mchs
+	begin_job	= 1
+
+	npc_info	= {=npc_community(mchs)} true
+
+	jobs = gulag_mchs_outpost_job_1, gulag_mchs_outpost_job_2, gulag_mchs_outpost_job_3
+
+	[gulag_mchs_outpost_job_1]
+		type		= walker
+		active		= mchs_outpost_patrol_a
+		priority	= 50
+		[mchs_outpost_patrol_a]
+			path_walk		= mchs_out_walk_a
+			path_look		= mchs_out_look_a
+			combat_ignore	= {=surge_complete} false, true
+
+	[gulag_mchs_outpost_job_2]
+		type		= walker
+		active		= mchs_outpost_patrol_b
+		priority	= 50
+		[mchs_outpost_patrol_b]
+			path_walk		= mchs_out_walk_b
+			path_look		= mchs_out_look_b
+			combat_ignore	= {=surge_complete} false, true
+
+	[gulag_mchs_outpost_job_3]
+		; Охрана базового транспорта
+		type		= camper
+		active		= mchs_outpost_vehicle_guard
+		priority	= 60
+		[mchs_outpost_vehicle_guard]
+			path_walk		= mchs_out_vehicle_walk
+			path_look		= mchs_out_vehicle_look
+			sniper			= false
+
+
+; =====================================================================
+;  СК НЧГ — СЛЕДСТВЕННАЯ ГРУППА НА МЕСТЕ ПРЕСТУПЛЕНИЯ
+; =====================================================================
+
+[gulag_sk_crime_scene]
+	type		= SK
+	begin_job	= 1
+
+	npc_info	= {=npc_community(SK)} true
+
+	jobs = gulag_sk_crime_job_1, gulag_sk_crime_job_2, gulag_sk_crime_job_3
+
+	[gulag_sk_crime_job_1]
+		; Старший следователь — стоит в центре места преступления
+		type		= camper
+		active		= sk_crime_senior_pos
+		priority	= 80
+		[sk_crime_senior_pos]
+			path_walk		= sk_crime_senior_walk
+			path_look		= sk_crime_senior_look
+			sniper			= false
+
+	[gulag_sk_crime_job_2]
+		; Следователь осматривает периметр
+		type		= walker
+		active		= sk_crime_investigator_patrol
+		priority	= 60
+		[sk_crime_investigator_patrol]
+			path_walk		= sk_crime_inv_walk
+			path_look		= sk_crime_inv_look
+			combat_ignore	= false
+
+	[gulag_sk_crime_job_3]
+		; Охрана оцепления
+		type		= camper
+		active		= sk_crime_guard_cordon
+		priority	= 70
+		[sk_crime_guard_cordon]
+			path_walk		= sk_crime_guard_walk
+			path_look		= sk_crime_guard_look
+			sniper			= false
+
+
+; =====================================================================
+;  СТО "КАБАН" — БАЗА ТЕХНАРЕЙ
+; =====================================================================
+
+[gulag_sto_kaban_base]
+	type		= STO
+	begin_job	= 1
+
+	npc_info	= {=npc_community(STO)} true
+
+	jobs = gulag_sto_base_job_1, gulag_sto_base_job_2, gulag_sto_base_job_3, gulag_sto_base_job_4
+
+	[gulag_sto_base_job_1]
+		; Босс — у конторки
+		type		= camper
+		active		= sto_base_boss_pos
+		priority	= 90
+		[sto_base_boss_pos]
+			path_walk		= sto_base_boss_walk
+			path_look		= sto_base_boss_look
+			sniper			= false
+
+	[gulag_sto_base_job_2]
+		; Механик у машины (работает)
+		type		= camper
+		active		= sto_base_mechanic_1
+		priority	= 50
+		[sto_base_mechanic_1]
+			path_walk		= sto_base_mech1_walk
+			path_look		= sto_base_mech1_look
+			sniper			= false
+
+	[gulag_sto_base_job_3]
+		; Механик у стойки с инструментами
+		type		= camper
+		active		= sto_base_mechanic_2
+		priority	= 45
+		[sto_base_mechanic_2]
+			path_walk		= sto_base_mech2_walk
+			path_look		= sto_base_mech2_look
+			sniper			= false
+
+	[gulag_sto_base_job_4]
+		; Охранник у въезда
+		type		= camper
+		active		= sto_base_guard_entry
+		priority	= 70
+		[sto_base_guard_entry]
+			path_walk		= sto_base_guard_walk
+			path_look		= sto_base_guard_look
+			sniper			= false
+
+
+; =====================================================================
+;  "ЧЕТКИЕ ПАЦАНЫ" — ЛАГЕРЬ БАНДИТОВ (5 НПС)
+; =====================================================================
+
+[gulag_chetkie_camp]
+	type		= bandit
+	begin_job	= 1
+
+	npc_info	= {=npc_community(bandit)} true
+
+	jobs = gulag_chetkie_camp_job_1, gulag_chetkie_camp_job_2, gulag_chetkie_camp_job_3, gulag_chetkie_camp_job_4, gulag_chetkie_camp_job_5
+
+	[gulag_chetkie_camp_job_1]
+		; Босс — сидит в центре лагеря
+		type		= camper
+		active		= chetkie_camp_boss_pos
+		priority	= 80
+		[chetkie_camp_boss_pos]
+			path_walk		= chetkie_boss_walk
+			path_look		= chetkie_boss_look
+			sniper			= false
+
+	[gulag_chetkie_camp_job_2]
+		; Часовой у въезда
+		type		= camper
+		active		= chetkie_camp_sentry_1
+		priority	= 70
+		[chetkie_camp_sentry_1]
+			path_walk		= chetkie_sentry1_walk
+			path_look		= chetkie_sentry1_look
+			sniper			= false
+
+	[gulag_chetkie_camp_job_3]
+		; Часовой у ящиков
+		type		= camper
+		active		= chetkie_camp_sentry_2
+		priority	= 65
+		[chetkie_camp_sentry_2]
+			path_walk		= chetkie_sentry2_walk
+			path_look		= chetkie_sentry2_look
+			sniper			= false
+
+	[gulag_chetkie_camp_job_4]
+		; Патруль по периметру
+		type		= walker
+		active		= chetkie_camp_patrol
+		priority	= 50
+		[chetkie_camp_patrol]
+			path_walk		= chetkie_patrol_walk
+			path_look		= chetkie_patrol_look
+			combat_ignore	= false
+
+	[gulag_chetkie_camp_job_5]
+		; "Наблюдатель" с крыши / возвышенности
+		type		= camper
+		active		= chetkie_camp_lookout
+		priority	= 75
+		[chetkie_camp_lookout]
+			path_walk		= chetkie_lookout_walk
+			path_look		= chetkie_lookout_look
+			sniper			= true
+
+
+; =====================================================================
+;  ЧВК Х-СОЛДАТЫ — УКРЕПЛЁННЫЙ ЛАГЕРЬ (6 бойцов)
+; =====================================================================
+
+[gulag_xsoldiers_camp]
+	type		= killer
+	begin_job	= 1
+
+	npc_info	= {=npc_community(killer)} true
+
+	jobs = gulag_xsoldiers_camp_job_1, gulag_xsoldiers_camp_job_2, gulag_xsoldiers_camp_job_3, gulag_xsoldiers_camp_job_4, gulag_xsoldiers_camp_job_5, gulag_xsoldiers_camp_job_6
+
+	[gulag_xsoldiers_camp_job_1]
+		; Полковник — у штабной палатки
+		type		= camper
+		active		= xsol_camp_colonel_pos
+		priority	= 90
+		[xsol_camp_colonel_pos]
+			path_walk		= xsol_colonel_walk
+			path_look		= xsol_colonel_look
+			sniper			= false
+
+	[gulag_xsoldiers_camp_job_2]
+		; Снайпер на вышке
+		type		= camper
+		active		= xsol_camp_sniper_tower
+		priority	= 85
+		[xsol_camp_sniper_tower]
+			path_walk		= xsol_sniper_walk
+			path_look		= xsol_sniper_look
+			sniper			= true
+
+	[gulag_xsoldiers_camp_job_3]
+		; Снайпер — второй сектор
+		type		= camper
+		active		= xsol_camp_sniper_2
+		priority	= 80
+		[xsol_camp_sniper_2]
+			path_walk		= xsol_sniper2_walk
+			path_look		= xsol_sniper2_look
+			sniper			= true
+
+	[gulag_xsoldiers_camp_job_4]
+		; Патруль с тяжёлым вооружением
+		type		= walker
+		active		= xsol_camp_heavy_patrol
+		priority	= 70
+		[xsol_camp_heavy_patrol]
+			path_walk		= xsol_heavy_patrol_walk
+			path_look		= xsol_heavy_patrol_look
+			combat_ignore	= false
+
+	[gulag_xsoldiers_camp_job_5]
+		; Боец у ворот
+		type		= camper
+		active		= xsol_camp_gate_guard_1
+		priority	= 75
+		[xsol_camp_gate_guard_1]
+			path_walk		= xsol_gate1_walk
+			path_look		= xsol_gate1_look
+			sniper			= false
+
+	[gulag_xsoldiers_camp_job_6]
+		; Боец у ворот — с другой стороны
+		type		= camper
+		active		= xsol_camp_gate_guard_2
+		priority	= 75
+		[xsol_camp_gate_guard_2]
+			path_walk		= xsol_gate2_walk
+			path_look		= xsol_gate2_look
+			sniper			= false
+
+
+; =====================================================================
+; ПРИМЕЧАНИЕ ДЛЯ РАЗРАБОТЧИКА:
+;
+; Все path_walk / path_look — это имена путей, которые нужно
+; расставить в редакторе уровней (LevelEditor / SDK).
+; Формат: имя_пути (строка) → набор точек на карте.
+;
+; Типы работ:
+;   walker  — НПС идёт по маршруту туда-обратно
+;   camper  — НПС стоит на месте (охраняет/наблюдает)
+;   sniper  = true — НПС принимает "снайперскую" позу (приседает, не движется)
+;
+; combat_ignore = true — НПС не реагирует на бой (например, гражданский в укрытии)
+; combat_ignore = {=surge_complete} false, true — не воюет только во время выброса
+; =====================================================================

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCZMP // СИСТЕМА Я.ТРЕТЬЯКОВА</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--g2:#00cc33;--g3:rgba(0,255,65,.08);--r:#ff4141;--b:#41a1ff;--y:#ffcc00;--bg:#050505;--bg2:#0a0a0a;--bg3:#0f0f0f;--brd:rgba(0,255,65,.25);--glow:0 0 14px rgba(0,255,65,.5);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{cursor:none!important;}
+body{background:var(--bg);color:var(--g);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:9998;}
+body::after{content:'';position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(0,255,65,.3),transparent);animation:scan 6s linear infinite;pointer-events:none;z-index:9997;}
+@keyframes scan{from{top:0}to{top:100vh}}
+#cur{position:fixed;width:10px;height:10px;border:1px solid var(--g);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s;box-shadow:var(--glow);}
+#cur2{position:fixed;width:2px;height:2px;background:var(--g);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);}
+
+/* LOGIN */
+#page-login{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:14px;}
+.boot-log{font-size:10px;color:rgba(0,255,65,.35);letter-spacing:1px;text-align:left;max-width:340px;line-height:1.9;}
+.login-box{border:1px solid var(--g);padding:50px 60px;background:var(--g3);box-shadow:var(--glow),inset 0 0 30px rgba(0,255,65,.02);text-align:center;animation:bootIn .8s ease forwards;position:relative;}
+.login-box::before,.login-box::after{content:'';position:absolute;width:14px;height:14px;border-color:var(--g);border-style:solid;}
+.login-box::before{top:-2px;left:-2px;border-width:2px 0 0 2px;}
+.login-box::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0;}
+@keyframes bootIn{from{opacity:0;transform:scale(.95) translateY(20px);filter:blur(4px);}to{opacity:1;transform:scale(1) translateY(0);filter:blur(0);}}
+.login-title{font-family:'Russo One',sans-serif;font-size:28px;letter-spacing:6px;color:var(--g);text-shadow:var(--glow);margin-bottom:6px;}
+.login-sub{font-size:9px;color:rgba(0,255,65,.4);letter-spacing:3px;margin-bottom:28px;}
+.t-input{background:#000;border:1px solid var(--brd);color:var(--g);padding:12px 20px;font-family:'Share Tech Mono',monospace;font-size:14px;outline:none;width:220px;text-align:center;letter-spacing:4px;transition:border-color .2s,box-shadow .2s;display:block;margin:0 auto 14px;}
+.t-input:focus{border-color:var(--g);box-shadow:var(--glow);}
+.t-btn{background:transparent;border:1px solid var(--g);color:var(--g);padding:10px 30px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;cursor:none;transition:all .2s;}
+.t-btn:hover{background:var(--g);color:#000;box-shadow:var(--glow);}
+#login-err{color:var(--r);font-size:10px;margin-top:12px;display:none;letter-spacing:2px;}
+
+/* APP */
+#app{display:none;flex-direction:column;min-height:100vh;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:500;background:rgba(5,5,5,.97);border-bottom:1px solid var(--brd);padding:0 22px;display:flex;align-items:center;justify-content:space-between;height:54px;}
+.logo-wrap{display:flex;align-items:center;gap:10px;cursor:none;}
+.logo-text{font-family:'Russo One',sans-serif;font-size:18px;letter-spacing:4px;color:var(--g);text-shadow:var(--glow);}
+.logo-sub{font-size:7px;color:rgba(0,255,65,.35);letter-spacing:2px;margin-top:2px;}
+nav{display:flex;gap:2px;}
+.nav-btn{background:transparent;border:none;color:rgba(0,255,65,.45);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:7px 12px;cursor:none;transition:all .2s;position:relative;}
+.nav-btn::after{content:'';position:absolute;bottom:0;left:50%;right:50%;height:1px;background:var(--g);transition:all .2s;}
+.nav-btn:hover,.nav-btn.active{color:var(--g);text-shadow:var(--glow);}
+.nav-btn:hover::after,.nav-btn.active::after{left:0;right:0;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:2px;color:rgba(0,255,65,.4);}
+.s-dot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:var(--glow);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.logout-btn{background:transparent;border:1px solid rgba(255,65,65,.35);color:var(--r);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:4px 9px;cursor:none;transition:all .2s;}
+.logout-btn:hover{background:var(--r);color:#000;}
+
+/* TICKER */
+.ticker{background:rgba(0,255,65,.03);border-bottom:1px solid var(--brd);padding:7px 0;overflow:hidden;}
+.ticker-inner{display:flex;gap:80px;white-space:nowrap;animation:tick 35s linear infinite;}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-item{font-size:10px;color:rgba(0,255,65,.35);letter-spacing:1px;}
+.tick-item span{color:var(--g);margin-right:8px;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;animation:pageIn .35s ease forwards;}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.pw{max-width:1200px;margin:0 auto;padding:36px 24px 80px;}
+.ph{margin-bottom:32px;border-left:3px solid var(--g);padding-left:18px;}
+.ph-tag{font-size:9px;letter-spacing:4px;color:rgba(0,255,65,.35);margin-bottom:8px;}
+.ph-title{font-family:'Russo One',sans-serif;font-size:clamp(22px,4vw,40px);color:#fff;letter-spacing:2px;line-height:1.1;}
+.ph-title span{color:var(--g);text-shadow:var(--glow);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* INDEX */
+.index-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:36px;}
+.idx-card{border:1px solid var(--brd);padding:26px;background:var(--g3);cursor:none;position:relative;overflow:hidden;transition:all .25s;opacity:0;animation:fadeUp .5s forwards;}
+.idx-card:nth-child(1){animation-delay:.1s}.idx-card:nth-child(2){animation-delay:.18s}.idx-card:nth-child(3){animation-delay:.26s}.idx-card:nth-child(4){animation-delay:.34s}
+.idx-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,65,.06),transparent 60%);opacity:0;transition:opacity .3s;}
+.idx-card:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:var(--glow);}
+.idx-card:hover::before{opacity:1;}
+.idx-num{font-size:34px;color:rgba(0,255,65,.1);font-family:'Russo One',sans-serif;margin-bottom:10px;}
+.idx-icon{font-size:26px;margin-bottom:10px;}
+.idx-title{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:3px;color:var(--g);text-shadow:var(--glow);margin-bottom:7px;}
+.idx-desc{font-size:10px;color:rgba(0,255,65,.45);line-height:1.7;letter-spacing:1px;}
+.idx-arrow{position:absolute;bottom:18px;right:18px;font-size:16px;color:rgba(0,255,65,.25);transition:all .2s;}
+.idx-card:hover .idx-arrow{color:var(--g);transform:translateX(4px);}
+.hacker-btn{margin-top:36px;background:transparent;border:1px dashed rgba(0,255,65,.15);color:rgba(0,255,65,.25);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:7px 14px;cursor:none;transition:all .2s;}
+.hacker-btn:hover{border-color:var(--r);color:var(--r);}
+
+/* NEWS */
+.news-layout{display:grid;grid-template-columns:1fr 290px;gap:24px;}
+.filter-row{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
+.f-btn{background:transparent;border:1px solid var(--brd);color:rgba(0,255,65,.4);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 10px;cursor:none;transition:all .2s;}
+.f-btn:hover,.f-btn.active{color:var(--g);border-color:var(--g);background:var(--g3);}
+.news-list{display:flex;flex-direction:column;gap:2px;}
+.n-card{border:1px solid var(--brd);border-left:3px solid transparent;padding:18px 22px;background:var(--bg2);cursor:none;transition:all .2s;position:relative;overflow:hidden;opacity:0;animation:fadeUp .4s forwards;}
+.n-card::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,255,65,.03),transparent 50%);opacity:0;transition:opacity .3s;}
+.n-card:hover{border-left-color:var(--g);transform:translateX(5px);}
+.n-card:hover::before{opacity:1;}
+.n-card.pinned{border-left-color:var(--y);}
+.n-card.alert-card{border-left-color:var(--r);}
+.n-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.n-tag{font-size:8px;letter-spacing:2px;padding:2px 6px;border:1px solid;}
+.tag-dev{color:var(--g);border-color:var(--g2);background:rgba(0,255,65,.07);}
+.tag-lore{color:var(--b);border-color:#2255aa;background:rgba(65,161,255,.07);}
+.tag-alert{color:var(--r);border-color:#aa1111;background:rgba(255,65,65,.07);}
+.tag-pin{color:var(--y);font-size:10px;}
+.n-date{font-size:9px;color:rgba(0,255,65,.25);margin-left:auto;}
+.n-title{font-family:'Exo 2',sans-serif;font-weight:700;font-size:14px;color:#ccc;margin-bottom:6px;line-height:1.3;transition:color .2s;}
+.n-card:hover .n-title{color:#fff;}
+.n-excerpt{font-size:10px;color:rgba(0,255,65,.38);line-height:1.7;margin-bottom:10px;}
+.n-footer{display:flex;justify-content:space-between;align-items:center;}
+.n-author{font-size:9px;color:rgba(0,255,65,.25);}
+.n-read{font-size:9px;color:var(--g);letter-spacing:2px;opacity:0;transition:opacity .2s;}
+.n-card:hover .n-read{opacity:1;}
+.sidebar{display:flex;flex-direction:column;gap:14px;}
+.widget{border:1px solid var(--brd);padding:16px;background:var(--bg2);opacity:0;animation:fadeUp .5s forwards;}
+.widget:nth-child(1){animation-delay:.2s}.widget:nth-child(2){animation-delay:.32s}.widget:nth-child(3){animation-delay:.44s}
+.w-title{font-size:8px;letter-spacing:3px;color:var(--g);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--brd);}
+.status-rows{display:flex;flex-direction:column;gap:7px;}
+.s-row{display:flex;justify-content:space-between;align-items:center;}
+.s-lbl{font-size:9px;color:rgba(0,255,65,.35);}
+.s-val{font-size:9px;font-weight:700;}
+.sv-g{color:var(--g);}.sv-y{color:var(--y);}.sv-w{color:#fff;}
+.prog-wrap{margin-top:10px;}
+.prog-lbl{display:flex;justify-content:space-between;font-size:8px;color:rgba(0,255,65,.3);margin-bottom:4px;}
+.prog{height:2px;background:var(--bg3);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g2),var(--g));box-shadow:0 0 5px var(--g);}
+.faction-rows{display:flex;flex-direction:column;gap:5px;}
+.f-row{display:flex;align-items:center;gap:7px;padding:5px 7px;border:1px solid transparent;cursor:none;transition:all .2s;}
+.f-row:hover{border-color:var(--brd);background:var(--bg3);}
+.f-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.f-name{font-size:10px;color:rgba(0,255,65,.6);flex:1;}
+.f-type{font-size:8px;color:rgba(0,255,65,.25);}
+.recent-list{display:flex;flex-direction:column;gap:9px;}
+.r-item{padding-bottom:9px;border-bottom:1px solid var(--brd);}
+.r-item:last-child{border:none;padding:0;}
+.r-title{font-size:10px;color:rgba(0,255,65,.55);line-height:1.4;margin-bottom:2px;transition:color .2s;}
+.r-title:hover{color:var(--g);}
+.r-meta{font-size:8px;color:rgba(0,255,65,.25);}
+
+/* DATABASE */
+.db-header-row{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+.db-search{background:#000;border:1px solid var(--brd);color:var(--g);padding:9px 14px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;flex:1;min-width:180px;transition:border-color .2s;}
+.db-search:focus{border-color:var(--g);}
+.db-search::placeholder{color:rgba(0,255,65,.2);}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:rgba(0,255,65,.04);}
+th{padding:10px 12px;text-align:left;font-size:8px;letter-spacing:2px;color:rgba(0,255,65,.45);border:1px solid var(--brd);}
+td{padding:9px 12px;font-size:10px;border:1px solid rgba(0,255,65,.08);transition:background .15s;}
+tr{cursor:none;transition:background .15s;}
+tbody tr:hover{background:rgba(0,255,65,.07);}
+
+/* OVERLAY */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:1000;align-items:center;justify-content:center;}
+#overlay.open{display:flex;}
+.folder{border:1px solid var(--g);padding:36px;width:min(680px,90vw);background:var(--bg);box-shadow:var(--glow),0 0 50px rgba(0,255,65,.08);position:relative;animation:folderIn .35s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes folderIn{from{opacity:0;transform:scale(.88) translateY(28px);filter:blur(8px);}to{opacity:1;transform:scale(1) translateY(0);filter:blur(0);}}
+.folder::before,.folder::after{content:'';position:absolute;width:14px;height:14px;border-color:var(--g);border-style:solid;}
+.folder::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+.folder::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+.close-btn{position:absolute;top:14px;right:14px;background:transparent;border:1px solid rgba(255,65,65,.35);color:var(--r);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:4px 8px;cursor:none;transition:all .2s;}
+.close-btn:hover{background:var(--r);color:#000;}
+.folder-icon{font-size:40px;margin-bottom:14px;}
+#folder-data h2{font-family:'Russo One',sans-serif;font-size:18px;letter-spacing:3px;border-bottom:1px solid;padding-bottom:8px;margin-bottom:12px;}
+#folder-data p{margin:7px 0;font-size:11px;line-height:1.6;}
+#folder-data strong{color:rgba(0,255,65,.4);margin-right:7px;}
+
+/* ORGS */
+.orgs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
+.org-card{border:1px solid var(--brd);padding:20px;background:var(--bg2);cursor:none;position:relative;overflow:hidden;transition:all .25s;opacity:0;animation:fadeUp .5s forwards;}
+.org-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,65,.05),transparent);opacity:0;transition:opacity .3s;}
+.org-card:hover{transform:translateY(-5px);}
+.org-card:hover::after{opacity:1;}
+.org-cat-line{font-size:7px;letter-spacing:3px;color:rgba(0,255,65,.25);margin-bottom:8px;}
+.org-icon{font-size:28px;margin-bottom:8px;}
+.org-name{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:2px;margin-bottom:4px;}
+.org-abbr{font-size:8px;color:rgba(0,255,65,.28);letter-spacing:3px;margin-bottom:9px;}
+.org-desc{font-size:9px;color:rgba(0,255,65,.44);line-height:1.7;margin-bottom:12px;}
+.org-stats{display:flex;gap:14px;border-top:1px solid var(--brd);padding-top:10px;}
+.org-stat{text-align:center;}
+.org-stat-num{font-size:13px;font-family:'Russo One',sans-serif;}
+.org-stat-lbl{font-size:7px;color:rgba(0,255,65,.28);letter-spacing:1px;margin-top:2px;}
+.org-card.gov .org-name,.org-card.gov .org-stat-num{color:var(--b);}
+.org-card.gov:hover{border-color:var(--b);box-shadow:0 0 14px rgba(65,161,255,.3);}
+.org-card.crim .org-name,.org-card.crim .org-stat-num{color:var(--r);}
+.org-card.crim:hover{border-color:var(--r);box-shadow:0 0 14px rgba(255,65,65,.3);}
+.org-card.svc .org-name,.org-card.svc .org-stat-num{color:var(--y);}
+.org-card.svc:hover{border-color:var(--y);box-shadow:0 0 14px rgba(255,204,0,.3);}
+
+/* AI */
+.ai-layout{display:grid;grid-template-columns:1fr 240px;gap:18px;height:calc(100vh - 220px);min-height:400px;}
+.ai-col{display:flex;flex-direction:column;}
+#chat-window{flex:1;border:1px solid var(--brd);padding:18px;overflow-y:auto;background:rgba(0,255,65,.015);display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+.ai-msg{border-left:2px solid var(--g);padding-left:10px;animation:fadeUp .3s forwards;}
+.ai-msg .who{font-size:8px;color:rgba(0,255,65,.35);letter-spacing:2px;margin-bottom:3px;}
+.ai-msg .txt{font-size:11px;color:var(--g);line-height:1.8;}
+.user-msg{text-align:right;}
+.user-msg .txt{display:inline-block;background:rgba(0,255,65,.06);border:1px solid var(--brd);padding:7px 12px;font-size:11px;color:rgba(0,255,65,.7);}
+.ai-input-row{display:flex;gap:7px;margin-top:12px;}
+.ai-input{flex:1;background:#000;border:1px solid var(--brd);color:var(--g);padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;transition:border-color .2s;}
+.ai-input:focus{border-color:var(--g);}
+.ai-send{background:var(--g);color:#000;border:none;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:0 18px;cursor:none;font-weight:700;transition:opacity .2s;}
+.ai-send:hover{opacity:.8;}
+.ai-sidebar{display:flex;flex-direction:column;gap:12px;}
+.cmd-list{border:1px solid var(--brd);padding:14px;background:var(--bg2);}
+.cmd-title{font-size:8px;letter-spacing:3px;color:var(--g);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--brd);}
+.cmd-item{font-size:9px;color:rgba(0,255,65,.45);padding:5px 0;border-bottom:1px solid rgba(0,255,65,.04);cursor:none;transition:color .2s;letter-spacing:1px;}
+.cmd-item:hover{color:var(--g);}
+.cmd-item span{color:var(--g);margin-right:5px;}
+
+/* HACKER */
+#hacker-screen{display:none;position:fixed;inset:0;background:#000;color:var(--g);z-index:9999;padding:28px;font-family:'Share Tech Mono',monospace;overflow:hidden;}
+#hacker-screen.open{display:block;}
+#hacker-log{font-size:12px;line-height:2.2;}
+#hacker-log p{margin:2px 0;}
+.h-ok{color:var(--g)}.h-warn{color:var(--y)}.h-err{color:var(--r)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--brd);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.ft-logo{font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:4px;color:var(--g);text-shadow:var(--glow);}
+.ft-txt{font-size:8px;color:rgba(0,255,65,.2);letter-spacing:2px;}
+.ft-links{display:flex;gap:14px;}
+.ft-links a{font-size:9px;color:rgba(0,255,65,.28);text-decoration:none;letter-spacing:2px;cursor:none;transition:color .2s;}
+.ft-links a:hover{color:var(--g);}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur2"></div>
+
+<!-- LOGIN -->
+<div id="page-login">
+  <div class="boot-log" id="boot-log"></div>
+  <div class="login-box">
+    <div class="login-title">CCZMP</div>
+    <div class="login-sub">СИСТЕМА Я.ТРЕТЬЯКОВА // АВТОРИЗАЦИЯ</div>
+    <input class="t-input" type="password" id="pass-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkAccess()">
+    <button class="t-btn" onclick="checkAccess()">ПОДТВЕРДИТЬ ДОСТУП</button>
+    <div id="login-err">!! ОШИБКА: ДОСТУП ЗАПРЕЩЁН !!</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="logo-wrap" onclick="nav('index')">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#00ff41" stroke-width="1" opacity=".3"/><circle cx="16" cy="16" r="9" stroke="#00ff41" stroke-width="1" opacity=".6"/><circle cx="16" cy="16" r="3" fill="#00ff41"/><line x1="16" y1="2" x2="16" y2="7" stroke="#00ff41" stroke-width="1.5"/><line x1="16" y1="25" x2="16" y2="30" stroke="#00ff41" stroke-width="1.5"/><line x1="2" y1="16" x2="7" y2="16" stroke="#00ff41" stroke-width="1.5"/><line x1="25" y1="16" x2="30" y2="16" stroke="#00ff41" stroke-width="1.5"/></svg>
+      <div><div class="logo-text">CCZMP</div><div class="logo-sub">CRIMINAL CHERNOBYL ZONE MULTIPLAYER</div></div>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="nav('index')" data-page="index">[0] ТЕРМИНАЛ</button>
+      <button class="nav-btn" onclick="nav('news')" data-page="news">[1] НОВОСТИ</button>
+      <button class="nav-btn" onclick="nav('database')" data-page="database">[2] PENTAGON</button>
+      <button class="nav-btn" onclick="nav('orgs')" data-page="orgs">[3] ОРГАНИЗАЦИИ</button>
+      <button class="nav-btn" onclick="nav('ai')" data-page="ai">[4] ОКУЛЯР-1</button>
+    </nav>
+    <div class="hdr-right">
+      <div class="status-pill"><div class="s-dot"></div>В РАЗРАБОТКЕ</div>
+      <button class="logout-btn" onclick="logout()">[ ВЫХОД ]</button>
+    </div>
+  </header>
+
+  <div class="ticker"><div class="ticker-inner" id="ticker-inner"></div></div>
+
+  <!-- INDEX -->
+  <div class="page active" id="p-index">
+    <div class="pw">
+      <div class="ph"><div class="ph-tag">// СИСТЕМА Я.ТРЕТЬЯКОВА v1.0</div><div class="ph-title">ИНИЦИИРОВАТЬ <span>ПРОЕКТ</span></div></div>
+      <div class="index-grid">
+        <div class="idx-card" onclick="nav('news')"><div class="idx-num">01</div><div class="idx-icon">📡</div><div class="idx-title">СВОДКИ ПДА</div><div class="idx-desc">Последние новости из Зоны. Оперативные данные НЧГ, события группировок, тревожные сигналы.</div><div class="idx-arrow">→</div></div>
+        <div class="idx-card" onclick="nav('database')"><div class="idx-num">02</div><div class="idx-icon">🗄️</div><div class="idx-title">PENTAGON</div><div class="idx-desc">Полный реестр группировок STALKER × CCZMP. 27 объектов. Досье, лидеры, дислокация.</div><div class="idx-arrow">→</div></div>
+        <div class="idx-card" onclick="nav('orgs')"><div class="idx-num">03</div><div class="idx-icon">🏛️</div><div class="idx-title">ОРГАНИЗАЦИИ</div><div class="idx-desc">Карточки всех фракций — государственные, криминальные, служебные. Тактика и идеология.</div><div class="idx-arrow">→</div></div>
+        <div class="idx-card" onclick="nav('ai')"><div class="idx-num">04</div><div class="idx-icon">🤖</div><div class="idx-title">ОКУЛЯР-1</div><div class="idx-desc">ИИ-модуль базы знаний НЧГ. Запросы по группировкам, аномалиям, вычисления.</div><div class="idx-arrow">→</div></div>
+      </div>
+      <button class="hacker-btn" onclick="startHacking()">[ bypass_security_protocol ]</button>
+    </div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="page" id="p-news">
+    <div class="pw">
+      <div class="ph"><div class="ph-tag">// ЦЕНТР СВЯЗИ НЧГ</div><div class="ph-title">ОПЕРАТИВНАЯ <span>СВОДКА</span></div></div>
+      <div class="news-layout">
+        <div>
+          <div class="filter-row">
+            <button class="f-btn active" onclick="filterNews(this,'all')">ВСЕ</button>
+            <button class="f-btn" onclick="filterNews(this,'dev')">РАЗРАБОТКА</button>
+            <button class="f-btn" onclick="filterNews(this,'lore')">ЛОР НЧГ</button>
+            <button class="f-btn" onclick="filterNews(this,'alert')">ТРЕВОГА</button>
+          </div>
+          <div class="news-list" id="news-list"></div>
+        </div>
+        <aside class="sidebar">
+          <div class="widget"><div class="w-title">// Статус проекта</div><div class="status-rows"><div class="s-row"><span class="s-lbl">Состояние</span><span class="s-val sv-y">В РАЗРАБОТКЕ</span></div><div class="s-row"><span class="s-lbl">Старт</span><span class="s-val sv-w">20.06.2025</span></div><div class="s-row"><span class="s-lbl">Команда</span><span class="s-val sv-w">4 чел.</span></div><div class="s-row"><span class="s-lbl">Фракций</span><span class="s-val sv-g">27 / 30+</span></div></div><div class="prog-wrap"><div class="prog-lbl"><span>Прогресс</span><span style="color:var(--g)">~20%</span></div><div class="prog"><div class="prog-fill" style="width:20%"></div></div></div></div>
+          <div class="widget"><div class="w-title">// Ключевые фракции</div><div class="faction-rows"><div class="f-row"><div class="f-dot" style="background:#41a1ff"></div><span class="f-name">МВД НЧГ</span><span class="f-type">ГОС</span></div><div class="f-row"><div class="f-dot" style="background:#00ff41"></div><span class="f-name">ОМОН</span><span class="f-type">ГОС</span></div><div class="f-row"><div class="f-dot" style="background:#ff4141"></div><span class="f-name">Вымпел</span><span class="f-type">ГОС</span></div><div class="f-row"><div class="f-dot" style="background:#ffcc00"></div><span class="f-name">СТО "Кабан"</span><span class="f-type">НЕЙ</span></div><div class="f-row"><div class="f-dot" style="background:#aa44ff"></div><span class="f-name">Сектор "0"</span><span class="f-type">ОПГ</span></div><div class="f-row"><div class="f-dot" style="background:#ff3366"></div><span class="f-name">Чёткие пацаны</span><span class="f-type">ОПГ</span></div></div></div>
+          <div class="widget"><div class="w-title">// Последние события</div><div class="recent-list"><div class="r-item"><div class="r-title">Баррикада захватила станцию — ОМОН выдвигается</div><div class="r-meta">04.03.2026 // СОБЫТИЕ</div></div><div class="r-item"><div class="r-title">НБЗ заморозил счета троих подозреваемых</div><div class="r-meta">03.03.2026 // НБЗ</div></div><div class="r-item"><div class="r-title">Технобандиты похитили образцы из Янов</div><div class="r-meta">02.03.2026 // ТРЕВОГА</div></div><div class="r-item"><div class="r-title">Сабберы открыли новый звуковой центр</div><div class="r-meta">01.03.2026 // БИЗНЕС</div></div></div></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATABASE -->
+  <div class="page" id="p-database">
+    <div class="pw">
+      <div class="ph"><div class="ph-tag">// PENTAGON INTELLIGENCE SERVICE НЧГ</div><div class="ph-title">БАЗА <span>ДАННЫХ</span></div></div>
+      <div class="db-header-row">
+        <input class="db-search" id="db-search" placeholder="ПОИСК ПО РЕЕСТРУ..." oninput="renderDB(this.value)">
+        <div style="font-size:9px;color:rgba(0,255,65,.3)" id="db-count"></div>
+      </div>
+      <table><thead><tr><th>ID</th><th>ОБЪЕКТ</th><th>КЛАССИФИКАЦИЯ</th><th>ДИСЛОКАЦИЯ</th><th>ЛИДЕР</th></tr></thead><tbody id="db-body"></tbody></table>
+    </div>
+  </div>
+
+  <!-- ORGS -->
+  <div class="page" id="p-orgs">
+    <div class="pw">
+      <div class="ph"><div class="ph-tag">// РЕЕСТР ГРУППИРОВОК</div><div class="ph-title">ОРГАНИЗАЦИИ <span>CCZMP</span></div></div>
+      <div class="filter-row orgs-filters">
+        <button class="f-btn active" onclick="filterOrgs(this,'all')">ВСЕ</button>
+        <button class="f-btn" onclick="filterOrgs(this,'gov')">ГОСУДАРСТВЕННЫЕ</button>
+        <button class="f-btn" onclick="filterOrgs(this,'crim')">КРИМИНАЛЬНЫЕ</button>
+        <button class="f-btn" onclick="filterOrgs(this,'svc')">СЛУЖЕБНЫЕ</button>
+        <button class="f-btn" onclick="filterOrgs(this,'neu')">НЕЙТРАЛЬНЫЕ</button>
+      </div>
+      <div class="orgs-grid" id="orgs-grid"></div>
+    </div>
+  </div>
+
+  <!-- AI -->
+  <div class="page" id="p-ai">
+    <div class="pw">
+      <div class="ph"><div class="ph-tag">// МОДУЛЬ ИСКУССТВЕННОГО ИНТЕЛЛЕКТА</div><div class="ph-title">ОКУЛЯР-<span>1</span></div></div>
+      <div class="ai-layout">
+        <div class="ai-col">
+          <div id="chat-window"><div class="ai-msg"><div class="who">ОКУЛЯР-1 // СИСТЕМА</div><div class="txt">Система готова. Введите запрос по группировкам или аномалиям Зоны...<br>Используйте команды справа или напишите свой вопрос.</div></div></div>
+          <div class="ai-input-row">
+            <input class="ai-input" id="ai-inp" placeholder="Запрос к системе ОКУЛЯР-1..." onkeydown="if(event.key==='Enter')askAI()">
+            <button class="ai-send" onclick="askAI()">ОТПРАВИТЬ</button>
+          </div>
+        </div>
+        <div class="ai-sidebar">
+          <div class="cmd-list">
+            <div class="cmd-title">// БЫСТРЫЕ КОМАНДЫ</div>
+            <div class="cmd-item" onclick="setCmd('привет')"><span>►</span>привет</div>
+            <div class="cmd-item" onclick="setCmd('альфа')"><span>►</span>альфа</div>
+            <div class="cmd-item" onclick="setCmd('кабан')"><span>►</span>кабан</div>
+            <div class="cmd-item" onclick="setCmd('омон')"><span>►</span>омон</div>
+            <div class="cmd-item" onclick="setCmd('сектор 0')"><span>►</span>сектор 0</div>
+            <div class="cmd-item" onclick="setCmd('нчг')"><span>►</span>нчг</div>
+            <div class="cmd-item" onclick="setCmd('история')"><span>►</span>история</div>
+            <div class="cmd-item" onclick="setCmd('химия')"><span>►</span>химия</div>
+            <div class="cmd-item" onclick="setCmd('посчитай ток')"><span>►</span>посчитай ток</div>
+            <div class="cmd-item" onclick="setCmd('синус')"><span>►</span>синус</div>
+          </div>
+          <div class="cmd-list">
+            <div class="cmd-title">// СТАТУС</div>
+            <div class="cmd-item"><span style="color:var(--g)">●</span> ОНЛАЙН</div>
+            <div class="cmd-item"><span style="color:rgba(0,255,65,.3)">●</span> БД: 27 ОБЪЕКТОВ</div>
+            <div class="cmd-item"><span style="color:rgba(0,255,65,.3)">●</span> НЧГ-ПРОТОКОЛ v2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="ft-logo">CCZMP</div>
+    <div class="ft-txt">© 2025–2026 CCZMP DEV TEAM</div>
+    <div class="ft-links"><a href="#">TELEGRAM</a><a href="#">DISCORD</a></div>
+  </footer>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" onclick="if(event.target===this)closeFolder()">
+  <div class="folder" id="folder-box">
+    <button class="close-btn" onclick="closeFolder()">[ ЗАКРЫТЬ X ]</button>
+    <div class="folder-icon" id="folder-icon"></div>
+    <div id="folder-data"></div>
+  </div>
+</div>
+
+<!-- HACKER -->
+<div id="hacker-screen"><div id="hacker-log"></div></div>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';cur2.style.left=e.clientX+'px';cur2.style.top=e.clientY+'px';});
+document.addEventListener('mousedown',()=>{cur.style.width='16px';cur.style.height='16px';});
+document.addEventListener('mouseup',()=>{cur.style.width='10px';cur.style.height='10px';});
+
+// TICKER
+const tickTxt=['CCZMP — первый онлайн РП-сервер в Зоне Отчуждения','НЧГ: Независимое Чернобыльское Государство','Набор в команду разработчиков — присоединяйся','27+ группировок с уникальной идеологией','Банковская система НБЗ: кредиты, счета, штрафы','Механика взлома ПДА — Сектор "0" уже тестирует'];
+const ti=document.getElementById('ticker-inner');
+let ts='';for(let i=0;i<2;i++)tickTxt.forEach(t=>ts+=`<span class="tick-item"><span>►</span>${t}</span>`);
+ti.innerHTML=ts;
+
+// AUTH
+function bootSequence(){
+  const lines=['> ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ Я.ТРЕТЬЯКОВА...','> ЗАГРУЗКА ПРОТОКОЛА НЧГ v2.0...','> ПРОВЕРКА КЛЮЧЕЙ: [OK]','> PENTAGON: [OK]','> ГОТОВ.'];
+  const el=document.getElementById('boot-log');
+  let i=0;
+  const iv=setInterval(()=>{if(i<lines.length){el.innerHTML+=lines[i++]+'<br>';}else clearInterval(iv);},160);
+}
+function checkAccess(){
+  const p=document.getElementById('pass-input').value;
+  if(['cczmp','1234','cczmp2025'].includes(p)){localStorage.setItem('accessGranted','true');showApp();}
+  else{const e=document.getElementById('login-err');e.style.display='block';document.getElementById('pass-input').value='';setTimeout(()=>e.style.display='none',2000);}
+}
+function showApp(){
+  document.getElementById('page-login').style.display='none';
+  const a=document.getElementById('app');a.style.display='flex';a.style.flexDirection='column';
+  renderNews();renderDB('');renderOrgs('all');
+}
+function logout(){localStorage.removeItem('accessGranted');location.reload();}
+
+// NAV
+function nav(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  const el=document.getElementById('p-'+page);if(el)el.classList.add('active');
+}
+
+// DATA
+const factions=[
+  {id:'01',name:'Альфа',abbr:'ЦСН А',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Полковник Соколов',members:'150',location:'Граница',color:'#41a1ff',icon:'🛡️',desc:'Элитное антитеррористическое подразделение НЧГ. Выезжают на теракты и защиту первых лиц государства.'},
+  {id:'02',name:'Вымпел',abbr:'УПР.В',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Майор Громов',members:'120',location:'Подземный центр',color:'#41a1ff',icon:'⚔️',desc:'Спецназ глубокого проникновения. Диверсии и разведка в тылу врага.'},
+  {id:'03',name:'СБУ',abbr:'СБУ',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Генерал-майор',members:'200',location:'Засекреченный бункер',color:'#41a1ff',icon:'🏢',desc:'Служба безопасности НЧГ. Контрразведка, наружное наблюдение, борьба с Сектором "0".'},
+  {id:'04',name:'ОМОН',abbr:'ОМОН',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Командир Беркут',members:'300',location:'Адм. здание',color:'#41a1ff',icon:'🚔',desc:'Силовое крыло МВД. Задержания ООП/ОП, разгон незаконных собраний.'},
+  {id:'05',name:'Минздрав',abbr:'МЗ',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Главврач',members:'80',location:'Мобильные госпитали',color:'#41a1ff',icon:'🚑',desc:'Медицинское ведомство НЧГ. Лечение, радиационная защита, биобезопасность.'},
+  {id:'06',name:'МЧС',abbr:'МЧС',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Маршал спасения',members:'110',location:'Пожарная станция',color:'#41a1ff',icon:'🚒',desc:'ЧС, поисково-спасательные операции, ликвидация аномальных угроз.'},
+  {id:'07',name:'ФСИН',abbr:'ФСИН',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Начальник лагеря',members:'140',location:'Лагерь С-3',color:'#41a1ff',icon:'🗝️',desc:'Пенитенциарная служба НЧГ. Содержание осуждённых по УК НЧГ.'},
+  {id:'08',name:'МВД',abbr:'МВД',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Министр правопорядка',members:'250',location:'Комиссариат',color:'#41a1ff',icon:'⚖️',desc:'Главный орган охраны правопорядка НЧГ. Координирует все силовые структуры.'},
+  {id:'09',name:'Лаборатория',abbr:'НИИ',type:'ГОСУДАРСТВЕННАЯ',cat:'gov',leader:'Профессор Сахаров',members:'40',location:'Янов / Озёрный',color:'#41a1ff',icon:'🧪',desc:'Научная экспедиция НЧГ. Изучают аномалии и артефакты.'},
+  {id:'10',name:'СТО Кабан',abbr:'СТО-К',type:'СЛУЖЕБНАЯ',cat:'svc',leader:'Кабан',members:'45',location:'Свалка',color:'#ffcc00',icon:'🛠️',desc:'Ремонт транспорта, брони, оружия. Нейтральны ко всем группировкам.'},
+  {id:'11',name:'Сабберы',abbr:'SUB',type:'СЛУЖЕБНАЯ',cat:'svc',leader:'Акустик',members:'25',location:'Звуковой центр',color:'#ffcc00',icon:'🔊',desc:'Единственные специалисты по сабвуферам и звуковому оборудованию в Зоне.'},
+  {id:'12',name:'Операторы',abbr:'LOG',type:'СЛУЖЕБНАЯ',cat:'svc',leader:'Диспетчер',members:'15',location:'Депо / Аэродром',color:'#ffcc00',icon:'📡',desc:'Транспортные операторы НЧГ. Логистика, перевозки, аренда транспорта.'},
+  {id:'13',name:'Сталкеры',abbr:'ST',type:'НЕЙТРАЛЬНАЯ',cat:'neu',leader:'Отец Валерьян',members:'500+',location:'Деревни, лагеря',color:'#ffffff',icon:'🏕️',desc:'Вольные бродяги Зоны. Охотники за артефактами. Никому не подчиняются.'},
+  {id:'14',name:'Киллеры',abbr:'CONTRACT',type:'НЕЙТРАЛЬНАЯ',cat:'neu',leader:'Неизвестно',members:'??',location:'Абандон-хостел',color:'#ffffff',icon:'🎯',desc:'Профессиональные ликвидаторы. Работают на любого, кто платит.'},
+  {id:'15',name:'ЧВК X-солдаты',abbr:'X-CORP',type:'НЕЙТРАЛЬНАЯ',cat:'neu',leader:'Наёмник Шрам',members:'90',location:'Закрытые лагеря',color:'#ffffff',icon:'💣',desc:'Частная военная компания без флага. Нейтральны — пока платят.'},
+  {id:'16',name:'Милиция',abbr:'ГРОВ',type:'НЕЙТРАЛЬНАЯ',cat:'neu',leader:'Лейтенант',members:'60',location:'Деревня Новичков',color:'#ffffff',icon:'👮',desc:'Первая историческая группировка проекта CCZMP. Охраняет мирных жителей.'},
+  {id:'17',name:'Снайперы',abbr:'VETERANS',type:'НЕЙТРАЛЬНАЯ',cat:'neu',leader:'Стрелок',members:'30',location:'Старые военбазы',color:'#ffffff',icon:'🔭',desc:'Ветераны Зоны. Охота за головами. Абсолютно независимы.'},
+  {id:'18',name:'Сектор "0"',abbr:'S0',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Код',members:'??',location:'Подземные серверные',color:'#ff4141',icon:'💻',desc:'Хакерская группировка. Взлом ПДА, перехват переговоров, кража данных НЧГ. Следов не оставляют.'},
+  {id:'19',name:'Технобандиты',abbr:'TECH-B',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Чип',members:'100',location:'Разрушенные НИИ',color:'#ff4141',icon:'⚙️',desc:'Похищают технологии. Грубый взлом ПДА — жертва знает, но данные уже утекли.'},
+  {id:'20',name:'Чёрная Кобра',abbr:'COBRA',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Змей',members:'130',location:'Шахты / Горы',color:'#ff4141',icon:'🐍',desc:'Наркоторговля, контрабанда артефактов. Контролируют горные маршруты.'},
+  {id:'21',name:'Синдикат',abbr:'SYN',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Босс',members:'85',location:'Бизнес-центры',color:'#ff4141',icon:'💼',desc:'Коррупционная сеть. Покупают должностных лиц НЧГ. Самые богатые преступники.'},
+  {id:'22',name:'Зона власти',abbr:'TC-ZV',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Вор',members:'210',location:'Брошенные тюрьмы',color:'#ff4141',icon:'⛓️',desc:'Тюремный союз. Бывшие зэки по понятиям. Контролируют рынок наркотиков.'},
+  {id:'23',name:'ТО Каратели',abbr:'EXEC',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Палач',members:'160',location:'Морги / Психбольницы',color:'#ff4141',icon:'💀',desc:'Наёмные убийцы. Пытки, запугивание. Самые жестокие в Зоне.'},
+  {id:'24',name:'Чёткие пацаны',abbr:'CP',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Бугор',members:'300+',location:'Вокзал / ТЦ',color:'#ff4141',icon:'🧢',desc:'Уличная ОПГ. Рэкет, грабежи, крышевание. Самая многочисленная банда.'},
+  {id:'25',name:'Группа Искра',abbr:'FIRE',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Прометей',members:'70',location:'Электростанция',color:'#ff4141',icon:'🔥',desc:'Анархисты-поджигатели. Диверсии против НЧГ, взрывы инфраструктуры.'},
+  {id:'26',name:'УГ Баррикада',abbr:'B-RAD',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Анархист',members:'180',location:'Станция метро',color:'#ff4141',icon:'🧱',desc:'Повстанцы. Захватывают стратегические объекты, строят баррикады.'},
+  {id:'27',name:'Фанатики',abbr:'FAN',type:'КРИМИНАЛЬНАЯ',cat:'crim',leader:'Пророк',members:'500',location:'Центр Зоны',color:'#ff4141',icon:'🕯️',desc:'Религиозный культ Зоны. Поклоняются аномалиям. Непредсказуемы.'},
+];
+
+const newsData=[
+  {tag:'dev',pinned:true,title:'Старт проекта CCZMP — первый онлайн РП-сервер в Зоне Отчуждения',date:'20 июня 2025',excerpt:'Официально объявляем о начале разработки Criminal Chernobyl Zone MultiPlayer. Аналогов в мире не существует.',author:'Александр // Основатель'},
+  {tag:'dev',title:'Система отношений фракций НЧГ — матрица завершена',date:'04 марта 2026',excerpt:'Настроена матрица отношений для 27+ группировок. МВД ненавидит Синдикат, МЧС воюет с Искрой, Сабберы торгуют со всеми.',author:'Александр // Основатель'},
+  {tag:'lore',title:'НЧГ подписывает торговые соглашения — экономика Зоны выходит на мировой уровень',date:'01 марта 2026',excerpt:'Независимое Чернобыльское Государство заключило договоры с рядом стран. Производство энергии на базе аномалий — главный экспорт.',author:'Пресс-служба НЧГ'},
+  {tag:'alert',title:'Сектор "0" взломал коммуникации ComNet — СЧС начало расследование',date:'28 февраля 2026',excerpt:'Атака на ретрансляторы в южном районе. Гражданам рекомендуется проверить шифрование ПДА.',author:'СЧС НЧГ // Контрразведка'},
+  {tag:'dev',title:'Персонажи и диалоги для 8 фракций — первый рабочий билд',date:'20 февраля 2026',excerpt:'Завершена работа над character_desc, диалогами и гулагами для МВД, ОМОН, Вымпел, МЧС, СК, СТО Кабан, Чётких пацанов и ЧВК.',author:'Александр // Основатель'},
+];
+
+function renderNews(filter='all'){
+  const list=document.getElementById('news-list');list.innerHTML='';
+  newsData.forEach((n,i)=>{
+    if(filter!=='all'&&n.tag!==filter)return;
+    const cls=n.pinned?'pinned':n.tag==='alert'?'alert-card':'';
+    const tc=n.tag==='dev'?'tag-dev':n.tag==='lore'?'tag-lore':'tag-alert';
+    const tn=n.tag==='dev'?'РАЗРАБОТКА':n.tag==='lore'?'ЛОР НЧГ':'ТРЕВОГА';
+    list.innerHTML+=`<div class="n-card ${cls}" style="animation-delay:${i*.07}s">
+      <div class="n-meta">${n.pinned?'<span class="tag-pin">📌</span>':''}<span class="n-tag ${tc}">${tn}</span><span class="n-date">${n.date}</span></div>
+      <div class="n-title">${n.title}</div>
+      <div class="n-excerpt">${n.excerpt}</div>
+      <div class="n-footer"><span class="n-author">${n.author}</span><span class="n-read">ЧИТАТЬ →</span></div>
+    </div>`;
+  });
+}
+function filterNews(btn,f){document.querySelectorAll('.filter-row .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderNews(f);}
+
+function renderDB(filter){
+  const body=document.getElementById('db-body');body.innerHTML='';
+  const fl=factions.filter(f=>!filter||f.name.toLowerCase().includes(filter.toLowerCase())||f.type.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('db-count').textContent=`ОБЪЕКТОВ: ${fl.length}`;
+  fl.forEach((f,i)=>{setTimeout(()=>{
+    const tr=document.createElement('tr');tr.onclick=()=>openFolder(f.id);
+    tr.innerHTML=`<td>${f.id}</td><td>${f.icon} ${f.name}</td><td style="color:${f.color}">${f.type}</td><td>${f.location}</td><td>${f.leader}</td>`;
+    body.appendChild(tr);
+  },i*50);});
+}
+
+function renderOrgs(filter){
+  const grid=document.getElementById('orgs-grid');grid.innerHTML='';
+  const cn={gov:'ГОСУДАРСТВЕННАЯ',crim:'КРИМИНАЛЬНАЯ',svc:'СЛУЖЕБНАЯ',neu:'НЕЙТРАЛЬНАЯ'};
+  factions.forEach((f,i)=>{
+    if(filter!=='all'&&f.cat!==filter)return;
+    const d=document.createElement('div');d.className=`org-card ${f.cat}`;d.style.animationDelay=(i*.04)+'s';d.onclick=()=>openFolder(f.id);
+    d.innerHTML=`<div class="org-cat-line">${cn[f.cat]||''}</div><div class="org-icon">${f.icon}</div><div class="org-name">${f.name}</div><div class="org-abbr">[${f.abbr}]</div><div class="org-desc">${f.desc}</div><div class="org-stats"><div class="org-stat"><div class="org-stat-num">${f.members}</div><div class="org-stat-lbl">БОЙЦОВ</div></div></div>`;
+    grid.appendChild(d);
+  });
+}
+function filterOrgs(btn,f){document.querySelectorAll('.orgs-filters .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderOrgs(f);}
+
+function openFolder(id){
+  const f=factions.find(x=>x.id===id);if(!f)return;
+  document.getElementById('folder-icon').textContent=f.icon;
+  const d=document.getElementById('folder-data');
+  d.innerHTML=`<h2 style="color:${f.color};border-color:${f.color}"></h2><div id="tc"></div>`;
+  document.getElementById('overlay').classList.add('open');
+  const lines=[{l:'ЛИДЕР',v:f.leader},{l:'ЧИСЛЕННОСТЬ',v:`~${f.members} операторов`},{l:'ДИСЛОКАЦИЯ',v:f.location},{l:'КЛАССИФИКАЦИЯ',v:f.type,c:f.color},{l:'ОПИСАНИЕ',v:f.desc}];
+  typeT(d.querySelector('h2'),`ДОСЬЕ: ${f.name} [${f.abbr}]`,()=>{
+    let li=0;
+    function nl(){if(li>=lines.length)return;const l=lines[li],p=document.createElement('p');p.innerHTML=`<strong>${l.l}:</strong> <span style="color:${l.c||'var(--g)'}"></span>`;document.getElementById('tc').appendChild(p);typeT(p.querySelector('span'),l.v,()=>{li++;nl();});}
+    nl();
+  });
+}
+function closeFolder(){document.getElementById('overlay').classList.remove('open');}
+function typeT(el,txt,cb){let i=0;function n(){if(i<txt.length){el.innerHTML+=txt[i++];setTimeout(n,16);}else if(cb)cb();}n();}
+
+// AI
+const kb={
+  'привет':'ПРИВЕТСТВУЮ, АЛЕКСАНДР. МОДУЛЬ «ОКУЛЯР-1» К ВАШИМ УСЛУГАМ.',
+  'как дела':'СИСТЕМА ФУНКЦИОНИРУЕТ В ШТАТНОМ РЕЖИМЕ. ОТКЛОНЕНИЙ НЕТ.',
+  'альфа':'ГРУППИРОВКА «АЛЬФА»: ЭЛИТНОЕ АНТИТЕРРОРИСТИЧЕСкое ПОДРАЗДЕЛЕНИЕ НЧГ. ЛИДЕР: ПОЛКОВНИК СОКОЛОВ. ЧИСЛЕННОСТЬ: ~150 ОП.',
+  'омон':'ОТРЯД МОБИЛЬНЫЙ ОСОБОГО НАЗНАЧЕНИЯ. ЗАДЕРЖАНИЯ ООП/ОП. КОМАНДИР: БЕРКУТ. ~300 БОЙЦОВ.',
+  'кабан':'СТО «КАБАН»: ТЕХНАРИ НА СВАЛКЕ. РЕМОНТ ТРАНСПОРТА И БРОНИ. НЕЙТРАЛЬНЫ КО ВСЕМ.',
+  'сектор 0':'СЕКТОР «0»: ХАКЕРСКАЯ ГРУППИРОВКА. ЛИДЕР: КОД. МЕСТОНАХОЖДЕНИЕ: ПОДЗЕМНЫЕ СЕРВЕРНЫЕ. СЛЕДОВ НЕ ОСТАВЛЯЮТ.',
+  'технобандиты':'ТБ: ПОХИЩАЮТ ТЕХНОЛОГИИ. ЛИДЕР: ЧИП. ГРУБЫЙ ВЗЛОМ ПДА.',
+  'нчг':'НЕЗАВИСИМОЕ ЧЕРНОБЫЛЬСКОЕ ГОСУДАРСТВО. ОСНОВАНО В АКТ I (2023). МВД, МЧС, ВЫМПЕЛ, АЛЬФА, ФСИН, МИНЗДРАВ, СК, НАЛОГОВАЯ.',
+  'история':()=>{const s=['СЛЫШАЛ, КАК СТАЛКЕРЫ НА СВАЛКЕ ОБСУЖДАЛИ НОВЫЙ ВЫБРОС...','ТЕХНИК ИЗ СТО «КАБАН» ПОЙМАЛ ЧАСТОТУ СЕКТОРА "0"...','В ПОДЗЕМНЫХ СЕРВЕРНЫХ ВЗЛОМАЛИ ТЕРМИНАЛ НЧГ — СИНДИКАТ МОЛЧИТ.'];return s[Math.floor(Math.random()*s.length)];},
+  'химия':()=>{const e={h2o:'ВОДА. М.М.: 18 г/моль.',co2:'CO2. М.М.: 44 г/моль.',o2:'КИСЛОРОД. М.М.: 32 г/моль.',nacl:'ПОВАРЕННАЯ СОЛЬ. М.М.: 58.5 г/моль.',h2so4:'СЕРНАЯ КИСЛОТА. М.М.: 98 г/моль.'};const f=prompt('ФОРМУЛА (h2o, co2, o2, nacl, h2so4):');return e[f?.toLowerCase()]||'ДАННЫЕ ОТСУТСТВУЮТ.';},
+  'посчитай ток':()=>{const u=prompt('НАПРЯЖЕНИЕ (U), В:');const r=prompt('СОПРОТИВЛЕНИЕ (R), Ом:');if(r==0)return'ОШИБКА: ДЕЛЕНИЕ НА НОЛЬ.';return`I = ${(u/r).toFixed(4)} АМПЕР.`;},
+  'синус':()=>{const d=prompt('УГОЛ В ГРАДУСАХ:');return`SIN(${d}°) = ${Math.sin(d*Math.PI/180).toFixed(4)}`;},
+  'админ-доступ':()=>{const p=prompt('КОД ДОСТУПА:');if(p==='1234'){document.body.style.setProperty('--g','#ff4141');document.body.style.setProperty('--g2','#cc1111');return'ДОСТУП ПОДТВЕРЖДЁН. РЕЖИМ "КРИТИЧЕСКАЯ УГРОЗА" АКТИВИРОВАН.';}return'ОШИБКА ДОСТУПА. ПОПЫТКА ЗАФИКСИРОВАНА.';},
+};
+
+function askAI(){
+  const inp=document.getElementById('ai-inp');const chat=document.getElementById('chat-window');
+  const q=inp.value.trim();if(!q)return;
+  chat.innerHTML+=`<div class="user-msg"><div class="txt">${q}</div></div>`;inp.value='';
+  let resp='ДАННЫЕ НЕ НАЙДЕНЫ. УТОЧНИТЕ ЗАПРОС.';
+  for(let k in kb){if(q.toLowerCase().includes(k)){resp=typeof kb[k]==='function'?kb[k]():kb[k];break;}}
+  const div=document.createElement('div');div.className='ai-msg';
+  div.innerHTML='<div class="who">ОКУЛЯР-1</div><div class="txt"></div>';
+  chat.appendChild(div);
+  typeT(div.querySelector('.txt'),resp,null);
+  setTimeout(()=>chat.scrollTop=chat.scrollHeight,100);
+}
+function setCmd(c){document.getElementById('ai-inp').value=c;document.getElementById('ai-inp').focus();}
+
+// HACKER
+function startHacking(){
+  const hs=document.getElementById('hacker-screen');hs.classList.add('open');
+  const logs=[
+    {t:'> ИНИЦИАЛИЗАЦИЯ ВЗЛОМА ПДА...',c:'h-ok'},
+    {t:'> СОЕДИНЕНИЕ С ПРОКСИ: 10.0.чз.104',c:'h-ok'},
+    {t:'> ОБХОД ПРОТОКОЛА ЗАЩИТЫ НЧГ v2...',c:'h-warn'},
+    {t:'> ПОДБОР AES-256: [████░░░░] 52%',c:'h-warn'},
+    {t:'> ПОДБОР AES-256: [████████] 100% [OK]',c:'h-ok'},
+    {t:'> ВНИМАНИЕ: СИСТЕМА ОБНАРУЖИЛА ВТОРЖЕНИЕ!',c:'h-err'},
+    {t:'> АКТИВАЦИЯ МАСКИРОВКИ «STEALTH»...',c:'h-warn'},
+    {t:'> ПЕРЕНАПРАВЛЕНИЕ ЧЕРЕЗ 7 НОДОВ...',c:'h-ok'},
+    {t:'> ВЗЛОМ ЗАВЕРШЁН. PENTAGON: ДОСТУП ПОЛУЧЕН.',c:'h-ok'},
+  ];
+  const log=document.getElementById('hacker-log');log.innerHTML='';let i=0;
+  const iv=setInterval(()=>{
+    if(i<logs.length){log.innerHTML+=`<p class="${logs[i].c}">${logs[i].t}</p>`;i++;}
+    else{clearInterval(iv);setTimeout(()=>{hs.classList.remove('open');nav('database');},1200);}
+  },220);
+}
+
+// INIT
+window.onload=()=>{
+  bootSequence();
+  if(localStorage.getItem('accessGranted')==='true'){document.getElementById('page-login').style.display='none';showApp();}
+};
+</script>
+</body>
+</html>

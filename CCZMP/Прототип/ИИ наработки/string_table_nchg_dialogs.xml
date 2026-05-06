@@ -1,0 +1,474 @@
+<?xml version='1.0' encoding="windows-1251"?>
+
+<!-- =====================================================================
+     ТАБЛИЦА СТРОК ДИАЛОГОВ НЧГ — CCZMP MOD
+     Файл: string_table_nchg_dialogs.xml
+     
+     Подключить в gamedata\configs\text\rus\:
+     Создать файл string_table_nchg_dialogs.xml
+     ===================================================================== -->
+
+<string_table>
+
+	<!-- ================================================================ -->
+	<!--                       МВД — ТЕКСТЫ                               -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_mvd_chief_name">
+		<text>Подполковник Карпенко</text>
+	</string>
+	<string id="nchg_mvd_chief_bio">
+		<text>Начальник отдела МВД НЧГ по Припяти. Ветеран ещё советской милиции, пришёл в Зону добровольно — говорит, что здесь хотя бы не надо терпеть начальство из Москвы.</text>
+	</string>
+
+	<string id="nchg_mvd_chief_start_0">
+		<text>Ну, чего надо? Я тут не для разговоров, у меня половина города без патруля.</text>
+	</string>
+	<string id="nchg_mvd_chief_start_1_job">
+		<text>Есть работа?</text>
+	</string>
+	<string id="nchg_mvd_chief_start_2_info">
+		<text>Расскажи про обстановку в городе.</text>
+	</string>
+	<string id="nchg_mvd_chief_start_3_bye">
+		<text>Не буду мешать, удачи.</text>
+	</string>
+
+	<string id="nchg_mvd_chief_job_0">
+		<text>Есть одно дельце. Четкие пацаны снова крышуют торговцев на рынке у вокзала. Нужен кто-то, кто разгонит этих деятелей и заберёт у них "реестр плательщиков". Доказательная база, понимаешь? Платят хорошо.</text>
+	</string>
+	<string id="nchg_mvd_chief_job_accept">
+		<text>Договорились, сделаю.</text>
+	</string>
+	<string id="nchg_mvd_chief_job_decline">
+		<text>Не моё дело, извини.</text>
+	</string>
+	<string id="nchg_mvd_chief_job_accepted">
+		<text>Умный человек. Рынок у вокзала — западная часть. Тихо не получится, так что готовься. Реестр принесёшь — рассчитаюсь.</text>
+	</string>
+	<string id="nchg_mvd_chief_job_declined">
+		<text>Ну и иди тогда. Найду кого-нибудь другого.</text>
+	</string>
+
+	<string id="nchg_mvd_chief_info_0">
+		<text>Обстановка? Хаос. "Четкие" рэкетируют всех подряд. Коррупционный синдикат купил уже троих моих сотрудников — я их знаю, но доказательств нет. Чем интересуешься?</text>
+	</string>
+	<string id="nchg_mvd_chief_info_nchg">
+		<text>НЧГ — это государство на бумаге. На деле всё держится на людях, которые ещё не сдались. Мы пытаемся поддерживать порядок. Пока получается... в некоторых районах.</text>
+	</string>
+	<string id="nchg_mvd_chief_info_criminals">
+		<text>"Четкие пацаны" — основная головная боль. За ними стоит кто-то серьёзный, не просто уличный криминал. СК это расследует, но медленно. Тюремный союз тоже поднимает голову — у них связи с ФСИН, что очень нехорошо.</text>
+	</string>
+
+	<string id="nchg_mvd_patrol_bio">
+		<text>Сотрудник МВД НЧГ. Патрулирует улицы Припяти, поддерживает порядок среди гражданского населения и выявляет преступный элемент.</text>
+	</string>
+
+	<string id="nchg_mvd_orders_0">
+		<text>Докладывай. Что по заданию?</text>
+	</string>
+	<string id="nchg_mvd_orders_report">
+		<text>Выполнил. Вот реестр.</text>
+	</string>
+	<string id="nchg_mvd_orders_ask_hint">
+		<text>Нужна подсказка — где их искать точно?</text>
+	</string>
+	<string id="nchg_mvd_orders_reward">
+		<text>Отличная работа. Держи — заработал. Если снова понадоблюсь — ты знаешь, где я.</text>
+	</string>
+	<string id="nchg_mvd_orders_hint">
+		<text>Западная часть рынка, за депо. Там у них что-то вроде "офиса" — ящик с замком в подвале. Реестр там.</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                      ОМОН — ТЕКСТЫ                               -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_omon_commander_name">
+		<text>Командир Звягин</text>
+	</string>
+	<string id="nchg_omon_commander_bio">
+		<text>Командир роты ОМОН НЧГ. Жёсткий, немногословный. До Зоны командовал ОМОН-ом в одном из крупных городов. Говорят, пришёл сюда, чтобы "навести порядок по-настоящему".</text>
+	</string>
+	<string id="nchg_omon_soldier_bio">
+		<text>Боец ОМОН НЧГ. Экипирован для разгона беспорядков и охраны стратегических объектов. Дисциплинирован, немногословен.</text>
+	</string>
+
+	<string id="nchg_omon_commander_start_0">
+		<text>Стоять. Блокпост. Документы или пропуск — показывай. Что надо?</text>
+	</string>
+	<string id="nchg_omon_start_pass">
+		<text>Хочу пройти через блокпост.</text>
+	</string>
+	<string id="nchg_omon_start_job">
+		<text>Есть задания для вольного человека?</text>
+	</string>
+	<string id="nchg_omon_start_bye">
+		<text>Всё, ухожу.</text>
+	</string>
+
+	<string id="nchg_omon_pass_check">
+		<text>Пропуск проверяю. Момент...</text>
+	</string>
+	<string id="nchg_omon_pass_ok">
+		<text>Пропуск в порядке. Проходи.</text>
+	</string>
+	<string id="nchg_omon_pass_denied">
+		<text>Нет пропуска — не пройдёшь. Пропуска выдаёт комиссариат МВД. Иди туда.</text>
+	</string>
+	<string id="nchg_omon_pass_welcome">
+		<text>Добро пожаловать. Без лишних движений.</text>
+	</string>
+	<string id="nchg_omon_pass_turn_back">
+		<text>Разворачивайся. Это территория НЧГ — без пропуска сюда никто не ходит.</text>
+	</string>
+
+	<string id="nchg_omon_job_desc">
+		<text>Есть работа. Баррикадовцы снова собираются у старой станции метро, готовят очередную акцию. Нужен кто-то, кто разведает их количество и планы. Платим за информацию, за провокатора — отдельно.</text>
+	</string>
+	<string id="nchg_omon_job_accept">
+		<text>Возьмусь.</text>
+	</string>
+	<string id="nchg_omon_job_decline">
+		<text>Не моё направление.</text>
+	</string>
+	<string id="nchg_omon_job_goodluck">
+		<text>Удачи. Не лезь на рожон, нам нужна информация — не труп.</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                    ВЫМПЕЛ — ТЕКСТЫ                               -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_vympel_lead_name">
+		<text>Майор "Призрак"</text>
+	</string>
+	<string id="nchg_vympel_lead_bio">
+		<text>Командир оперативной группы "Вымпел" НЧГ. Личность засекречена, позывной — Призрак. Специализируется на контртеррористических операциях против "Чёрной Кобры" и хакеров Сектора "0".</text>
+	</string>
+	<string id="nchg_vympel_operator_bio">
+		<text>Оператор группы "Вымпел". Подготовлен к действиям в условиях аномальной активности, городского боя и диверсионных операций.</text>
+	</string>
+
+	<string id="nchg_vympel_lead_start_0">
+		<text>У меня мало времени. Говори по делу.</text>
+	</string>
+	<string id="nchg_vympel_start_mission">
+		<text>Нужно задание.</text>
+	</string>
+	<string id="nchg_vympel_start_intel">
+		<text>Какая сейчас обстановка?</text>
+	</string>
+	<string id="nchg_vympel_start_bye">
+		<text>Всё, удачи.</text>
+	</string>
+
+	<string id="nchg_vympel_mission_brief">
+		<text>Три направления. Выбирай — что готов взять?</text>
+	</string>
+	<string id="nchg_vympel_mission_eliminate">
+		<text>Ликвидация цели — командир ячейки "Кобры" в промзоне.</text>
+	</string>
+	<string id="nchg_vympel_mission_recon">
+		<text>Разведка — выяснить расположение серверного узла Сектора "0".</text>
+	</string>
+	<string id="nchg_vympel_mission_escort">
+		<text>Сопровождение — провести агента СЧС через контролируемую бандитами зону.</text>
+	</string>
+	<string id="nchg_vympel_mission_accepted">
+		<text>Принял. Действуй автономно. Связь только через ПДА — частота в задании. Провалишь — мы тебя не знаем.</text>
+	</string>
+
+	<string id="nchg_vympel_intel_0">
+		<text>Что именно интересует?</text>
+	</string>
+	<string id="nchg_vympel_intel_cobra">
+		<text>"Чёрная Кобра" активизировалась в горном секторе. Минируют подходы, готовят что-то крупное. У них новое снаряжение — явно не сами достали.</text>
+	</string>
+	<string id="nchg_vympel_intel_sector0">
+		<text>Сектор "0" взломал часть коммуникаций ComNet. Мы вычисляем их узел. Есть зацепки, но нужны люди для физической разведки.</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                      МЧС — ТЕКСТЫ                               -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_mchs_chief_name">
+		<text>Начальник Волков</text>
+	</string>
+	<string id="nchg_mchs_chief_bio">
+		<text>Начальник спасательной станции МЧС НЧГ. Бывший пожарный, в Зону пришёл после первого большого выброса — говорит, что "там, где все бегут из огня, кто-то должен бежать в огонь".</text>
+	</string>
+	<string id="nchg_mchs_rescuer_bio">
+		<text>Спасатель МЧС НЧГ. Специализируется на эвакуации пострадавших в условиях аномальной активности, радиационного загрязнения и разрушений после выброса.</text>
+	</string>
+
+	<string id="nchg_mchs_chief_start_0">
+		<text>Привет. Ты вовремя — у нас после вчерашнего выброса три группы пропали в Рыжем лесу. Поможешь?</text>
+	</string>
+	<string id="nchg_mchs_start_rescue">
+		<text>Расскажи про пропавших — помогу, если смогу.</text>
+	</string>
+	<string id="nchg_mchs_start_supplies">
+		<text>Нужны медикаменты — есть что продать?</text>
+	</string>
+	<string id="nchg_mchs_start_bye">
+		<text>Удачи вам тут.</text>
+	</string>
+
+	<string id="nchg_mchs_rescue_desc">
+		<text>Три группы выехали до выброса — собирали данные по аномалиям. Связь оборвалась. ПДА последний раз пинговался у восточного края Рыжего леса. Нужно найти выживших и вытащить их. Вознаграждение — артефакты из запасов МЧС плюс медикаменты.</text>
+	</string>
+	<string id="nchg_mchs_rescue_accept">
+		<text>Пойду, найду их.</text>
+	</string>
+	<string id="nchg_mchs_rescue_decline">
+		<text>Извини, не могу сейчас.</text>
+	</string>
+	<string id="nchg_mchs_rescue_briefing">
+		<text>Возьми маяк — он откликнется на их ПДА. Осторожно там, после выброса всё непредсказуемо. Удачи.</text>
+	</string>
+
+	<string id="nchg_mchs_supplies_offer">
+		<text>Есть медкомплекты армейские, антирад, бинты. Для сталкеров — чуть дороже, чем у торгашей, зато всё сертифицированное, не паль.</text>
+	</string>
+	<string id="nchg_mchs_supplies_list">
+		<text>Армейский медкомплект — 3500 руб. Антирадиационный — 1800 руб. Хирургический набор — 8000 руб. Если возишь что-то в Рыжий лес — скидка 10%.</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                      СК НЧГ — ТЕКСТЫ                             -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_sk_head_investigator_name">
+		<text>Следователь Дронов</text>
+	</string>
+	<string id="nchg_sk_head_investigator_bio">
+		<text>Следователь по особо важным делам СК НЧГ. Педантичен до раздражения. Говорят, раскрыл три дела о коррупции внутри МВД. МВД его за это не любит.</text>
+	</string>
+	<string id="nchg_sk_investigator_bio">
+		<text>Следователь СК НЧГ. Занимается расследованием уголовных дел: торговля оружием, незаконные артефакты, преступления против государства.</text>
+	</string>
+
+	<string id="nchg_sk_head_start_0">
+		<text>Присаживайтесь. Я Дронов, СК НЧГ. У меня к вам деловое предложение — ничего противозаконного, если что.</text>
+	</string>
+	<string id="nchg_sk_start_case">
+		<text>Слушаю — что за дела?</text>
+	</string>
+	<string id="nchg_sk_start_info">
+		<text>Что сейчас расследуется в НЧГ?</text>
+	</string>
+	<string id="nchg_sk_start_bye">
+		<text>Пожалуй, не сегодня.</text>
+	</string>
+
+	<string id="nchg_sk_case_list">
+		<text>Три открытых дела. Могу привлечь вас как внештатного агента. Оплата по результату, никаких протоколов — вас официально не существует.</text>
+	</string>
+	<string id="nchg_sk_case_laundering">
+		<text>Дело об отмывании денег через НБЗ. Нужно выйти на посредника.</text>
+	</string>
+	<string id="nchg_sk_case_murder">
+		<text>Убийство свидетеля. Тело нашли у комиссариата. Нужны улики.</text>
+	</string>
+	<string id="nchg_sk_case_sabotage">
+		<text>Диверсия на подстанции ЧернЭнерго. Кто-то из своих.</text>
+	</string>
+	<string id="nchg_sk_case_assigned">
+		<text>Хорошо. Детали — в ПДА. Доказательства сносите ко мне. Только факты, никакой самодеятельности с задержанием — это моя работа.</text>
+	</string>
+
+	<string id="nchg_sk_info_0">
+		<text>Что именно интересует?</text>
+	</string>
+	<string id="nchg_sk_info_corruption">
+		<text>Коррупция — главная проблема НЧГ прямо сейчас. Синдикат проник в несколько структур. Называть имена пока не могу — идёт расследование.</text>
+	</string>
+	<string id="nchg_sk_info_blackmarket">
+		<text>Чёрный рынок артефактов — огромные деньги. СТО "Кабан" подозревается в посредничестве. Пока доказательств нет. Но будут.</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                 СТО "КАБАН" — ТЕКСТЫ                             -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_sto_kaban_boss_name">
+		<text>Кабан</text>
+	</string>
+	<string id="nchg_sto_kaban_boss_bio">
+		<text>Хозяин СТО "Кабан". Настоящего имени не знает никто. Говорят — бывший механик с "АвтоВАЗа", пришёл в Зону с чемоданом инструментов и идеей. Теперь у него лучший сервис к востоку от Киева.</text>
+	</string>
+	<string id="nchg_sto_mechanic_bio">
+		<text>Механик СТО "Кабан". Знает всё про оружие, транспорт и то, как сделать из хлама что-то полезное. Лишних вопросов не задаёт.</text>
+	</string>
+
+	<string id="nchg_sto_boss_start_0">
+		<text>О, клиент! Заходи, не стесняйся. Что надо — ремонт, апгрейд, или... кое-что другое?</text>
+	</string>
+	<string id="nchg_sto_start_repair">
+		<text>Нужен ремонт.</text>
+	</string>
+	<string id="nchg_sto_start_upgrade">
+		<text>Хочу улучшить оружие.</text>
+	</string>
+	<string id="nchg_sto_start_blackmarket">
+		<text>Слышал, у тебя есть кое-что особенное...</text>
+	</string>
+	<string id="nchg_sto_start_bye">
+		<text>Пойду, спасибо.</text>
+	</string>
+
+	<string id="nchg_sto_repair_pricelist">
+		<text>Ремонт — по состоянию. Дырявый ствол или дырявый бронник?</text>
+	</string>
+	<string id="nchg_sto_repair_weapon">
+		<text>Оружие.</text>
+	</string>
+	<string id="nchg_sto_repair_armor">
+		<text>Броник.</text>
+	</string>
+	<string id="nchg_sto_repair_done">
+		<text>Готово. Как новенький. Приходи ещё — мы всегда рады постоянным клиентам.</text>
+	</string>
+
+	<string id="nchg_sto_upgrade_desc">
+		<text>Апгрейд — дело тонкое. Что хочешь улучшить? Имей в виду: некоторые модификации... ну, назовём это "нестандартными". За них доплата.</text>
+	</string>
+	<string id="nchg_sto_upgrade_weapon">
+		<text>Оружие — давай смотреть.</text>
+	</string>
+	<string id="nchg_sto_upgrade_nevermind">
+		<text>Пожалуй, нет.</text>
+	</string>
+
+	<string id="nchg_sto_blackmarket_intro">
+		<text>Ха. Слухи ходят, да? Ну, смотря кто спрашивает. Ты откуда вообще про это знаешь?</text>
+	</string>
+	<string id="nchg_sto_blackmarket_open">
+		<text>Мне можно доверять. Хочу посмотреть товар.</text>
+	</string>
+	<string id="nchg_sto_blackmarket_denied">
+		<text>Слушай, я тебя первый раз вижу. Не обижайся, но — нет. Завоюй доверие сначала.</text>
+	</string>
+	<string id="nchg_sto_blackmarket_welcome">
+		<text>Ладно, доверяю. Только тихо. СК и так косо смотрит. Вот что есть...</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                 "ЧЕТКИЕ ПАЦАНЫ" — ТЕКСТЫ                         -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_chetkie_boss_name">
+		<text>Бригадир Леха</text>
+	</string>
+	<string id="nchg_chetkie_boss_bio">
+		<text>Бригадир "Чётких пацанов". Носит адидасовский костюм и золотую цепь с зубом мутанта. Умный, хитрый. Не та опасность, которую видно сразу.</text>
+	</string>
+	<string id="nchg_chetkie_bio">
+		<text>Боевик группировки "Чёткие пацаны". Промышляет рэкетом, контрабандой и мелкими заданиями от ОПГ. В открытый бой без численного превосходства не лезет.</text>
+	</string>
+
+	<string id="nchg_chetkie_boss_start_0">
+		<text>Ооо, кто пришёл. Ну чего, братан, по делу или просто мимо проходил?</text>
+	</string>
+	<string id="nchg_chetkie_start_job">
+		<text>Ищу работу.</text>
+	</string>
+	<string id="nchg_chetkie_start_racket">
+		<text>Тут говорят, с меня что-то причитается...</text>
+	</string>
+	<string id="nchg_chetkie_start_bye">
+		<text>Пойду я.</text>
+	</string>
+
+	<string id="nchg_chetkie_job_offer">
+		<text>Работа есть, не вопрос. Что готов делать?</text>
+	</string>
+	<string id="nchg_chetkie_job_courier">
+		<text>Курьер — отвезти посылку, без вопросов что внутри.</text>
+	</string>
+	<string id="nchg_chetkie_job_hit">
+		<text>Серьёзное дело — убрать одного человечка. Хорошо платим.</text>
+	</string>
+	<string id="nchg_chetkie_job_refuse">
+		<text>Нет, не мой формат.</text>
+	</string>
+	<string id="nchg_chetkie_job_deal">
+		<text>Базару нет, договорились. Детали в ПДА. И — ни слова никому, договорились?</text>
+	</string>
+
+	<string id="nchg_chetkie_racket_desc">
+		<text>Слушай, ты же по территории нашей ходишь, верно? У нас тут принято — небольшой взнос. За безопасность, так сказать. 5000 рублей — и ходи куда хочешь.</text>
+	</string>
+	<string id="nchg_chetkie_racket_pay">
+		<text>Ладно, вот деньги.</text>
+	</string>
+	<string id="nchg_chetkie_racket_refuse">
+		<text>Иди ты.</text>
+	</string>
+	<string id="nchg_chetkie_racket_paid">
+		<text>Вот и умница. Уважаю деловых людей. Проходи.</text>
+	</string>
+
+
+	<!-- ================================================================ -->
+	<!--                 ЧВК Х-СОЛДАТЫ — ТЕКСТЫ                           -->
+	<!-- ================================================================ -->
+
+	<string id="nchg_xsoldiers_colonel_name">
+		<text>Полковник "Сталь"</text>
+	</string>
+	<string id="nchg_xsoldiers_colonel_bio">
+		<text>Командир ЧВК "Х-Солдаты". Бывший офицер, ушёл из армии после "инцидента" — подробностей не рассказывает. В Зоне создал частную армию. Принимает контракты от любых структур — лишь бы платили.</text>
+	</string>
+	<string id="nchg_xsoldiers_merc_bio">
+		<text>Наёмник ЧВК "Х-Солдаты". Профессиональный боец, работает за деньги. Лояльность — только к работодателю и контракту.</text>
+	</string>
+
+	<string id="nchg_xsoldiers_colonel_start_0">
+		<text>Вы по делу или поглазеть? Если по делу — присаживайтесь.</text>
+	</string>
+	<string id="nchg_xsoldiers_start_contract">
+		<text>Нужна работа.</text>
+	</string>
+	<string id="nchg_xsoldiers_start_join">
+		<text>Хочу вступить в ЧВК.</text>
+	</string>
+	<string id="nchg_xsoldiers_start_bye">
+		<text>Нет, просто проходил мимо.</text>
+	</string>
+
+	<string id="nchg_xsoldiers_contract_list">
+		<text>Два активных контракта. Оба законные — работаем только официально, никакого беспредела.</text>
+	</string>
+	<string id="nchg_xsoldiers_contract_vip_guard">
+		<text>Охрана VIP-персоны — чиновник МИД НЧГ едет на переговоры. Маршрут опасный.</text>
+	</string>
+	<string id="nchg_xsoldiers_contract_zone_clear">
+		<text>Зачистка района под строительство ЗОНАСТРОЙ. Мутанты и остатки бандитской группы.</text>
+	</string>
+	<string id="nchg_xsoldiers_contract_accepted">
+		<text>Принято. Брифинг в ПДА. Выход — через два часа. Опоздаешь — контракт аннулируется.</text>
+	</string>
+
+	<string id="nchg_xsoldiers_join_conditions">
+		<text>Условия приёма: ранг не ниже опытного, репутация нейтральная или выше, и прохождение тестового задания. Готов?</text>
+	</string>
+	<string id="nchg_xsoldiers_join_agree">
+		<text>Готов, принимайте.</text>
+	</string>
+	<string id="nchg_xsoldiers_join_notready">
+		<text>Нужно больше опыта? Понимаю.</text>
+	</string>
+	<string id="nchg_xsoldiers_join_welcome">
+		<text>Добро пожаловать в "Х-Солдаты". Тестовое задание — в ПДА. Выполнишь — официально в рядах.</text>
+	</string>
+
+</string_table>

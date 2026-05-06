@@ -1,0 +1,427 @@
+; =====================================================================
+;  SQUAD_DESCR_NCHG_LOCATIONS.LTX
+;  CCZMP MOD ó ÓÚˇ‰˚ Ò ÔË‚ˇÁÍÓÈ Í ÍÓÌÍÂÚÌ˚Ï ÚÓ˜Í‡Ï ÒÔ‡‚Ì‡
+;  œÓ‰ÍÎ˛˜ËÚ¸ ‚ system.ltx:
+;    #include "gameplay\squad_descr_nchg_locations.ltx"
+; =====================================================================
+
+
+; #####################################################################
+;   Œ–ƒŒÕ
+; #####################################################################
+
+[nchg_militia_kordon_squad]:online_offline_group
+faction              = militia
+npc_in_squad         = 3
+spawn_point          = nchg_militia_spawn_1
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = escape
+npc_0 = {redefined_faction = militia} nchg_mvd_chief
+npc_1 = {redefined_faction = militia} nchg_mvd_patrol
+npc_2 = {redefined_faction = militia} nchg_mvd_patrol
+
+[nchg_militia_kordon_patrol]:online_offline_group
+faction              = militia
+npc_in_squad         = 2
+spawn_point          = nchg_militia_spawn_2
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = escape
+npc_0 = {redefined_faction = militia} nchg_mvd_patrol
+npc_1 = {redefined_faction = militia} nchg_mvd_patrol
+
+[nchg_chetkie_elevator_squad]:online_offline_group
+faction              = bandit
+npc_in_squad         = 5
+spawn_point          = nchg_chetkie_spawn_elevator
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = escape
+npc_0 = {redefined_faction = bandit} nchg_chetkie_boss
+npc_1 = {redefined_faction = bandit} nchg_chetkie_grunt
+npc_2 = {redefined_faction = bandit} nchg_chetkie_grunt
+npc_3 = {redefined_faction = bandit} nchg_chetkie_grunt
+npc_4 = {redefined_faction = bandit} nchg_chetkie_grunt
+
+[nchg_chetkie_elevator_guard]:online_offline_group
+faction              = bandit
+npc_in_squad         = 2
+spawn_point          = nchg_chetkie_elevator_guard
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = escape
+npc_0 = {redefined_faction = bandit} nchg_chetkie_grunt
+npc_1 = {redefined_faction = bandit} nchg_chetkie_grunt
+
+
+; #####################################################################
+;  —¬¿À ¿ ó ¡¿–¿’ŒÀ ¿
+; #####################################################################
+
+[nchg_alfa_garbage_squad]:online_offline_group
+faction              = alfa
+npc_in_squad         = 4
+spawn_point          = nchg_alfa_spawn_garbage
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = alfa} nchg_alfa_operative
+npc_1 = {redefined_faction = alfa} nchg_alfa_operative
+npc_2 = {redefined_faction = alfa} nchg_alfa_operative
+npc_3 = {redefined_faction = alfa} nchg_alfa_operative
+
+[nchg_mchs_garbage_squad]:online_offline_group
+faction              = mchs
+npc_in_squad         = 3
+spawn_point          = nchg_mchs_spawn_garbage
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = mchs} nchg_mchs_chief
+npc_1 = {redefined_faction = mchs} nchg_mchs_rescuer
+npc_2 = {redefined_faction = mchs} nchg_mchs_rescuer
+
+[nchg_vympel_garbage_squad]:online_offline_group
+faction              = vympel
+npc_in_squad         = 3
+spawn_point          = nchg_vympel_spawn_garbage
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = vympel} nchg_vympel_lead
+npc_1 = {redefined_faction = vympel} nchg_vympel_operator
+npc_2 = {redefined_faction = vympel} nchg_vympel_operator
+
+[nchg_omon_garbage_squad]:online_offline_group
+faction              = omon
+npc_in_squad         = 4
+spawn_point          = nchg_omon_spawn_garbage
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = omon} nchg_omon_commander
+npc_1 = {redefined_faction = omon} nchg_omon_soldier
+npc_2 = {redefined_faction = omon} nchg_omon_soldier
+npc_3 = {redefined_faction = omon} nchg_omon_soldier
+
+
+; #####################################################################
+;  —¬¿À ¿ ó  À¿ƒ¡»Ÿ≈ “≈’Õ» »
+; #####################################################################
+
+[nchg_sto_junkyard_squad]:online_offline_group
+faction              = sto
+npc_in_squad         = 3
+spawn_point          = nchg_sto_spawn_junkyard
+relationship         = neutral
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = sto} nchg_sto_kaban_boss
+npc_1 = {redefined_faction = sto} nchg_sto_mechanic
+npc_2 = {redefined_faction = sto} nchg_sto_mechanic
+
+[nchg_sabbers_junkyard_squad]:online_offline_group
+faction              = sabbers
+npc_in_squad         = 2
+spawn_point          = nchg_sabbers_spawn_junkyard
+relationship         = neutral
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = sabbers} nchg_sabbers_technician
+npc_1 = {redefined_faction = sabbers} nchg_sabbers_technician
+
+[nchg_operators_junkyard_squad]:online_offline_group
+faction              = operators
+npc_in_squad         = 2
+spawn_point          = nchg_operators_spawn_junkyard
+relationship         = neutral
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = garbage
+npc_0 = {redefined_faction = operators} nchg_operators_driver
+npc_1 = {redefined_faction = operators} nchg_operators_driver
+
+
+; #####################################################################
+;  ¡¿–
+; #####################################################################
+
+[nchg_nalogs_bar_squad]:online_offline_group
+faction              = nalogs
+npc_in_squad         = 2
+spawn_point          = nchg_nalogs_spawn_bar
+relationship         = neutral
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = bar
+npc_0 = {redefined_faction = nalogs} nchg_nalogs_inspector
+npc_1 = {redefined_faction = nalogs} nchg_nalogs_inspector
+
+[nchg_gosdep_bar_squad]:online_offline_group
+faction              = gosdep
+npc_in_squad         = 2
+spawn_point          = nchg_gosdep_spawn_bar
+relationship         = neutral
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = bar
+npc_0 = {redefined_faction = gosdep} nchg_gosdep_official
+npc_1 = {redefined_faction = gosdep} nchg_gosdep_official
+
+[nchg_prokuratura_bar_squad]:online_offline_group
+faction              = prokuratura
+npc_in_squad         = 2
+spawn_point          = nchg_prokuratura_spawn_bar
+relationship         = neutral
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = bar
+npc_0 = {redefined_faction = prokuratura} nchg_prokuratura_officer
+npc_1 = {redefined_faction = prokuratura} nchg_prokuratura_officer
+
+
+; #####################################################################
+;  ¿√–Œœ–ŒÃ ó ¬—≈ √Œ—. —“–” “”–€
+; #####################################################################
+
+[nchg_mvd_agroprom_squad]:online_offline_group
+faction              = mvd
+npc_in_squad         = 3
+spawn_point          = nchg_mvd_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = mvd} nchg_mvd_chief
+npc_1 = {redefined_faction = mvd} nchg_mvd_patrol
+npc_2 = {redefined_faction = mvd} nchg_mvd_patrol
+
+[nchg_omon_agroprom_squad]:online_offline_group
+faction              = omon
+npc_in_squad         = 4
+spawn_point          = nchg_omon_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = omon} nchg_omon_commander
+npc_1 = {redefined_faction = omon} nchg_omon_soldier
+npc_2 = {redefined_faction = omon} nchg_omon_soldier
+npc_3 = {redefined_faction = omon} nchg_omon_soldier
+
+[nchg_vympel_agroprom_squad]:online_offline_group
+faction              = vympel
+npc_in_squad         = 3
+spawn_point          = nchg_vympel_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = vympel} nchg_vympel_lead
+npc_1 = {redefined_faction = vympel} nchg_vympel_operator
+npc_2 = {redefined_faction = vympel} nchg_vympel_operator
+
+[nchg_mchs_agroprom_squad]:online_offline_group
+faction              = mchs
+npc_in_squad         = 3
+spawn_point          = nchg_mchs_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = mchs} nchg_mchs_chief
+npc_1 = {redefined_faction = mchs} nchg_mchs_rescuer
+npc_2 = {redefined_faction = mchs} nchg_mchs_rescuer
+
+[nchg_sk_agroprom_squad]:online_offline_group
+faction              = sk
+npc_in_squad         = 3
+spawn_point          = nchg_sk_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = sk} nchg_sk_head_investigator
+npc_1 = {redefined_faction = sk} nchg_sk_investigator
+npc_2 = {redefined_faction = sk} nchg_sk_investigator
+
+[nchg_sbu_agroprom_squad]:online_offline_group
+faction              = sbu
+npc_in_squad         = 3
+spawn_point          = nchg_sbu_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = sbu} nchg_sbu_agent
+npc_1 = {redefined_faction = sbu} nchg_sbu_agent
+npc_2 = {redefined_faction = sbu} nchg_sbu_agent
+
+[nchg_alfa_agroprom_squad]:online_offline_group
+faction              = alfa
+npc_in_squad         = 4
+spawn_point          = nchg_alfa_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = alfa} nchg_alfa_operative
+npc_1 = {redefined_faction = alfa} nchg_alfa_operative
+npc_2 = {redefined_faction = alfa} nchg_alfa_operative
+npc_3 = {redefined_faction = alfa} nchg_alfa_operative
+
+[nchg_fsin_agroprom_squad]:online_offline_group
+faction              = fsin
+npc_in_squad         = 3
+spawn_point          = nchg_fsin_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = fsin} nchg_fsin_guard
+npc_1 = {redefined_faction = fsin} nchg_fsin_guard
+npc_2 = {redefined_faction = fsin} nchg_fsin_guard
+
+[nchg_mz_agroprom_squad]:online_offline_group
+faction              = mz
+npc_in_squad         = 2
+spawn_point          = nchg_mz_spawn_agroprom
+relationship         = friend
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = agroprom
+npc_0 = {redefined_faction = mz} nchg_mz_medic
+npc_1 = {redefined_faction = mz} nchg_mz_medic
+
+
+; #####################################################################
+;  “®ÃÕ¿ﬂ ƒŒÀ»Õ¿ ó ¬—≈  –»Ã»Õ¿À‹Õ€≈
+; #####################################################################
+
+[nchg_tok_dv_squad]:online_offline_group
+faction              = tok
+npc_in_squad         = 4
+spawn_point          = nchg_tok_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = tok} nchg_tok_enforcer
+npc_1 = {redefined_faction = tok} nchg_tok_enforcer
+npc_2 = {redefined_faction = tok} nchg_tok_enforcer
+npc_3 = {redefined_faction = tok} nchg_tok_enforcer
+
+[nchg_tszv_dv_squad]:online_offline_group
+faction              = tszv
+npc_in_squad         = 4
+spawn_point          = nchg_tszv_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = tszv} nchg_tszv_prisoner
+npc_1 = {redefined_faction = tszv} nchg_tszv_prisoner
+npc_2 = {redefined_faction = tszv} nchg_tszv_prisoner
+npc_3 = {redefined_faction = tszv} nchg_tszv_prisoner
+
+[nchg_korsin_dv_squad]:online_offline_group
+faction              = korsin
+npc_in_squad         = 3
+spawn_point          = nchg_korsin_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = korsin} nchg_korsin_agent
+npc_1 = {redefined_faction = korsin} nchg_korsin_agent
+npc_2 = {redefined_faction = korsin} nchg_korsin_agent
+
+[nchg_tb_dv_squad]:online_offline_group
+faction              = tb
+npc_in_squad         = 3
+spawn_point          = nchg_tb_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = tb} nchg_tb_hacker
+npc_1 = {redefined_faction = tb} nchg_tb_hacker
+npc_2 = {redefined_faction = tb} nchg_tb_hacker
+
+[nchg_tochk_dv_squad]:online_offline_group
+faction              = tochk
+npc_in_squad         = 4
+spawn_point          = nchg_tochk_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = tochk} nchg_tochk_soldier
+npc_1 = {redefined_faction = tochk} nchg_tochk_soldier
+npc_2 = {redefined_faction = tochk} nchg_tochk_soldier
+npc_3 = {redefined_faction = tochk} nchg_tochk_soldier
+
+[nchg_sekz_dv_squad]:online_offline_group
+faction              = sekz
+npc_in_squad         = 3
+spawn_point          = nchg_sekz_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = sekz} nchg_sekz_operative
+npc_1 = {redefined_faction = sekz} nchg_sekz_operative
+npc_2 = {redefined_faction = sekz} nchg_sekz_operative
+
+[nchg_gisk_dv_squad]:online_offline_group
+faction              = gisk
+npc_in_squad         = 3
+spawn_point          = nchg_gisk_spawn_dv
+relationship         = enemy
+sympathy             = 0
+can_switch_online    = true
+can_switch_offline   = true
+target_map           = dark_valley
+npc_0 = {redefined_faction = gisk} nchg_gisk_radical
+npc_1 = {redefined_faction = gisk} nchg_gisk_radical
+npc_2 = {redefined_faction = gisk} nchg_gisk_radical

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CCZMP // ПОГОНЯ // АРТЕФАКТ «КРОВЬ ЗОНЫ»</title>
+    <style>
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0c0a, #020402);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', 'Share Tech Mono', monospace;
+            overflow: hidden;
+        }
+        
+        .game-wrapper {
+            background: #000000aa;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 25px #00ff4180;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            cursor: none;
+        }
+        
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding: 8px 15px;
+            background: #030603;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        
+        .restart-btn {
+            background: #00ff4120;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 4px 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .restart-btn:hover {
+            background: #00ff41;
+            color: black;
+        }
+        
+        .story-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .story-card {
+            background: #0a0f0a;
+            border: 2px solid #00ff41;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            color: #ccffcc;
+            box-shadow: 0 0 30px #00ff4166;
+        }
+        
+        .story-card h2 {
+            color: #00ff41;
+            margin-bottom: 15px;
+        }
+        
+        .story-card p {
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        
+        .story-card button {
+            background: #00ff41;
+            border: none;
+            color: black;
+            padding: 8px 30px;
+            font-family: monospace;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        
+        .choice {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .choice button {
+            background: #1a2a1a;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 8px 20px;
+        }
+        
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game-wrapper">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+        <div class="info-panel">
+            <span>🏁 ДИСТАНЦИЯ: <span id="distanceM">0</span> м</span>
+            <span>❤️ ЗДОРОВЬЕ: <span id="healthVal">3</span></span>
+            <span>⚡ НИТРО: <span id="nitroVal">1</span></span>
+            <div class="restart-btn" id="resetGameBtn">⟳ НОВАЯ ПОГОНЯ</div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- СЮЖЕТНАЯ ПОГОНЯ "АРТЕФАКТ КРОВЬ ЗОНЫ" ----------
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Параметры игры
+        let gameRunning = true;
+        let score = 0; // дистанция в метрах
+        let health = 3;
+        let nitro = 1; // количество ускорений
+        let speed = 5; // базовая скорость движения дороги (пикселей/кадр)
+        let baseSpeed = 5;
+        let laneWidth = canvas.width / 3; // 3 полосы
+        let playerLane = 1; // 0-левая, 1-центр, 2-правая
+        let obstacles = [];
+        let pursuers = []; // машины погони сзади (появляются позади)
+        let bonuses = [];
+        let frame = 0;
+        let difficultyFactor = 1.0;
+        let storyStep = 0; // 0-вступление, 1-первый выбор, 2-второй, 3-третий
+        let gameLoopId = null;
+
+        // Элементы интерфейса
+        const distanceSpan = document.getElementById('distanceM');
+        const healthSpan = document.getElementById('healthVal');
+        const nitroSpan = document.getElementById('nitroVal');
+        const resetBtn = document.getElementById('resetGameBtn');
+
+        // Классы объектов
+        class Obstacle {
+            constructor(lane, type, y) {
+                this.lane = lane;
+                this.type = type; // 'car', 'blockpost', 'anomaly'
+                this.y = y || -80;
+                this.width = 60;
+                this.height = 80;
+                this.x = lane * laneWidth + (laneWidth / 2) - 30;
+            }
+            draw() {
+                if (this.type === 'car') {
+                    ctx.fillStyle = "#aa4444";
+                    ctx.fillRect(this.x, this.y, 50, 70);
+                    ctx.fillStyle = "#ff8888";
+                    ctx.fillRect(this.x + 10, this.y + 15, 30, 20);
+                } else if (this.type === 'blockpost') {
+                    ctx.fillStyle = "#777";
+                    ctx.fillRect(this.x, this.y, 60, 40);
+                    ctx.fillStyle = "#ffaa33";
+                    ctx.font = "bold 20px monospace";
+                    ctx.fillText("⛔", this.x + 15, this.y + 30);
+                } else if (this.type === 'anomaly') {
+                    ctx.fillStyle = "#33ffaa";
+                    ctx.beginPath();
+                    ctx.arc(this.x + 30, this.y + 30, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "#00aa66";
+                    ctx.font = "18px monospace";
+                    ctx.fillText("⚡", this.x + 22, this.y + 35);
+                }
+            }
+        }
+
+        class Pursuer {
+            constructor(lane, y) {
+                this.lane = lane;
+                this.y = y || canvas.height + 30;
+                this.width = 60;
+                this.height = 80;
+                this.x = lane * laneWidth + (laneWidth / 2) - 30;
+            }
+            draw() {
+                ctx.fillStyle = "#2266ff";
+                ctx.fillRect(this.x, this.y, 50, 70);
+                ctx.fillStyle = "#aaffff";
+                ctx.fillRect(this.x + 10, this.y + 15, 30, 20);
+                ctx.fillStyle = "red";
+                ctx.fillRect(this.x + 20, this.y - 5, 10, 5); // мигалка
+            }
+        }
+
+        class Bonus {
+            constructor(lane, type, y) {
+                this.lane = lane;
+                this.type = type; // 'nitro', 'shield', 'medkit'
+                this.y = y || -40;
+                this.width = 40;
+                this.height = 40;
+                this.x = lane * laneWidth + (laneWidth / 2) - 20;
+            }
+            draw() {
+                if (this.type === 'nitro') {
+                    ctx.fillStyle = "#ffaa44";
+                    ctx.fillRect(this.x, this.y, 40, 40);
+                    ctx.fillStyle = "#000";
+                    ctx.font = "22px monospace";
+                    ctx.fillText("⚡", this.x + 10, this.y + 30);
+                } else if (this.type === 'shield') {
+                    ctx.fillStyle = "#44aaff";
+                    ctx.fillRect(this.x, this.y, 40, 40);
+                    ctx.fillText("🛡️", this.x + 8, this.y + 30);
+                } else if (this.type === 'medkit') {
+                    ctx.fillStyle = "#ff44aa";
+                    ctx.fillRect(this.x, this.y, 40, 40);
+                    ctx.fillText("❤️", this.x + 8, this.y + 30);
+                }
+            }
+        }
+
+        // Сброс игры
+        function resetGame() {
+            gameRunning = true;
+            score = 0;
+            health = 3;
+            nitro = 1;
+            speed = baseSpeed;
+            playerLane = 1;
+            obstacles = [];
+            pursuers = [];
+            bonuses = [];
+            frame = 0;
+            difficultyFactor = 1.0;
+            storyStep = 0;
+            updateUI();
+            // Запускаем сюжетное вступление
+            showStoryIntro();
+        }
+
+        function updateUI() {
+            distanceSpan.innerText = Math.floor(score);
+            healthSpan.innerText = health;
+            nitroSpan.innerText = nitro;
+        }
+
+        // Генерация объектов
+        function spawnObstacle() {
+            let lane = Math.floor(Math.random() * 3);
+            let r = Math.random();
+            let type = 'car';
+            if (r < 0.2) type = 'blockpost';
+            else if (r < 0.35 && score > 300) type = 'anomaly';
+            obstacles.push(new Obstacle(lane, type, -80));
+        }
+
+        function spawnPursuer() {
+            let lane = Math.floor(Math.random() * 3);
+            pursuers.push(new Pursuer(lane, canvas.height + 30));
+        }
+
+        function spawnBonus() {
+            if (Math.random() > 0.007) return;
+            let lane = Math.floor(Math.random() * 3);
+            let r = Math.random();
+            let type = 'nitro';
+            if (r < 0.33 && health < 3) type = 'medkit';
+            else if (r < 0.66) type = 'shield';
+            bonuses.push(new Bonus(lane, type, -40));
+        }
+
+        // Обновление логики
+        function updateGame() {
+            if (!gameRunning) return;
+
+            // Увеличиваем дистанцию и сложность
+            score += speed * 0.5;
+            if (score > 500) difficultyFactor = 1.2;
+            if (score > 1000) difficultyFactor = 1.5;
+            if (score > 1500) difficultyFactor = 1.8;
+            speed = baseSpeed + Math.floor(score / 600);
+            if (speed > 12) speed = 12;
+            updateUI();
+
+            // Спавн препятствий (частота растёт)
+            if (Math.random() < 0.02 * difficultyFactor) spawnObstacle();
+            if (Math.random() < 0.008 * difficultyFactor) spawnPursuer();
+            spawnBonus();
+
+            // Движение препятствий
+            for (let i = 0; i < obstacles.length; i++) {
+                obstacles[i].y += speed;
+                if (obstacles[i].y > canvas.height + 100) {
+                    obstacles.splice(i, 1);
+                    i--;
+                }
+            }
+            // Движение преследователей (сзади)
+            for (let i = 0; i < pursuers.length; i++) {
+                pursuers[i].y -= speed * 0.7; // едут навстречу? нет, они сзади и приближаются снизу вверх
+                if (pursuers[i].y < -100) pursuers.splice(i, 1);
+            }
+            // Бонусы
+            for (let i = 0; i < bonuses.length; i++) {
+                bonuses[i].y += speed;
+                if (bonuses[i].y > canvas.height + 60) bonuses.splice(i, 1);
+            }
+
+            // Коллизия с препятствиями
+            const playerX = playerLane * laneWidth + laneWidth / 2 - 25;
+            const playerRect = {
+                x: playerX,
+                y: canvas.height - 80,
+                w: 50,
+                h: 70
+            };
+            for (let i = 0; i < obstacles.length; i++) {
+                let o = obstacles[i];
+                let oRect = {
+                    x: o.x,
+                    y: o.y,
+                    w: 50,
+                    h: 70
+                };
+                if (playerRect.x < oRect.x + oRect.w && playerRect.x + playerRect.w > oRect.x &&
+                    playerRect.y < oRect.y + oRect.h && playerRect.y + playerRect.h > oRect.y) {
+                    // столкновение
+                    health--;
+                    updateUI();
+                    obstacles.splice(i, 1);
+                    if (health <= 0) gameOver(false);
+                    else showHitEffect();
+                    break;
+                }
+            }
+
+            // Коллизия с преследователями (если догнали сзади)
+            for (let i = 0; i < pursuers.length; i++) {
+                let p = pursuers[i];
+                let pRect = {
+                    x: p.x,
+                    y: p.y,
+                    w: 50,
+                    h: 70
+                };
+                if (playerRect.x < pRect.x + pRect.w && playerRect.x + playerRect.w > pRect.x &&
+                    playerRect.y + playerRect.h > pRect.y && playerRect.y < pRect.y + pRect.h) {
+                    health--;
+                    updateUI();
+                    pursuers.splice(i, 1);
+                    if (health <= 0) gameOver(false);
+                    else showHitEffect();
+                    break;
+                }
+            }
+
+            // Бонусы
+            for (let i = 0; i < bonuses.length; i++) {
+                let b = bonuses[i];
+                let bRect = {
+                    x: b.x,
+                    y: b.y,
+                    w: 40,
+                    h: 40
+                };
+                if (playerRect.x < bRect.x + bRect.w && playerRect.x + playerRect.w > bRect.x &&
+                    playerRect.y < bRect.y + bRect.h && playerRect.y + playerRect.h > bRect.y) {
+                    if (b.type === 'nitro') nitro++;
+                    else if (b.type === 'shield') { /* временный щит, но упростим - даём +здоровье */
+                        health = Math.min(health + 1, 5);
+                    } else if (b.type === 'medkit') health = Math.min(health + 2, 5);
+                    updateUI();
+                    bonuses.splice(i, 1);
+                }
+            }
+
+            // Сюжетные этапы (диалоги с выбором)
+            if (score >= 500 && storyStep === 0) {
+                gameRunning = false;
+                showStoryChoice(1);
+                storyStep = 1;
+            } else if (score >= 1000 && storyStep === 1) {
+                gameRunning = false;
+                showStoryChoice(2);
+                storyStep = 2;
+            } else if (score >= 1800 && storyStep === 2) {
+                gameRunning = false;
+                showStoryChoice(3);
+                storyStep = 3;
+            } else if (score >= 2500 && !gameRunning) {
+                // победа
+                gameOver(true);
+            }
+        }
+
+        function showHitEffect() {
+            ctx.save();
+            ctx.globalAlpha = 0.6;
+            ctx.fillStyle = "#ff0000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+            setTimeout(() => {}, 50);
+        }
+
+        function gameOver(win) {
+            gameRunning = false;
+            if (win) {
+                showStoryMessage("ПОБЕДА!", "Ты добрался до свалки. Артефакт «Кровь Зоны» передан сталкерам. Теперь ты легенда. +10000₽ и уважение Свободы.");
+            } else {
+                showStoryMessage("ПОГОНЯ ПРОВАЛЕНА", "Тебя схватили люди Синдиката. Артефакт изъят, а ты отправлен в подвал. Игра окончена.");
+            }
+            if (gameLoopId) cancelAnimationFrame(gameLoopId);
+        }
+
+        // Рисование
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Асфальт и разметка
+            ctx.fillStyle = "#1a2a1a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 3; i++) {
+                ctx.strokeStyle = "#00ff41";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(i * laneWidth, 0);
+                ctx.lineTo(i * laneWidth, canvas.height);
+                ctx.stroke();
+            }
+            // линия движения
+            ctx.fillStyle = "#00ff4180";
+            for (let i = 0; i < 10; i++) {
+                let y = (frame * 2 + i * 40) % canvas.height;
+                ctx.fillRect(canvas.width / 2 - 10, y, 20, 15);
+            }
+
+            // объекты
+            obstacles.forEach(o => o.draw());
+            pursuers.forEach(p => p.draw());
+            bonuses.forEach(b => b.draw());
+
+            // Машина игрока
+            let playerX = playerLane * laneWidth + laneWidth / 2 - 25;
+            ctx.fillStyle = "#2eff7a";
+            ctx.fillRect(playerX, canvas.height - 80, 50, 70);
+            ctx.fillStyle = "#111";
+            ctx.fillRect(playerX + 10, canvas.height - 60, 30, 20);
+            ctx.fillStyle = "white";
+            ctx.fillRect(playerX + 15, canvas.height - 75, 20, 10);
+
+            // Эффект тумана
+            ctx.fillStyle = "rgba(0,0,0,0.3)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            frame++;
+        }
+
+        // Управление
+        function handleKey(e) {
+            if (!gameRunning) return;
+            let key = e.key;
+            if (key === 'ArrowLeft' || key === 'a') playerLane = Math.max(0, playerLane - 1);
+            if (key === 'ArrowRight' || key === 'd') playerLane = Math.min(2, playerLane + 1);
+            if (key === 'ArrowUp' || key === 'w') {
+                if (nitro > 0) {
+                    nitro--;
+                    speed += 4;
+                    setTimeout(() => {
+                        speed = baseSpeed + Math.floor(score / 600);
+                    }, 1000);
+                    updateUI();
+                }
+            }
+        }
+
+        // Сюжетные окна
+        function showStoryIntro() {
+            const div = document.createElement('div');
+            div.className = 'story-overlay';
+            div.innerHTML = `<div class="story-card"><h2>⚡ АРТЕФАКТ «КРОВЬ ЗОНЫ» ⚡</h2>
+        <p>Ты — сталкер Хмурый. В заброшенной лаборатории ты нашёл артефакт невероятной силы. Слухи разлетелись мгновенно. Теперь за тобой охотится Синдикат и СЧС.</p>
+        <p>Твоя цель — добраться до свалки, где тебя ждут свои. За руль! Избегай блокпостов, аномалий и не дай погоне настигнуть себя.</p>
+        <button id="startGameBtn">НАЧАТЬ ПОБЕГ</button></div>`;
+            document.body.appendChild(div);
+            document.getElementById('startGameBtn').onclick = () => {
+                div.remove();
+                gameRunning = true;
+                gameLoop();
+            };
+        }
+
+        function showStoryChoice(level) {
+            const div = document.createElement('div');
+            div.className = 'story-overlay';
+            let title = "",
+                text = "",
+                choice1 = "",
+                choice2 = "";
+            if (level === 1) {
+                title = "ПЕРЕКРЁСТОК";
+                text = "Ты доехал до развилки. Навигатор показывает два пути: через лес (меньше блокпостов, но выше риск аномалий) или через трассу (активное преследование, но есть шанс найти помощь).";
+                choice1 = "Лесная дорога (меньше врагов)";
+                choice2 = "Трасса (больше бонусов)";
+            } else if (level === 2) {
+                title = "ПРЕСЛЕДОВАНИЕ УСИЛИВАЕТСЯ";
+                text = "СЧС вызвала вертолёт. На рации слышно: «Блокируйте все выезды». Тебе нужно срочно принять решение: спрятаться в старом бункере или рискнуть и проскочить блокпост на скорости.";
+                choice1 = "Спрятаться в бункере (восстановление здоровья)";
+                choice2 = "Прорыв на скорости (шанс получить нитро)";
+            } else {
+                title = "ФИНАЛЬНЫЙ РЫВОК";
+                text = "Свалка уже близко. Но на дорогу вылетает броневик Синдиката. У тебя есть выбор: принять бой (риск) или попытаться объехать по аномальному полю (опасно, но быстро).";
+                choice1 = "Вступить в бой (+500 дистанции, минус 1 здоровье)";
+                choice2 = "Аномальное поле (мгновенный финиш, но можно потерять всё)";
+            }
+            div.innerHTML = `<div class="story-card"><h2>${title}</h2><p>${text}</p><div class="choice"><button id="ch1">${choice1}</button><button id="ch2">${choice2}</button></div></div>`;
+            document.body.appendChild(div);
+            document.getElementById('ch1').onclick = () => {
+                if (level === 1) { /* лес - уменьшаем спавн врагов */
+                    difficultyFactor *= 0.8;
+                } else if (level === 2) {
+                    health = Math.min(health + 2, 5);
+                    updateUI();
+                } else {
+                    health--;
+                    score += 500;
+                    updateUI();
+                }
+                div.remove();
+                gameRunning = true;
+                gameLoop();
+            };
+            document.getElementById('ch2').onclick = () => {
+                if (level === 1) { /* трасса - больше бонусов */
+                    nitro += 2;
+                    updateUI();
+                } else if (level === 2) {
+                    nitro += 2;
+                    updateUI();
+                } else {
+                    score += 1000;
+                    gameRunning = true;
+                    gameLoop();
+                }
+                div.remove();
+                gameRunning = true;
+                gameLoop();
+            };
+        }
+
+        function showStoryMessage(title, msg) {
+            const div = document.createElement('div');
+            div.className = 'story-overlay';
+            div.innerHTML = `<div class="story-card"><h2>${title}</h2><p>${msg}</p><button id="closeStory">ЗАКРЫТЬ</button></div>`;
+            document.body.appendChild(div);
+            document.getElementById('closeStory').onclick = () => {
+                div.remove();
+                resetBtn.click();
+            };
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+            updateGame();
+            draw();
+            gameLoopId = requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('keydown', handleKey);
+        resetBtn.addEventListener('click', () => {
+            if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            resetGame();
+        });
+
+        resetGame();
+    </script>
+</body>
+
+</html>

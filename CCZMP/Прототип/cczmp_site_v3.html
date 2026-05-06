@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCZMP // ГИС "НЕЗАВИСИМОСТЬ"</title>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --g: #00ff41;
+            --g2: #00cc33;
+            --g3: rgba(0, 255, 65, .08);
+            --r: #ff4141;
+            --b: #41a1ff;
+            --y: #ffcc00;
+            --bg: #050505;
+            --bg2: #0a0a0a;
+            --bg3: #0f0f0f;
+            --brd: rgba(0, 255, 65, .25);
+            --glow: 0 0 14px rgba(0, 255, 65, .5);
+        }
+        
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--g);
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        header {
+            padding: 25px;
+            border-bottom: 1px solid var(--brd);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            font-family: 'Russo One', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 3px;
+            text-shadow: var(--glow);
+            color: var(--g);
+        }
+        
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px;
+            background: var(--bg3);
+            border-bottom: 1px solid var(--brd);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        
+        nav button {
+            background: transparent;
+            border: 1px solid var(--brd);
+            color: var(--g);
+            padding: 10px 20px;
+            font-family: inherit;
+            transition: 0.2s;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        nav button:hover,
+        nav button.active {
+            background: var(--g);
+            color: var(--bg);
+            box-shadow: var(--glow);
+            border-color: var(--g);
+        }
+        
+        .container {
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container.active {
+            display: block;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--brd);
+            padding: 25px;
+            position: relative;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card:hover {
+            border-color: var(--g);
+            box-shadow: var(--glow);
+            background: var(--bg3);
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            color: var(--b);
+            border-bottom: 1px solid var(--brd);
+            padding-bottom: 10px;
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.2rem;
+        }
+        
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        
+        .tag {
+            font-size: 0.7rem;
+            background: var(--g3);
+            padding: 3px 8px;
+            border: 1px solid var(--brd);
+            margin-bottom: 10px;
+            display: inline-block;
+            color: var(--y);
+        }
+        /* OKULAR-1 INTERFACE */
+        
+        #ai-terminal {
+            background: var(--bg2);
+            border: 1px solid var(--g);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 30px rgba(0, 255, 65, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        #ai-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03) 0px, rgba(0, 255, 0, 0.03) 1px, transparent 1px, transparent 2px);
+            background-size: 100% 3px;
+        }
+        
+        .ai-msg,
+        .user-msg {
+            max-width: 80%;
+            padding: 15px;
+            border: 1px solid var(--brd);
+            position: relative;
+        }
+        
+        .ai-msg {
+            align-self: flex-start;
+            background: rgba(0, 255, 65, 0.05);
+            border-left: 5px solid var(--g);
+        }
+        
+        .user-msg {
+            align-self: flex-end;
+            background: rgba(65, 161, 255, 0.05);
+            border-right: 5px solid var(--b);
+            color: var(--b);
+            text-align: right;
+        }
+        
+        .who {
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        
+        #ai-form {
+            display: flex;
+            background: var(--bg3);
+            border-top: 1px solid var(--g);
+        }
+        
+        #ai-inp {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--g);
+            padding: 20px;
+            font-family: inherit;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        #ai-form button {
+            background: var(--g);
+            color: var(--bg);
+            border: none;
+            padding: 0 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Russo One', sans-serif;
+        }
+        
+        #ai-form button:hover {
+            background: var(--y);
+            box-shadow: var(--glow);
+        }
+        /* MODAL SYSTEM */
+        
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.open {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg2);
+            border: 2px solid var(--g);
+            width: 100%;
+            max-width: 850px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 50px;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.2);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2.5rem;
+            color: var(--r);
+            cursor: pointer;
+            line-height: 1;
+            transition: 0.3s;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+            color: var(--g);
+        }
+        
+        footer {
+            padding: 60px 20px;
+            border-top: 1px solid var(--brd);
+            margin-top: 80px;
+            background: var(--bg2);
+        }
+        
+        .legal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            text-align: left;
+        }
+        
+        .legal-item h4 {
+            color: var(--b);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .legal-item p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+        
+        .copyright {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0.5;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scanline"></div>
+
+    <header>
+        <div class="logo">CCZMP // НЧГ-NET</div>
+        <div style="text-align:right">
+            <div class="h-ok">СЕРВЕР: ПРИПЯТЬ-ЦЕНТР</div>
+            <div id="clock" style="font-size:0.9rem; letter-spacing:1px;"></div>
+        </div>
+    </header>
+
+    <nav>
+        <button onclick="shTab('news')" id="b-news" class="active">ГЛАВНАЯ</button>
+        <button onclick="shTab('groups')" id="b-groups">РЕЕСТР ГРУППИРОВОК (30)</button>
+        <button onclick="shTab('pentagon')" id="b-pentagon">ГОС. СТРУКТУРЫ</button>
+        <button onclick="shTab('okular')" id="b-okular">ОКУЛЯР-1 (ИНТЕРФЕЙС)</button>
+        <button onclick="shTab('faq')" id="b-faq">ПОМОЩЬ / FAQ</button>
+    </nav>
+
+    <section id="news" class="container active">
+        <h2 style="margin-bottom:30px; font-family:'Russo One';">ОПЕРАТИВНЫЕ СВОДКИ</h2>
+        <div class="grid">
+            <div class="card" onclick="openN('Протокол Независимости','Согласно архивам СЧС, в 2024 году был подписан финальный акт о суверенитете ЧЗО. Территория признана НЧГ всеми крупными игроками. Теперь Зона — это не полигон, а дом.')">
+                <span class="tag">АРХИВ СЧС</span>
+                <h3>Суверенитет подтвержден</h3>
+                <p>Официальные данные о признании НЧГ мировым сообществом и установлении границ...</p>
+            </div>
+            <div class="card" onclick="openN('Финансовая стабильность','Национальный Банк Зоны (НБЗ) сообщает о рекордном росте курса рубля НЧГ. Рост обеспечен экспортом сверхпроводников и артефактов «Светляк» в страны ЕС.')">
+                <span class="tag">ЭКОНОМИКА</span>
+                <h3>Экономическое чудо</h3>
+                <p>Как ЧернЭнерго и НБЗ вывели бюджет государства в профицит за 2 года...</p>
+            </div>
+            <div class="card" onclick="openN('Кибер-безопасность','Министерство Внутренних Дел напоминает: использование нелицензионных прошивок ПДА карается конфискацией устройства. СЧС ведет мониторинг всех HTTP/HTTPS соединений.')">
+                <span class="tag">МВД ПРЕДУПРЕЖДАЕТ</span>
+                <h3>Цифровой контроль</h3>
+                <p>Новые меры по защите данных гражданских и пресечению взломов банковских счетов...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="groups" class="container">
+        <h2 style="margin-bottom:30px; font-family:'Russo One';">ГОСУДАРСТВЕННЫЙ РЕЕСТР ОРГАНИЗАЦИЙ</h2>
+        <div class="grid" id="groups-list">
+        </div>
+    </section>
+
+    <section id="pentagon" class="container">
+        <h2 style="margin-bottom:30px; font-family:'Russo One';">ВЫСШЕЕ РУКОВОДСТВО И ВЕДОМСТВА</h2>
+        <div class="grid">
+            <div class="card" onclick="openN('МВД НЧГ','Глава: Александр Третьяков. Задачи: Патрулирование, следствие, исполнение наказаний. МВД — это щит, который защищает граждан НЧГ от преступности и хаоса.')">
+                <span class="tag">СИЛОВОЙ БЛОК</span>
+                <h3>Министерство Внутренних Дел</h3>
+                <p>Центральный аппарат управления правопорядком.</p>
+            </div>
+            <div class="card" onclick="openN('СЧС НЧГ','Секретная Чернобыльская Служба. Контрразведка, антитеррор, кибербезопасность. Подчиняется напрямую высшему совету. Обладает правом на внесудебную блокировку ПДА.')">
+                <span class="tag">СПЕЦСЛУЖБЫ</span>
+                <h3>Секретная Чернобыльская Служба</h3>
+                <p>Защита интересов НЧГ в цифровом и реальном пространстве.</p>
+            </div>
+            <div class="card" onclick="openN('Министерство Обороны','Армия НЧГ. Контроль ЧАЭС, Радара и внешнего периметра. На вооружении: тяжелая техника, авиация и экспериментальное оружие Гаусса.')">
+                <span class="tag">ОБОРОНА</span>
+                <h3>Министерство Обороны</h3>
+                <p>Защита границ и сдерживание угрозы Монолита.</p>
+            </div>
+            <div class="card" onclick="openN('Минздрав','Локация: Лаборатории и мобильные госпитали. Задачи: Разработка сывороток против ПСИ-излучения и лечение травм средней тяжести.')">
+                <span class="tag">СОЦИАЛЬНЫЙ БЛОК</span>
+                <h3>Министерство Здравоохранения</h3>
+                <p>Биологическая безопасность и медицина Зоны.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="container">
+        <h2 style="margin-bottom:30px; font-family:'Russo One';">ИНФОРМАЦИОННЫЙ ЦЕНТР (FAQ)</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>1. Что такое проект CCZMP?</h3>
+                <p>Это глобальный Multiplayer проект на базе Сталкера. Мы создали мир, где Зона стала полноценным государством НЧГ с живой экономикой, иерархией МВД и СЧС, а также уникальным сюжетом 2026 года.</p>
+            </div>
+            <div class="card">
+                <h3>2. Какой сюжет ждет игроков?</h3>
+                <p>Сюжет охватывает три акта: от военного конфликта 2023 года до признания независимости в 2024-м и экономического бума 2025-2026 годов. Вы — участник новой истории, где старые враги стали союзниками.</p>
+            </div>
+            <div class="card">
+                <h3>3. Как работает СЧС?</h3>
+                <p>Секретная Чернобыльская Служба (СЧС) — это эволюция СБУ. Она контролирует все цифровые транзакции. Если вы попытаетесь взломать банк НБЗ или чужой ПДА — СЧС объявит вас девиантом.</p>
+            </div>
+            <div class="card">
+                <h3>4. Можно ли создать свою группировку?</h3>
+                <p>Да, через регистрацию в Министерстве Юстиции НЧГ. Вам потребуется устав, список участников и одобрение от МВД.</p>
+            </div>
+            <div class="card">
+                <h3>5. Что будет за нарушение УК?</h3>
+                <p>Наказания варьируются от штрафов (5-50 тыс. руб) до реального срока в тюрьме Припяти (до 5 часов реального времени за тяжкие преступления).</p>
+            </div>
+            <div class="card">
+                <h3>6. Как работают банки и кредиты?</h3>
+                <p>Банк НБЗ выдает кредиты «Начальный толчок» для новичков. Будьте осторожны: невыплата ведет к блокировке счетов через систему СЧС.</p>
+            </div>
+            <div class="card">
+                <h3>7. Кто возглавляет НЧГ?</h3>
+                <p>Государство управляется Высшим Советом, где ключевую роль играет руководство МВД и СЧС. Лидерство основано на технократии и эффективности.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="okular" class="container">
+        <div id="ai-terminal">
+            <div id="ai-chat">
+                <div class="ai-msg">
+                    <div class="who">ОКУЛЯР-1 v5.0 // СЧС-KERNEL</div>
+                    <div class="txt">Связь установлена. Система авторизации: А.Третьяков (ROOT). Доступ к базе данных НЧГ разрешен. Введите запрос или команду. Я владею информацией о всех 30 фракциях, законах и сюжете CCZMP.</div>
+                </div>
+            </div>
+            <form id="ai-form">
+                <input type="text" id="ai-inp" placeholder="Запрос к системе..." autocomplete="off">
+                <button type="submit">ВВОД</button>
+            </form>
+        </div>
+    </section>
+
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeM()">&times;</span>
+            <h2 id="m-title" style="color:var(--b);margin-bottom:25px;border-bottom:1px solid var(--g)"></h2>
+            <div id="m-body" style="line-height:1.8; font-size:1.1rem; color:#fff;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="legal-grid">
+            <div class="legal-item">
+                <h4>Политика конфиденциальности</h4>
+                <p>Все данные, передаваемые через ПДА (включая личные сообщения и банковские транзакции), шифруются протоколом AES-256. СЧС НЧГ оставляет за собой право дешифровки данных в случае подозрения в терроризме или нарушении УК. Ваши метаданные
+                    хранятся на серверах Припяти 50 лет.</p>
+            </div>
+            <div class="legal-item">
+                <h4>Условия использования</h4>
+                <p>Использование ресурсов НЧГ-NET подразумевает полное согласие с Административным Кодексом. Любая попытка SQL-инъекции или DDOS-атаки на государственные ресурсы карается пожизненным баном по железу и объявлением в розыск внутри игрового
+                    мира.</p>
+            </div>
+            <div class="legal-item">
+                <h4>Авторское право</h4>
+                <p>Проект CCZMP является некоммерческой фанатской модификацией. Все права на ассеты игры принадлежат GSC Game World. Сюжет НЧГ, система ОКУЛЯР-1 и уникальные механики МВД являются интеллектуальной собственностью разработчиков CCZMP. Копирование
+                    кода без разрешения запрещено.</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 НЕЗАВИСИМОЕ ЧЕРНОБЫЛЬСКОЕ ГОСУДАРСТВО (НЧГ). СИСТЕМА УПРАВЛЕНИЯ КОНТЕНТОМ v2.1
+        </div>
+    </footer>
+
+    <script>
+        // ТЕКУЩЕЕ ВРЕМЯ
+        setInterval(() => {
+            const n = new Date();
+            document.getElementById('clock').innerText = n.toLocaleString('ru-RU');
+        }, 1000);
+
+        // НАВИГАЦИЯ
+        function shTab(id) {
+            document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('b-' + id).classList.add('active');
+        }
+
+        // МОДАЛЬНЫЕ ОКНА
+        function openN(title, body) {
+            document.getElementById('m-title').innerText = title;
+            document.getElementById('m-body').innerText = body;
+            document.getElementById('info-modal').classList.add('open');
+        }
+
+        function closeM() {
+            document.getElementById('info-modal').classList.remove('open');
+        }
+
+        // ГЕНЕРАЦИЯ 30 ГРУППИРОВОК
+        const groups_db = [{
+            n: 'ЗОНАСТРОЙ',
+            d: 'Государственная корпорация. Восстановление Припяти, стройка блокпостов. "Если рухнуло — мы поднимем!"'
+        }, {
+            n: 'ЧернЭнерго',
+            d: 'Монополист в сфере энергии. Владеют ЧАЭС и сетью подстанций. Поставляют свет во все уголки НЧГ.'
+        }, {
+            n: 'СЧС НЧГ',
+            d: 'Секретная Служба. Контроль цифры и контрразведка. Наследники СБУ, но с гораздо более мощным софтом.'
+        }, {
+            n: 'МЧС НЧГ',
+            d: 'Ликвидация выбросов, спасение из аномалий. Оранжевая форма, тяжелая техника КрАЗ.'
+        }, {
+            n: 'Киллеры',
+            d: 'Профессиональные наемники. Работают по контракту через Даркнет НЧГ. Чёрные BMW и полная анонимность.'
+        }, {
+            n: 'Вымпел',
+            d: 'Спецназ антитеррора. Зачистка лабораторий и подземных бункеров.'
+        }, {
+            n: 'ОМОН',
+            d: 'Силовая поддержка МВД. Контроль митингов и массовых беспорядков.'
+        }, {
+            n: 'Минздрав',
+            d: 'Научные институты и полевые медики. Разработка защиты от радиации.'
+        }, {
+            n: 'Банк НБЗ',
+            d: 'Национальный Банк Зоны. Контроль всех финансов и кредитных линий.'
+        }, {
+            n: 'Ученые (НИИ)',
+            d: 'Изучение артефактов и аномалий в интересах государства.'
+        }, {
+            n: 'Вольные Сталкеры',
+            d: 'Зарегистрированные граждане НЧГ, занимающиеся промыслом.'
+        }, {
+            n: 'Торговый Союз',
+            d: 'Объединение торговцев от Сидоровича до Бармена. Экономическая опора.'
+        }, {
+            n: 'Синдикат',
+            d: 'Крупные поставщики оружия и снаряжения из-за периметра.'
+        }, {
+            n: 'Монолит (Пленные)',
+            d: 'Перевоспитание бывших фанатиков для работы на благо НЧГ.'
+        }, {
+            n: 'Экологи',
+            d: 'Мониторинг загрязнения и климата Зоны.'
+        }, {
+            n: 'Служба Связи',
+            d: 'Обслуживание вышек ComNet и ПДА.'
+        }, {
+            n: 'Транспортный Цех',
+            d: 'Железные дороги и логистика между городами Зоны.'
+        }, {
+            n: 'Судебная Власть',
+            d: 'Судьи и прокуроры НЧГ. Справедливость по закону.'
+        }, {
+            n: 'Пограничники',
+            d: 'Охрана внешнего периметра от нелегалов.'
+        }, {
+            n: 'Гвардия Припяти',
+            d: 'Элитная охрана правительственного квартала.'
+        }, {
+            n: 'Разведкорпус',
+            d: 'Картография глубоких районов Зоны.'
+        }, {
+            n: 'Инфо-Служба',
+            d: 'Государственное ТВ и радио НЧГ.'
+        }, {
+            n: 'Технический Отдел',
+            d: 'Ремонт ПДА и сложной электроники.'
+        }, {
+            n: 'Спецстрой',
+            d: 'Строительство секретных подземных объектов.'
+        }, {
+            n: 'Дип-корпус',
+            d: 'Переговоры с внешним миром (Китай, Индия, ЕС).'
+        }, {
+            n: 'Лесничество',
+            d: 'Контроль мутировавшей флоры и фауны.'
+        }, {
+            n: 'Склад ГСМ',
+            d: 'Топливное обеспечение всей техники НЧГ.'
+        }, {
+            n: 'Архив НЧГ',
+            d: 'Хранение данных о прошлом и настоящем ЧЗО.'
+        }, {
+            n: 'Служба Безопасности НБЗ',
+            d: 'Инкассация и защита золотовалютного резерва.'
+        }, {
+            n: 'Отдел К (СЧС)',
+            d: 'Борьба с киберпреступностью внутри сети.'
+        }];
+
+        const gl = document.getElementById('groups-list');
+        groups_db.forEach((g, i) => {
+            gl.innerHTML += `<div class="card" onclick="openN('${g.n}','${g.d}')">
+    <span class="tag">ID: 00${i+1}</span>
+    <h3>${g.n}</h3>
+    <p>${g.d}</p>
+  </div>`;
+        });
+
+        // OKULAR-1 ADVANCED BRAIN
+        const ai_knowledge = {
+            "привет": ["Авторизация пройдена. Здравствуйте, Александр. Система ОКУЛЯР-1 готова к работе.", "Доступ разрешен. Слушаю ваш запрос, глава МВД."],
+            "счс": ["Секретная Чернобыльская Служба (СЧС) — это костяк безопасности НЧГ. Мы контролируем трафик, ищем шпионов и охраняем тайны правительства. СБУ больше не существует.", "В базе СЧС числится 1.5 млн активных ПДА. Все под контролем."],
+            "сюжет": ["Текущая фаза: 2026 год. НЧГ процветает. Но по данным разведки, в районе ЧАЭС зафиксирована странная активность 'Монолита'. Будьте готовы к мобилизации.", "История CCZMP — это путь от хаоса к порядку. Мы построили государство там, где все видели только смерть."],
+            "закон": ["Уголовный Кодекс НЧГ суров: за убийство сотрудника МВД — пожизненная блокировка ПДА или 5 лет тюрьмы. Помните: СЧС видит каждое нажатие на курок.", "Штрафы НБЗ списываются автоматически. Не нарушайте ПДД в Припяти."],
+            "default": ["Запрос отправлен в центральный архив... Данные не найдены. Попробуйте уточнить ключевое слово (Сюжет, МВД, СЧС, Банк).", "Ошибка доступа. Повторите запрос или обратитесь к администратору СЧС.", "Анализирую... В текущей базе данных CCZMP информации по этому вопросу не обнаружено."]
+        };
+
+        const chat = document.getElementById('ai-chat');
+        const form = document.getElementById('ai-form');
+
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            const inp = document.getElementById('ai-inp');
+            const val = inp.value.toLowerCase();
+            if (!val) return;
+
+            chat.innerHTML += `<div class="user-msg"><div class="who">USER // ROOT</div><div class="txt">${inp.value}</div></div>`;
+            inp.value = '';
+
+            setTimeout(() => {
+                let r = ai_knowledge["default"][Math.floor(Math.random() * 3)];
+                if (val.includes("привет")) r = ai_knowledge["привет"][Math.floor(Math.random() * 2)];
+                else if (val.includes("счс") || val.includes("сбу")) r = ai_knowledge["счс"][Math.floor(Math.random() * 2)];
+                else if (val.includes("сюжет") || val.includes("проект")) r = ai_knowledge["сюжет"][Math.floor(Math.random() * 2)];
+                else if (val.includes("закон") || val.includes("ук") || val.includes("мвд")) r = ai_knowledge["закон"][Math.floor(Math.random() * 2)];
+
+                chat.innerHTML += `<div class="ai-msg"><div class="who">ОКУЛЯР-1</div><div class="txt">${r}</div></div>`;
+                chat.scrollTop = chat.scrollHeight;
+            }, 500);
+        };
+    </script>
+</body>
+
+</html>
