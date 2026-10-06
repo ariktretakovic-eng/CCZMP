@@ -1,0 +1,73 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: LAW (УК / ФП / АК / Конституция НЧГ)
+;; File:   settings.ltx -- tunables for the enforcement engine
+;;
+;; The brief states: "Аресты — по шкале игрового времени (1 день = 1 час в реале)"
+;; so real_seconds_per_game_day is 3600 here, unlike the bank module's own scale.
+
+[settings]
+; --- time ---
+real_seconds_per_game_day = 3600
+real_seconds_per_game_hour = 150
+
+; --- repeat offences ---
+; "Повторное нарушение -> удвоенное наказание"
+repeat_multiplier = 2
+repeat_window_days = 30
+; how many prior convictions of the same offence stay on record
+repeat_keep = 5
+
+; --- money ---
+; a fine the player cannot cover is recorded as debt instead of being skipped
+allow_debt = 1
+; never hold more than this in fines at once before the arrest escalates
+debt_limit = 100000
+
+; --- arrest ---
+; arrest durations are stored in hours exactly as written in the codes
+arrest_max_hours = 24
+; violating these zones while under arrest breaks the player out
+arrest_zones = lager,Prison,base_*
+
+; --- custodial terms ---
+; The criminal code is written in real years ("3 года"), which cannot be served
+; literally on a 10-minute day. A sentence is therefore two things: a permanent
+; record of `freedom` years, and this much actual game time spent inside.
+; freedom_year_days = 1 means one year of sentence costs one game day locked up.
+freedom_year_days = 1
+freedom_year_days_min = 1
+freedom_year_days_max = 10
+jail_markers = jail,base_prison,Prison
+; releasing the player from jail is done through these game objects
+jail_exit_markers = exit_a,exit_b
+
+; --- weapon hit classification ---
+; npc_on_death_callback does not report the weapon that made the kill, so the
+; module treats a kill as firearm-caused when the actor fired within this many
+; milliseconds before the victim died.
+firearm_window_ms = 3000
+
+; --- who counts as a state employee ---
+; Anomaly community ids (configs/creatures/game_relations.ltx):
+;   actor bandit dolg ecolog freedom killer army army_npc monolith greh greh_npc renegade monster stalker
+; NChG structures are mapped onto army (МО НЧГ) and ecolog (Учёные/Лаборатория).
+; New NChG factions must be registered here or they will count as civilians.
+state_communities = army, army_npc, ecolog
+
+; ranks that make a target a "high-ranking official" (Статья 1.6, 2.4, 2.7)
+; rank ids as used by the game; 0 means "no rank assigned"
+high_rank_min = 60
+
+; --- weapon licence ---
+; the engine has no scripted way to delete an info portion, so the licence is a
+; flag on the law state. Issue and check it through cczmp_law.has_license().
+license_portion = cczmp_weapon_license
+
+; --- integration with the bank ---
+; cc<offence> feeds cczmp_law.offence_ids and cczmp_bank.apply_block()
+; offences that are also a banking violation name the block rule here
+bank_module = cczmp_bank
+
+; --- logging ---
+; 0 = silent, 1 = offences only, 2 = every check
+debug_level = 1

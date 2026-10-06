@@ -1,0 +1,161 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: LAW
+;; File:   fp.ltx -- ФП НЧГ, служебный (дисциплинарный) кодекс, 10 правил
+;;
+;; Applies only to state employees. Same penalty grammar as uk.ltx.
+;; threshold:<rub> splits a rule into two points by the amount involved,
+;; so the engine can pick the right one from the offence amount:
+;;   amount <  threshold -> the "low" section is used
+;;   amount >= threshold -> the "high" section is used
+
+[fp]
+list = fp_1_low, fp_1_high, fp_2_low, fp_2_high, fp_3_low, fp_3_high, fp_4_low, fp_4_high, fp_5_low, fp_5_high, fp_6_low, fp_6_high, fp_7_low, fp_7_high, fp_8_low, fp_9_low, fp_9_high, fp_10_low, fp_10_high
+
+; ---------------- ФП №1. Разглашение внутренней информации госструктур ----------------
+[fp_1_low]
+number = 1.1
+rule = fp_1
+descr_key = cczmp_fp_1_low
+penalty = dismissal
+repeat = 0
+
+[fp_1_high]
+number = 1.2
+rule = fp_1
+descr_key = cczmp_fp_1_high
+penalty = arrest:3
+repeat = 0
+
+; ---------------- ФП №2. Обязательное ношение формы на службе ----------------
+[fp_2_low]
+number = 2.1
+rule = fp_2
+descr_key = cczmp_fp_2_low
+penalty = reprimand
+repeat = 1
+
+[fp_2_high]
+number = 2.2
+rule = fp_2
+descr_key = cczmp_fp_2_high
+penalty = demotion
+repeat = 1
+
+; ---------------- ФП №3. Удостоверение и его предъявление по требованию ----------------
+[fp_3_low]
+number = 3.1
+rule = fp_3
+descr_key = cczmp_fp_3_low
+penalty = arrest:1
+repeat = 1
+
+[fp_3_high]
+number = 3.2
+rule = fp_3
+descr_key = cczmp_fp_3_high
+penalty = dismissal
+repeat = 0
+
+; ---------------- ФП №4. Категорический запрет на коррупцию в структурах ----------------
+; split by the size of the bribe: up to 10 000 is the lighter point
+[fp_4_low]
+number = 4.1
+rule = fp_4
+descr_key = cczmp_fp_4_low
+penalty = arrest:2
+threshold = 10000
+repeat = 1
+
+[fp_4_high]
+number = 4.2
+rule = fp_4
+descr_key = cczmp_fp_4_high
+penalty = arrest:4, dismissal
+threshold = 10000
+repeat = 0
+
+; ---------------- ФП №5. Соблюдение субординации ----------------
+[fp_5_low]
+number = 5.1
+rule = fp_5
+descr_key = cczmp_fp_5_low
+penalty = reprimand
+repeat = 1
+
+; the brief lists "понижение / увольнение" as alternatives; dismissal is kept
+; out of the automatic path because it is the more severe branch
+[fp_5_high]
+number = 5.2
+rule = fp_5
+descr_key = cczmp_fp_5_high
+penalty = demotion
+alternative = dismissal
+repeat = 0
+
+; ---------------- ФП №6. Выход на дежурство в состоянии опьянения ----------------
+[fp_6_low]
+number = 6.1
+rule = fp_6
+descr_key = cczmp_fp_6_low
+penalty = demotion
+repeat = 1
+
+[fp_6_high]
+number = 6.2
+rule = fp_6
+descr_key = cczmp_fp_6_high
+penalty = dismissal, arrest:1
+repeat = 0
+
+; ---------------- ФП №7. Запрет на хранение артефактов госслужащими ----------------
+[fp_7_low]
+number = 7.1
+rule = fp_7
+descr_key = cczmp_fp_7_low
+penalty = arrest:3
+repeat = 1
+
+[fp_7_high]
+number = 7.2
+rule = fp_7
+descr_key = cczmp_fp_7_high
+penalty = dismissal, arrest:4
+repeat = 0
+
+; ---------------- ФП №8. Запрет на выдачу оружия гражданским лицам ----------------
+[fp_8_low]
+number = 8.1
+rule = fp_8
+descr_key = cczmp_fp_8_low
+penalty = arrest:2, dismissal
+repeat = 0
+
+; ---------------- ФП №9. Обязанность фиксировать спецоперации ----------------
+[fp_9_low]
+number = 9.1
+rule = fp_9
+descr_key = cczmp_fp_9_low
+penalty = reprimand
+repeat = 1
+
+[fp_9_high]
+number = 9.2
+rule = fp_9
+descr_key = cczmp_fp_9_high
+penalty = demotion
+repeat = 1
+
+; ---------------- ФП №10. Разрешение на применение спецсредств ----------------
+[fp_10_low]
+number = 10.1
+rule = fp_10
+descr_key = cczmp_fp_10_low
+penalty = arrest:1
+repeat = 1
+
+[fp_10_high]
+number = 10.2
+rule = fp_10
+descr_key = cczmp_fp_10_high
+penalty = dismissal
+repeat = 0

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_ui_title"><text>NBZ - Central Terminal</text></string>
+	<string id="cczmp_ui_balance"><text>Account: %s</text></string>
+	<string id="cczmp_ui_rating"><text>Credit rating: %s</text></string>
+	<string id="cczmp_ui_blocked"><text>Account blocked</text></string>
+	<string id="cczmp_ui_free"><text>Account free</text></string>
+	<string id="cczmp_ui_tab_bank"><text>Bank</text></string>
+	<string id="cczmp_ui_tab_factions"><text>Factions</text></string>
+	<string id="cczmp_ui_tab_law"><text>Law</text></string>
+	<string id="cczmp_ui_tab_close"><text>Close</text></string>
+	<string id="cczmp_ui_deposits"><text>Deposits</text></string>
+	<string id="cczmp_ui_credits"><text>Credits</text></string>
+	<string id="cczmp_ui_open"><text>Open</text></string>
+	<string id="cczmp_ui_close"><text>Close</text></string>
+	<string id="cczmp_ui_take"><text>Take</text></string>
+	<string id="cczmp_ui_repay"><text>Repay</text></string>
+	<string id="cczmp_ui_join"><text>Join</text></string>
+	<string id="cczmp_ui_leave"><text>Leave</text></string>
+	<string id="cczmp_ui_member"><text>Member: %s (%s)</text></string>
+	<string id="cczmp_ui_no_member"><text>Not a member</text></string>
+	<string id="cczmp_ui_jailed"><text>Sentence: %s</text></string>
+	<string id="cczmp_ui_debt"><text>NBZ debt: %s</text></string>
+	<string id="cczmp_ui_record_empty"><text>No records</text></string>
+	<string id="cczmp_ui_input_amount"><text>Enter amount</text></string>
+	<string id="cczmp_ui_prompt"><text>Confirm action?</text></string>
+	<string id="cczmp_ui_amount"><text>Amount</text></string>
+	<string id="cczmp_ui_product"><text>Product</text></string>
+	<string id="cczmp_ui_term"><text>Term (days)</text></string>
+	<string id="cczmp_ui_rate"><text>Rate</text></string>
+	<string id="cczmp_ui_min"><text>Minimum</text></string>
+	<string id="cczmp_ui_max"><text>Maximum</text></string>
+	<string id="cczmp_ui_status"><text>Status</text></string>
+	<string id="cczmp_ui_confirm"><text>OK</text></string>
+	<string id="cczmp_ui_prev"><text>Back</text></string>
+	<string id="cczmp_ui_next"><text>Next</text></string>
+	<string id="cczmp_ui_back"><text>Back</text></string>
+	<string id="cczmp_ui_select"><text>Select a line</text></string>
+	<string id="cczmp_ui_no_money"><text>Insufficient funds</text></string>
+	<string id="cczmp_ui_msg_opened"><text>Deposit opened</text></string>
+	<string id="cczmp_ui_msg_closed"><text>Deposit closed: +%s</text></string>
+	<string id="cczmp_ui_msg_credit"><text>Credit issued</text></string>
+	<string id="cczmp_ui_msg_repaid"><text>Repaid: -%s</text></string>
+	<string id="cczmp_ui_msg_error"><text>Error</text></string>
+	<string id="cczmp_ui_msg_no_record"><text>No active records</text></string>
+</string_table>

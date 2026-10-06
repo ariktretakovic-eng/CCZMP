@@ -1,0 +1,481 @@
+--[[
+	CCZMP - Chernobyl Criminal Zone MultiPlayer
+	Module: Factions
+
+	Registry, rank ladders, relations, reputation and the player's membership.
+
+	Design notes
+	------------
+	* Everything tunable lives in configs\cczmp\factions\*.ltx and is produced by
+	  fac_gen.py from fac_data.py, so the section ids and the strings in
+	  st_cczmp_factions.xml can never drift apart.
+	* ini_file() resolves against $game_config$ (= gamedata\configs\), so the paths
+	  carry the "cczmp\\factions\\" prefix and nothing else.
+	* A missing or malformed ini is fatal in X-Ray (r_section aborts the process),
+	  so every read funnels through ready(), which validates the files once and
+	  disables the module instead of crashing mid-game.
+	* Membership and reputation live in alife_storage_manager, so they survive a
+	  relog and a save/load cycle.
+]]
+
+local CFG = "cczmp\\factions\\"
+local FILES = { "factions", "ranks", "relations", "accounts", "settings" }
+
+local f_factions, f_ranks, f_relations, f_accounts, f_settings
+
+local function ini(what)
+	if f_factions  == nil and what == "factions"  then f_factions  = ini_file(CFG .. "factions.ltx")  end
+	if f_ranks     == nil and what == "ranks"     then f_ranks     = ini_file(CFG .. "ranks.ltx")     end
+	if f_relations == nil and what == "relations" then f_relations = ini_file(CFG .. "relations.ltx") end
+	if f_accounts  == nil and what == "accounts"  then f_accounts  = ini_file(CFG .. "accounts.ltx")  end
+	if f_settings  == nil and what == "settings"  then f_settings  = ini_file(CFG .. "settings.ltx")  end
+	if what == "factions"  then return f_factions  end
+	if what == "ranks"     then return f_ranks     end
+	if what == "relations" then return f_relations end
+	if what == "accounts"  then return f_accounts  end
+	if what == "settings"  then return f_settings  end
+	return nil
+end
+
+local cfg_ready = nil
+
+local function finite(v)
+	return type(v) == "number" and v == v and v > -math.huge and v < math.huge
+end
+
+local function valid_id(id)
+	return type(id) == "string" and id:match("^[%w_]+$") ~= nil
+end
+
+local function ready()
+	if cfg_ready == nil then
+		cfg_ready = true
+		for _, what in ipairs(FILES) do
+			if ini(what) == nil or not ini(what):section_exist(what) then
+				cfg_ready = false
+				printe("[CCZMP factions] config not found: $game_config$%s%s.ltx -- module disabled",
+					CFG, what)
+				break
+			end
+		end
+	end
+	return cfg_ready
+end
+
+-- ready() is checked here rather than in every caller: these two are the only
+-- places that touch an ini, so one guard keeps a missing ltx from reaching the
+-- engine at all
+local function s(what, section, key, default)
+	if not ready() then return default end
+	local file = ini(what)
+	if type(section) ~= "string" or not file:section_exist(section)
+		or not file:line_exist(section, key) then return default end
+	local v = file:r_string(section, key)
+	if v == nil or v == "" then return default end
+	return v
+end
+
+local function n(what, section, key, default)
+	local v = tonumber(s(what, section, key, ""))
+	if not finite(v) then return default end
+	return v
+end
+
+local function tr(key)
+	if key == nil or key == "" or key == "none" then return "" end
+	return game.translate_string(key)
+end
+
+local function split(t)
+	local out = {}
+	for x in string.gmatch(t or "", "[^,%s]+") do out[#out + 1] = x end
+	return out
+end
+
+-- the ltx uses the literal "none" for an absent list, so every list walk has to
+-- drop it; otherwise a faction with no tasks would report one empty task
+local function split_list(t)
+	local out = {}
+	for _, x in ipairs(split(t)) do
+		if x ~= "none" then out[#out + 1] = x end
+	end
+	return out
+end
+
+-- registry ---------------------------------------------------------------
+
+local SET = "settings"
+
+local function sn(key, default) return n("settings", SET, key, default) end
+
+function exists(id)
+	if not valid_id(id) then return false end
+	for _, candidate in ipairs(all()) do
+		if candidate == id then return true end
+	end
+	return false
+end
+
+-- every faction id in registry order
+local id_cache = nil
+
+function all()
+	if not ready() then return {} end
+	if id_cache == nil then
+		local out = {}
+		local seen = {}
+		for _, sec in ipairs(split(s("factions", "factions", "list", ""))) do
+			if sec:match("^f_[%w_]+$") and not seen[sec]
+				and ini("factions"):section_exist(sec) then
+				out[#out + 1] = sec:sub(3)
+				seen[sec] = true
+			end
+		end
+		id_cache = out
+	end
+	local out = {}
+	for i, id in ipairs(id_cache) do out[i] = id end
+	return out
+end
+
+local function section(id)
+	return exists(id) and ("f_" .. id) or nil
+end
+
+function of_type(typ)
+	local out = {}
+	for _, id in ipairs(all()) do
+		if get_type(id) == typ then out[#out + 1] = id end
+	end
+	return out
+end
+
+function get_type(id)      return s("factions", section(id), "type", "unknown") end
+function get_community(id) return s("factions", section(id), "community", "none") end
+function get_icon(id)      return s("factions", section(id), "icon", "") end
+function get_account(id)   return s("factions", section(id), "account", "none") end
+function can_join(id)
+	if not exists(id) or n("factions", section(id), "can_join", 0) == 0 then return false end
+	if is_state(id) and cczmp_law and type(cczmp_law.is_dismissed) == "function"
+		and cczmp_law.is_dismissed() then return false end
+	return true
+end
+
+function get_name(id)  return tr(s("factions", section(id), "name",  "")) end
+function get_location(id) return tr(s("factions", section(id), "location", "")) end
+function get_style(id)    return tr(s("factions", section(id), "style", "")) end
+function get_base(id)     return tr(s("factions", section(id), "base_name", "")) end
+
+local function resolve_list(id, base)
+	local out = {}
+	for _, key in ipairs(split_list(s("factions", section(id), base, "none"))) do
+		out[#out + 1] = tr(key)
+	end
+	return out
+end
+
+function get_ranks(id)     return resolve_list(id, "ranks")     end
+function get_transport(id) return resolve_list(id, "transport") end
+function get_tasks(id)     return resolve_list(id, "tasks")     end
+function get_equipment(id) return resolve_list(id, "equipment") end
+function get_weapons(id)   return resolve_list(id, "weapons")   end
+function get_features(id)  return resolve_list(id, "features")  end
+function get_extra(id)     return resolve_list(id, "extra")     end
+
+function rank_count(id)
+	local count = n("factions", section(id), "ranks_count", 0)
+	return count >= 0 and count == math.floor(count) and count or 0
+end
+
+function get_rank(id, lvl)
+	local cnt = rank_count(id)
+	if lvl == nil or lvl == -1 then lvl = cnt - 1 end
+	if not finite(lvl) or lvl ~= math.floor(lvl) then return "" end
+	if lvl < 0 or lvl >= cnt then return "" end
+	return tr(s("ranks", ("r_%s_%d"):format(id, lvl), "name", "none"))
+end
+
+function get_rank_name(id, lvl)
+	local r = get_rank(id, lvl)
+	if r ~= "" then return r end
+	return get_name(id)
+end
+
+function is_state(id)     return get_type(id) == "state"    end
+function is_criminal(id)  return get_type(id) == "criminal" end
+function is_business(id)  return get_type(id) == "business" end
+function is_neutral(id)   return get_type(id) == "neutral"  end
+function is_contract(id)  return get_type(id) == "contract" end
+function is_civilian(id)  return get_type(id) == "civilian" end
+
+function faction_of_community(comm)
+	local set = factions_of_community(comm)
+	if #set == 1 then return set[1] end
+	return nil
+end
+
+function factions_of_community(comm)
+	local out = {}
+	if type(comm) ~= "string" or comm == "none" then return out end
+	for _, id in ipairs(all()) do
+		if get_community(id) == comm then out[#out + 1] = id end
+	end
+	return out
+end
+
+-- Explicit NPC identity survives save/load; nil clears it. Never changes community.
+function set_object_faction(obj, id)
+	if obj == nil or obj == db.actor or (id ~= nil and not exists(id)) then return false end
+	local st = alife_storage_manager.get_game_object_state(obj, true)
+	if st == nil then return false end
+	st.cczmp_faction_id = id
+	return true
+end
+
+function faction_of_object(obj)
+	if obj == nil then return nil end
+	if obj == db.actor then return faction() end
+	local st = alife_storage_manager.get_game_object_state(obj)
+	if st and exists(st.cczmp_faction_id) then return st.cczmp_faction_id end
+	return faction_of_community(obj:character_community())
+end
+
+-- state ------------------------------------------------------------------
+
+local SKEY = "cczmp_factions"
+
+local function state()
+	local actor = db.actor
+	if actor == nil then return nil end
+	if not ready() then return nil end
+	local st = alife_storage_manager.get_game_object_state(actor, true)
+	if st[SKEY] == nil then
+		st[SKEY] = {
+			faction   = "", -- empty means the actor is unaffiliated
+			rank      = 0,
+			rep       = {}, -- per faction reputation, keyed by faction id
+			standing  = {}, -- runtime relation overrides, "a|b" -> value
+		}
+	end
+	local s2 = st[SKEY]
+	if s2.rep == nil then s2.rep = {} end
+	if s2.standing == nil then s2.standing = {} end
+	return s2
+end
+
+-- membership -------------------------------------------------------------
+
+function faction()
+	local st = state()
+	if st == nil or st.faction == nil or st.faction == "" then return nil end
+	if not exists(st.faction) then return nil end
+	return st.faction
+end
+
+function rank()
+	local st = state()
+	if st == nil then return 0 end
+	local id = faction()
+	if id == nil then return 0 end
+	local r = st.rank or 0
+	if not finite(r) or r ~= math.floor(r) then r = 0 end
+	if r >= rank_count(id) then r = rank_count(id) - 1 end
+	if r < 0 then r = 0 end
+	return r
+end
+
+function join(id)
+	local st = state()
+	if st == nil then return false end
+	if not exists(id) or not can_join(id) then return false end
+	if st.faction == id then return true end
+	st.faction = id
+	st.rank = 0
+	if st.rep[id] == nil then set_reputation(id, sn("reputation_start", 0)) end
+	printe("[CCZMP factions] actor joined %s", id)
+	return true
+end
+
+function leave()
+	local st = state()
+	if st == nil then return false end
+	st.faction = ""
+	st.rank = 0
+	return true
+end
+
+function set_rank(lvl)
+	if not finite(lvl) or lvl ~= math.floor(lvl) then return false end
+	local st = state()
+	if st == nil then return false end
+	local id = faction()
+	if id == nil then return false end
+	local cnt = rank_count(id)
+	if cnt == 0 then return false end
+	if lvl < 0 or lvl >= cnt then return false end
+	st.rank = lvl
+	return true
+end
+
+function promote() return set_rank(rank() + 1) end
+function demote()  return set_rank(rank() - 1) end
+
+-- reputation -------------------------------------------------------------
+
+local function clamp(v, lo, hi)
+	if v < lo then return lo end
+	if v > hi then return hi end
+	return v
+end
+
+function get_reputation(id)
+	if not exists(id) then return 0 end
+	local st = state()
+	if st == nil then return 0 end
+	return finite(st.rep[id]) and st.rep[id] or sn("reputation_start", 0)
+end
+
+function set_reputation(id, value)
+	if not exists(id) or not finite(value) then return nil end
+	local st = state()
+	if st == nil then return nil end
+	st.rep[id] = clamp(value, 0, math.max(0, sn("reputation_max", 100)))
+	return st.rep[id]
+end
+
+function add_reputation(id, delta)
+	if not exists(id) or not finite(delta) then return nil end
+	local st = state()
+	if st == nil then return nil end
+	return set_reputation(id, get_reputation(id) + delta)
+end
+
+-- relations --------------------------------------------------------------
+-- Declarations are symmetric, with enemies winning conflicts. Explicit runtime
+-- overrides replace declarations in both directions.
+
+local function pair(a, b) return a .. "|" .. b end
+
+local function declared(fid, what)
+	local out = {}
+	for _, sec in ipairs(split_list(s("relations", section(fid), what, "none"))) do
+		if sec:sub(1, 2) == "f_" and exists(sec:sub(3)) then out[#out + 1] = sec:sub(3) end
+	end
+	return out
+end
+
+-- Lists reflect effective relations, including reverse declarations and overrides.
+function allies(id)
+	local out = {}
+	for _, other in ipairs(all()) do
+		if is_ally(id, other) then out[#out + 1] = other end
+	end
+	return out
+end
+function enemies(id)
+	local out = {}
+	for _, other in ipairs(all()) do
+		if is_enemy(id, other) then out[#out + 1] = other end
+	end
+	return out
+end
+
+function base_standing(a, b)
+	if not exists(a) or not exists(b) or a == b then return 0 end
+	local ally_th  = sn("relation_ally", 40)
+	local host_th  = sn("relation_hostile", -40)
+	for _, x in ipairs(declared(a, "enemies")) do
+		if x == b then return host_th end
+	end
+	for _, x in ipairs(declared(b, "enemies")) do
+		if x == a then return host_th end
+	end
+	for _, x in ipairs(declared(a, "allies")) do
+		if x == b then return ally_th end
+	end
+	for _, x in ipairs(declared(b, "allies")) do
+		if x == a then return ally_th end
+	end
+	return sn("relation_start", 0)
+end
+
+function standing(a, b)
+	if not exists(a) or not exists(b) or a == b then return 0 end
+	local st = state()
+	local base = base_standing(a, b)
+	if st == nil then return base end
+	local v = st.standing[pair(a, b)]
+	local reverse = st.standing[pair(b, a)]
+	-- Old saves may contain one-sided overrides. Conflicts use the lower score.
+	if finite(v) and finite(reverse) then return math.min(v, reverse) end
+	if finite(v) then return v end
+	if finite(reverse) then return reverse end
+	return base
+end
+
+function set_standing(a, b, value)
+	if not exists(a) or not exists(b) or a == b or not finite(value) then return nil end
+	local st = state()
+	if st == nil then return nil end
+	local v = clamp(value, sn("relation_min", -100), sn("relation_max", 100))
+	if v == base_standing(a, b) then
+		st.standing[pair(a, b)] = nil -- back to the declared value
+		st.standing[pair(b, a)] = nil
+		return v
+	end
+	st.standing[pair(a, b)] = v
+	st.standing[pair(b, a)] = v
+	return v
+end
+
+function shift_standing(a, b, delta)
+	if not finite(delta) then return nil end
+	return set_standing(a, b, standing(a, b) + delta)
+end
+
+function is_ally(a, b)
+	return exists(a) and exists(b) and a ~= b and not is_enemy(a, b)
+		and standing(a, b) >= sn("relation_ally", 40)
+end
+function is_enemy(a, b)
+	return exists(a) and exists(b) and a ~= b and standing(a, b) <= sn("relation_hostile", -40)
+end
+
+-- Seller-owned rules; positive percentages reduce price, negative ones surcharge.
+-- No customer means no quote (never infer the actor or a category from the seller).
+function seller_rule(seller, customer)
+	if not exists(seller) or not exists(customer) then
+		return { status = "invalid_faction" }
+	end
+	local key = is_state(customer) and "discount_state"
+		or (is_criminal(customer) and "discount_gang" or nil)
+	local raw = key and n("factions", section(seller), key, 0) or 0
+	if seller == "sabbers" and is_state(customer) then
+		-- Brief line 1172 says '+10%' on top of price, but generated LTX says 20.
+		return { status = "unresolved_state_price", configured_percent = raw, key = key }
+	end
+	if raw < -100 or raw > 100 then return { status = "invalid_percent", key = key } end
+	return { status = "resolved", discount_percent = raw, price_multiplier = 1 - raw / 100, key = key }
+end
+
+function discount_for(seller, customer)
+	local rule = seller_rule(seller, customer)
+	-- Numeric first result remains UI-safe; callers must inspect status before trading.
+	return rule.discount_percent or 0, rule.status
+end
+
+-- diagnostics ------------------------------------------------------------
+
+function dump()
+	local out = {}
+	for _, id in ipairs(all()) do
+		out[#out + 1] = ("%-14s %-9s %-9s %s"):format(id, get_type(id), get_community(id), get_name(id))
+	end
+	return out
+end
+
+function on_game_start()
+	if not ready() then return end
+	state()
+	printe("[CCZMP factions] %d factions loaded", #all())
+end

@@ -1,0 +1,143 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: LAW
+;; File:   ak.ltx -- АК НЧГ, Административный кодекс (5 статей, 18 составов)
+;;
+;; Same penalty grammar as uk.ltx. Administrative offences carry fines in
+;; roubles and short arrests; they never carry freedom terms.
+;; hook = the engine callback that can auto-report it, "none" if manual.
+
+[ak]
+list = ak_1_1, ak_1_2, ak_1_3, ak_2_1, ak_2_2, ak_2_3, ak_2_4, ak_3_1, ak_3_2, ak_3_3, ak_3_4, ak_4_1, ak_4_2, ak_4_3, ak_4_4, ak_5_1, ak_5_2, ak_5_3
+
+; ---------------- Статья 1: Нарушение порядка ----------------
+[ak_1_1]
+number = 1.1
+descr_key = cczmp_ak_1_1
+penalty = fine:5000
+hook = none
+repeat = 1
+
+[ak_1_2]
+number = 1.2
+descr_key = cczmp_ak_1_2
+penalty = fine:10000, arrest:1
+hook = none
+repeat = 1
+
+[ak_1_3]
+number = 1.3
+descr_key = cczmp_ak_1_3
+penalty = fine:25000, arrest:2
+hook = none
+repeat = 0
+
+; ---------------- Статья 2: Нарушения ПДД ----------------
+[ak_2_1]
+number = 2.1
+descr_key = cczmp_ak_2_1
+penalty = fine:8000
+hook = none
+repeat = 1
+
+[ak_2_2]
+number = 2.2
+descr_key = cczmp_ak_2_2
+penalty = fine:10000
+hook = none
+repeat = 1
+
+[ak_2_3]
+number = 2.3
+descr_key = cczmp_ak_2_3
+penalty = arrest:3
+hook = none
+repeat = 1
+
+[ak_2_4]
+number = 2.4
+descr_key = cczmp_ak_2_4
+penalty = fine:25000, arrest:2
+hook = none
+repeat = 1
+
+; ---------------- Статья 3: Нарушения порядка в Зоне ----------------
+[ak_3_1]
+number = 3.1
+descr_key = cczmp_ak_3_1
+penalty = arrest:2
+hook = interact
+zone = secure
+repeat = 1
+
+[ak_3_2]
+number = 3.2
+descr_key = cczmp_ak_3_2
+penalty = fine:15000
+hook = none
+repeat = 1
+
+[ak_3_3]
+number = 3.3
+descr_key = cczmp_ak_3_3
+penalty = fine:20000
+hook = trade
+repeat = 1
+
+[ak_3_4]
+number = 3.4
+descr_key = cczmp_ak_3_4
+penalty = arrest:4
+hook = interact
+zone = uniform
+repeat = 0
+
+; ---------------- Статья 4: Противодействие органам ----------------
+[ak_4_1]
+number = 4.1
+descr_key = cczmp_ak_4_1
+penalty = fine:5000
+hook = none
+repeat = 1
+
+[ak_4_2]
+number = 4.2
+descr_key = cczmp_ak_4_2
+penalty = arrest:2
+hook = none
+repeat = 1
+
+[ak_4_3]
+number = 4.3
+descr_key = cczmp_ak_4_3
+penalty = fine:15000, arrest:1
+hook = none
+repeat = 1
+
+[ak_4_4]
+number = 4.4
+descr_key = cczmp_ak_4_4
+penalty = fine:10000
+hook = none
+repeat = 1
+
+; ---------------- Статья 5: Прочее ----------------
+[ak_5_1]
+number = 5.1
+descr_key = cczmp_ak_5_1
+penalty = fine:7000
+hook = none
+repeat = 1
+
+[ak_5_2]
+number = 5.2
+descr_key = cczmp_ak_5_2
+penalty = fine:3000
+hook = none
+repeat = 1
+
+[ak_5_3]
+number = 5.3
+descr_key = cczmp_ak_5_3
+penalty = arrest:3
+hook = none
+repeat = 1

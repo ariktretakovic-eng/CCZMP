@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_ui_title"><text>НБЗ — Центральный терминал</text></string>
+	<string id="cczmp_ui_balance"><text>Счёт: %s</text></string>
+	<string id="cczmp_ui_rating"><text>Кредитный рейтинг: %s</text></string>
+	<string id="cczmp_ui_blocked"><text>Счёт заблокирован</text></string>
+	<string id="cczmp_ui_free"><text>Счёт свободен</text></string>
+	<string id="cczmp_ui_tab_bank"><text>Банк</text></string>
+	<string id="cczmp_ui_tab_factions"><text>Фракции</text></string>
+	<string id="cczmp_ui_tab_law"><text>Закон</text></string>
+	<string id="cczmp_ui_tab_close"><text>Закрыть</text></string>
+	<string id="cczmp_ui_deposits"><text>Депозиты</text></string>
+	<string id="cczmp_ui_credits"><text>Кредиты</text></string>
+	<string id="cczmp_ui_open"><text>Открыть</text></string>
+	<string id="cczmp_ui_close"><text>Закрыть</text></string>
+	<string id="cczmp_ui_take"><text>Взять</text></string>
+	<string id="cczmp_ui_repay"><text>Погасить</text></string>
+	<string id="cczmp_ui_join"><text>Вступить</text></string>
+	<string id="cczmp_ui_leave"><text>Выйти</text></string>
+	<string id="cczmp_ui_member"><text>Член: %s (%s)</text></string>
+	<string id="cczmp_ui_no_member"><text>Не в фракции</text></string>
+	<string id="cczmp_ui_jailed"><text>Заключение: %s</text></string>
+	<string id="cczmp_ui_debt"><text>Долг НБЗ: %s</text></string>
+	<string id="cczmp_ui_record_empty"><text>Записей нет</text></string>
+	<string id="cczmp_ui_input_amount"><text>Введите сумму</text></string>
+	<string id="cczmp_ui_prompt"><text>Подтвердить действие?</text></string>
+	<string id="cczmp_ui_amount"><text>Сумма</text></string>
+	<string id="cczmp_ui_product"><text>Продукт</text></string>
+	<string id="cczmp_ui_term"><text>Срок (дн)</text></string>
+	<string id="cczmp_ui_rate"><text>Ставка</text></string>
+	<string id="cczmp_ui_min"><text>Минимум</text></string>
+	<string id="cczmp_ui_max"><text>Максимум</text></string>
+	<string id="cczmp_ui_status"><text>Статус</text></string>
+	<string id="cczmp_ui_confirm"><text>ОК</text></string>
+	<string id="cczmp_ui_prev"><text>Назад</text></string>
+	<string id="cczmp_ui_next"><text>Вперёд</text></string>
+	<string id="cczmp_ui_back"><text>Назад</text></string>
+	<string id="cczmp_ui_select"><text>Выберите строку</text></string>
+	<string id="cczmp_ui_no_money"><text>Недостаточно средств</text></string>
+	<string id="cczmp_ui_msg_opened"><text>Депозит открыт</text></string>
+	<string id="cczmp_ui_msg_closed"><text>Депозит закрыт: +%s</text></string>
+	<string id="cczmp_ui_msg_credit"><text>Кредит выдан</text></string>
+	<string id="cczmp_ui_msg_repaid"><text>Погашено: -%s</text></string>
+	<string id="cczmp_ui_msg_error"><text>Ошибка</text></string>
+	<string id="cczmp_ui_msg_no_record"><text>Нет активных записей</text></string>
+</string_table>

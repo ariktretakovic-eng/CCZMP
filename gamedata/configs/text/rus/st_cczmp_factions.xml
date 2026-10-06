@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_fac_zonastroy_name">
+		<text>ЗОНАСТРОЙ</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_location">
+		<text>Промзона «Октябрьская», восточная окраина Припяти</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_0">
+		<text>Рабочий</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_1">
+		<text>Каменщик</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_2">
+		<text>Инженер-строитель</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_3">
+		<text>Мастер участка</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_4">
+		<text>Прораб</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_0">
+		<text>КАМАЗ-бетономешалка</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_1">
+		<text>Экскаватор ЭО-3323</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_2">
+		<text>Гусеничный кран КС-4561</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_3">
+		<text>Пикап инженерного состава</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_4">
+		<text>Броневик «Шахтёр»</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_0">
+		<text>Строительство и восстановление зданий НЧГ</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_1">
+		<text>Создание новых укреплений, блокпостов и мостов</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_2">
+		<text>Возведение защитных куполов и подземных укрытий</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_3">
+		<text>Сотрудничество с ЧернЭнерго и ComNet при строительстве энерго- и связевых сетей</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_4">
+		<text>Ремонт стратегически важных объектов после выбросов</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_name">
+		<text>ЧернЭнерго</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_location">
+		<text>Главная электроподстанция «Радар-3», северо-восток Припяти, подземный уровень комплекса</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_0">
+		<text>Электромонтер</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_1">
+		<text>Техник по оборудованию</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_2">
+		<text>Старший техник</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_3">
+		<text>Инженер-оператор</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_4">
+		<text>Старший инженер</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_0">
+		<text>Вахтовый УАЗ «Энергия»</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_1">
+		<text>Грузовик ГАЗ-3308</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_2">
+		<text>Передвижная электростанция ПЭС-3</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_3">
+		<text>Багги для патрулирования высоковольтных трасс</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_0">
+		<text>Поддержание и восстановление энергетической сети НЧГ</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_1">
+		<text>Обеспечение питания баз, антенн и лабораторий</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_2">
+		<text>Починка линий после выбросов и боёв</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_3">
+		<text>Создание временных энергетических полей защиты</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_4">
+		<text>Сотрудничество с ComNet и МонолитСтрой при строительстве и подключении объектов</text>
+	</string>
+	<string id="cczmp_fac_comnet_name">
+		<text>ComNet НЧГ</text>
+	</string>
+	<string id="cczmp_fac_comnet_location">
+		<text>Заброшенный радиокомплекс «Вектор-5», южнее города Янтарь</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_0">
+		<text>Радиотехник</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_1">
+		<text>Связист</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_2">
+		<text>Старший связист</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_3">
+		<text>Координатор сети</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_4">
+		<text>Старший координатор</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_0">
+		<text>Радиофургон «Лавина»</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_1">
+		<text>Внедорожник с антенным комплексом</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_2">
+		<text>Малые дроны-разведчики</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_3">
+		<text>Катер для связи в прибрежных районах</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_0">
+		<text>Поддержание радиосвязи между базами и патрулями</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_1">
+		<text>Мониторинг аномальных радиосигналов и пси-волн</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_2">
+		<text>Восстановление спутниковых каналов</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_3">
+		<text>Шифрование и дешифровка сообщений фракций</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_4">
+		<text>Поддержка ЧернЭнерго и МонолитСтрой при установке новых антенн</text>
+	</string>
+	<string id="cczmp_fac_sud_name">
+		<text>Суд НЧГ</text>
+	</string>
+	<string id="cczmp_fac_sud_location">
+		<text>Здание Суда НЧГ в центральной части Припяти, недалеко от площади имени Независимости</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_0">
+		<text>Секретарь суда</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_1">
+		<text>Помощник судьи</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_2">
+		<text>Судебный исполнитель</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_3">
+		<text>Мировой судья</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_4">
+		<text>Судья первой инстанции</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_0">
+		<text>Audi A6 (служебный транспорт судьи)</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_1">
+		<text>Volkswagen Passat (делопроизводство)</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_2">
+		<text>УАЗ «Буханка» (конвойный транспорт)</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_3">
+		<text>Mercedes-Benz S-Class (председатель суда)</text>
+	</string>
+	<string id="cczmp_fac_sud_task_0">
+		<text>Проведение судебных заседаний по делам, переданным от СК и Прокуратуры</text>
+	</string>
+	<string id="cczmp_fac_sud_task_1">
+		<text>Вынесение приговоров и решений на основании доказательств</text>
+	</string>
+	<string id="cczmp_fac_sud_task_2">
+		<text>Обеспечение справедливого и беспристрастного разбирательства</text>
+	</string>
+	<string id="cczmp_fac_sud_task_3">
+		<text>Контроль исполнения решений суда через судебных исполнителей</text>
+	</string>
+	<string id="cczmp_fac_sud_task_4">
+		<text>Ведение реестра дел и приговоров, доступного только госструктурам</text>
+	</string>
+	<string id="cczmp_fac_sud_task_5">
+		<text>Возможность пересмотра дел по апелляциям и жалобам</text>
+	</string>
+	<string id="cczmp_fac_sud_task_6">
+		<text>Защита прав граждан НЧГ и поддержание законности на всей территории</text>
+	</string>
+	<string id="cczmp_fac_sk_name">
+		<text>СК НЧГ</text>
+	</string>
+	<string id="cczmp_fac_sk_location">
+		<text>Бывший административный комплекс №14 в центральном секторе Припяти (по слухам — бывший штаб КГБ)</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_0">
+		<text>Стажёр-следователь</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_1">
+		<text>Младший следователь</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_2">
+		<text>Следователь</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_3">
+		<text>Старший следователь</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_4">
+		<text>Следователь по особо важным делам</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_0">
+		<text>Toyota Land Cruiser 200 (броневик СК)</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_1">
+		<text>УАЗ Patriot (оперативная группа)</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_2">
+		<text>Mercedes-Benz E-Class (служебный автомобиль следователя)</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_3">
+		<text>Вертолёт Ми-8 СК (редко, только по приказу главы)</text>
+	</string>
+	<string id="cczmp_fac_sk_task_0">
+		<text>Проведение допросов, обысков и задержаний подозреваемых по делам НЧГ</text>
+	</string>
+	<string id="cczmp_fac_sk_task_1">
+		<text>Ведение уголовных дел против нарушителей закона и коррупционеров</text>
+	</string>
+	<string id="cczmp_fac_sk_task_2">
+		<text>Контроль действий ФСИН, ДПС, Военных и Таможни на предмет превышения полномочий</text>
+	</string>
+	<string id="cczmp_fac_sk_task_3">
+		<text>Сбор разведданных о преступных группировках и торговцах артефактами</text>
+	</string>
+	<string id="cczmp_fac_sk_task_4">
+		<text>Проведение спецопераций совместно с другими структурами (приказ Президента)</text>
+	</string>
+	<string id="cczmp_fac_sk_task_5">
+		<text>Отчётность перед Советом Безопасности НЧГ и лично Президентом</text>
+	</string>
+	<string id="cczmp_fac_schs_name">
+		<text>СЧС</text>
+	</string>
+	<string id="cczmp_fac_schs_location">
+		<text>Засекреченный бункер в районе разрушенного завода</text>
+	</string>
+	<string id="cczmp_fac_schs_style">
+		<text>Обычная одежда, скрытое снаряжение</text>
+	</string>
+	<string id="cczmp_fac_schs_transport_0">
+		<text>Неномированный микроавтобус</text>
+	</string>
+	<string id="cczmp_fac_schs_transport_1">
+		<text>Гражданские автомобили</text>
+	</string>
+	<string id="cczmp_fac_schs_task_0">
+		<text>Разведка</text>
+	</string>
+	<string id="cczmp_fac_schs_task_1">
+		<text>Слежка</text>
+	</string>
+	<string id="cczmp_fac_schs_task_2">
+		<text>Внедрение в группировки</text>
+	</string>
+	<string id="cczmp_fac_schs_task_3">
+		<text>Аресты по подозрению в измене</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_name">
+		<text>Прокуратура НЧГ</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_location">
+		<text>Припять, здание с гербом прокуратуры</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_0">
+		<text>Volkswagen Touareg</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_1">
+		<text>Toyota RAV4</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_2">
+		<text>Toyota Land Rover</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_3">
+		<text>Toyota Land Cruiser 200 (тонированный)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_4">
+		<text>Mercedes-Benz E200 (синего цвета, надпись «Прокуратура»)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_equip_0">
+		<text>Костюмы с погонами</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_equip_1">
+		<text>Фуражка прокуратуры</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_equip_2">
+		<text>Блестящие туфли</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_0">
+		<text>М-16 (у обычных прокуроров)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_1">
+		<text>ПМ с глушителем (у обычных прокуроров)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_2">
+		<text>MSG-V1 с глушителем (старшие прокуроры)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_3">
+		<text>USP с глушителем (старшие прокуроры)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_4">
+		<text>Teg 9, улучшенная версия на 24 патрона (главный прокурор)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_5">
+		<text>МП-7 с регулируемой оптикой (главный прокурор)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_name">
+		<text>СТО «Кабан»</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_location">
+		<text>Зона на стыке Свалки и Кладбища техники</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_0">
+		<text>ЗИЛ-131 с кузовом-мастерской</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_1">
+		<text>УАЗ 452 («Буханка») с наклейками «СТО»</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_2">
+		<text>Пикапы с логотипом «Кабан»</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_3">
+		<text>Москвич 412</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_4">
+		<text>Lada 2107 на усиленной подвеске</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_5">
+		<text>Переоборудованный БТР (передвижная база в опасных зонах)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_0">
+		<text>Ремонт и тюнинг оружия и транспорта</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_1">
+		<text>Производство модифицированного снаряжения</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_2">
+		<text>Торговля деталями, ПДА, инструментами</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_3">
+		<text>Чёрный рынок — возможно, нелегальное оружие по заказу ОПГ</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_4">
+		<text>Поддержание нейтралитета между фракциями</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_5">
+		<text>Участие в теневом аукционе «Редкие Артефакты»</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_0">
+		<text>Рабочий комбез</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_1">
+		<text>Кожаный фартук</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_2">
+		<text>Перчатки</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_3">
+		<text>Иногда бронежилет под одеждой</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_4">
+		<text>Цвета: чёрный и жёлтые элементы, логотип кабана на спине</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_5">
+		<text>У старших техников — маски сварщика с модификацией ПНВ</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_0">
+		<text>Обрезы</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_1">
+		<text>ПП «Бизон»</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_2">
+		<text>«Ксюха»</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_3">
+		<text>МР-5</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_4">
+		<text>АК-74М с подстволком (у мастеров)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_5">
+		<text>РПК (для обороны базы)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_6">
+		<text>Гвоздомёты</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_7">
+		<text>Электрошоковые мины</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_8">
+		<text>Кастомные ловушки на базе аккумуляторов и запчастей</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_feature_0">
+		<text>Знают все тайные ходы и закладки на Свалке</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_feature_1">
+		<text>Могут «откатить» ПДА игрока, стереть следы или найти любой лог</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_feature_2">
+		<text>Собственная радиочастота «Техно-01» (только для кабанов) и «Техно-00» (для кабанов, сабберов и операторов)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_extra_0">
+		<text>Выездные СТО в Затоне, на Агропроме и иногда даже в Рыжем лесу</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_extra_1">
+		<text>«Чёрный ангар» — секретное место тюнинга экспериментального транспорта</text>
+	</string>
+	<string id="cczmp_fac_sabbers_name">
+		<text>Сабберы</text>
+	</string>
+	<string id="cczmp_fac_sabbers_location">
+		<text>Свалка, барахолка, недалеко от депо, в сторону базы «ЧВК Х-солдаты»</text>
+	</string>
+	<string id="cczmp_fac_sabbers_base">
+		<text>Звуковой центр «Пёс»</text>
+	</string>
+	<string id="cczmp_fac_sabbers_task_0">
+		<text>Установка и прокачка сабвуферов в служебных, бандитских и гражданских автомобилях</text>
+	</string>
+	<string id="cczmp_fac_sabbers_equip_0">
+		<text>Комбинезон сталкеров, измазанный в мазуте, как у братьев из СТО «Кабан»</text>
+	</string>
+	<string id="cczmp_fac_barrikada_name">
+		<text>УГ «Баррикада»</text>
+	</string>
+	<string id="cczmp_fac_barrikada_location">
+		<text>Занятая станция метро</text>
+	</string>
+	<string id="cczmp_fac_barrikada_style">
+		<text>Кожанки, маски, красные повязки</text>
+	</string>
+	<string id="cczmp_fac_barrikada_transport_0">
+		<text>Автобусы с баррикадами</text>
+	</string>
+	<string id="cczmp_fac_barrikada_transport_1">
+		<text>Легковушки с громкоговорителями</text>
+	</string>
+	<string id="cczmp_fac_operators_name">
+		<text>Операторы</text>
+	</string>
+	<string id="cczmp_fac_operators_location">
+		<text>Депо, жд станция, аэродром</text>
+	</string>
+	<string id="cczmp_fac_operators_style">
+		<text>Комбинезоны, водительская атрибутика</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_0">
+		<text>Поезда</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_1">
+		<text>КамАЗы</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_2">
+		<text>Такси</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_3">
+		<text>Вертолёты</text>
+	</string>
+	<string id="cczmp_fac_operators_task_0">
+		<text>Контроль над логистикой — водители, машинисты, пилоты</text>
+	</string>
+	<string id="cczmp_fac_fanatiki_name">
+		<text>Фанатики</text>
+	</string>
+	<string id="cczmp_fac_fanatiki_location">
+		<text>Центр Зоны, старые храмы, антенны</text>
+	</string>
+	<string id="cczmp_fac_fanatiki_style">
+		<text>Робо-религиозный, маски, символика монолита</text>
+	</string>
+	<string id="cczmp_fac_pmc_name">
+		<text>ЧВК Х-солдаты</text>
+	</string>
+	<string id="cczmp_fac_pmc_location">
+		<text>Закрытые лагеря с вертолётными площадками</text>
+	</string>
+	<string id="cczmp_fac_pmc_style">
+		<text>Современная экипировка, наёмники</text>
+	</string>
+	<string id="cczmp_fac_pmc_transport_0">
+		<text>БТРы</text>
+	</string>
+	<string id="cczmp_fac_pmc_transport_1">
+		<text>Военные джипы</text>
+	</string>
+	<string id="cczmp_fac_snipers_name">
+		<text>Снайперы ветераны</text>
+	</string>
+	<string id="cczmp_fac_snipers_location">
+		<text>Старые военные базы</text>
+	</string>
+	<string id="cczmp_fac_snipers_style">
+		<text>Камуфляж, балаклавы, дальнобой</text>
+	</string>
+	<string id="cczmp_fac_snipers_transport_0">
+		<text>УАЗики</text>
+	</string>
+	<string id="cczmp_fac_snipers_transport_1">
+		<text>Мотоциклы</text>
+	</string>
+	<string id="cczmp_fac_chetkie_name">
+		<text>Чёткие пацаны</text>
+	</string>
+	<string id="cczmp_fac_chetkie_location">
+		<text>Развалины ТЦ или вокзал</text>
+	</string>
+	<string id="cczmp_fac_chetkie_style">
+		<text>Адидас, золотые цепи, бакланы</text>
+	</string>
+	<string id="cczmp_fac_chetkie_transport_0">
+		<text>Тазики</text>
+	</string>
+	<string id="cczmp_fac_chetkie_transport_1">
+		<text>Е34</text>
+	</string>
+	<string id="cczmp_fac_chetkie_transport_2">
+		<text>2107</text>
+	</string>
+	<string id="cczmp_fac_stalkers_name">
+		<text>Сталкеры</text>
+	</string>
+	<string id="cczmp_fac_stalkers_location">
+		<text>Деревни, временные лагеря</text>
+	</string>
+	<string id="cczmp_fac_stalkers_style">
+		<text>Всё подряд, от треника до броника</text>
+	</string>
+	<string id="cczmp_fac_stalkers_transport_0">
+		<text>Всё, что найдут — мотоциклы, старые УАЗики</text>
+	</string>
+	<string id="cczmp_fac_karateli_name">
+		<text>ТО «Каратели»</text>
+	</string>
+	<string id="cczmp_fac_karateli_location">
+		<text>Заброшенные морги и психиатрические клиники</text>
+	</string>
+	<string id="cczmp_fac_karateli_style">
+		<text>Медицинские халаты, измазанные кровью</text>
+	</string>
+	<string id="cczmp_fac_karateli_transport_0">
+		<text>Пикапы с символикой черепов</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_name">
+		<text>ТС «Зона Власти»</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_location">
+		<text>Брошенные тюрьмы и лагеря</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_style">
+		<text>Тюремные татуировки, бушлаты</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_transport_0">
+		<text>Грузовики</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_transport_1">
+		<text>Броневики с наручной резкой</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_name">
+		<text>Коррупционный синдикат</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_location">
+		<text>Элитные дома, бизнес-центры</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_style">
+		<text>Костюмы, тёмные очки, дорогие часы</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_transport_0">
+		<text>БМВ</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_transport_1">
+		<text>Лексусы</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_transport_2">
+		<text>Премиум-класс</text>
+	</string>
+	<string id="cczmp_fac_tehno_name">
+		<text>Технобандиты</text>
+	</string>
+	<string id="cczmp_fac_tehno_location">
+		<text>Разрушенные НИИ</text>
+	</string>
+	<string id="cczmp_fac_tehno_style">
+		<text>Сварочные маски, обвес с проводами</text>
+	</string>
+	<string id="cczmp_fac_tehno_transport_0">
+		<text>Самодельные броневики</text>
+	</string>
+	<string id="cczmp_fac_cobra_name">
+		<text>ТО «Чёрная Кобра»</text>
+	</string>
+	<string id="cczmp_fac_cobra_location">
+		<text>Горы и шахты, где невозможно засечь</text>
+	</string>
+	<string id="cczmp_fac_cobra_style">
+		<text>Чёрные повязки, знаки кобры</text>
+	</string>
+	<string id="cczmp_fac_cobra_transport_0">
+		<text>Камуфлированные пикапы</text>
+	</string>
+	<string id="cczmp_fac_cobra_transport_1">
+		<text>Мотоциклы</text>
+	</string>
+	<string id="cczmp_fac_sector0_name">
+		<text>Сектор «0»</text>
+	</string>
+	<string id="cczmp_fac_sector0_location">
+		<text>Подземные серверные, зашифрованные штабы</text>
+	</string>
+	<string id="cczmp_fac_sector0_style">
+		<text>Тактическая одежда и электронные девайсы</text>
+	</string>
+	<string id="cczmp_fac_sector0_transport_0">
+		<text>Чёрные минивэны без номеров</text>
+	</string>
+	<string id="cczmp_fac_iskra_name">
+		<text>Группа «Искра»</text>
+	</string>
+	<string id="cczmp_fac_iskra_location">
+		<text>Старая электростанция</text>
+	</string>
+	<string id="cczmp_fac_iskra_style">
+		<text>Пожарная форма с черепами</text>
+	</string>
+	<string id="cczmp_fac_iskra_transport_0">
+		<text>Самодельные багги</text>
+	</string>
+	<string id="cczmp_fac_iskra_transport_1">
+		<text>Пикапы с огнемётами</text>
+	</string>
+	<string id="cczmp_fac_militsiya_name">
+		<text>Милиция</text>
+	</string>
+	<string id="cczmp_fac_militsiya_location">
+		<text>Деревня Новичков (отделение милиции)</text>
+	</string>
+	<string id="cczmp_fac_militsiya_style">
+		<text>Форма 90-х, кепки, дубинки</text>
+	</string>
+	<string id="cczmp_fac_militsiya_transport_0">
+		<text>ВАЗ 2114</text>
+	</string>
+	<string id="cczmp_fac_militsiya_transport_1">
+		<text>УАЗ «Буханка»</text>
+	</string>
+	<string id="cczmp_fac_mvd_name">
+		<text>МВД</text>
+	</string>
+	<string id="cczmp_fac_mvd_location">
+		<text>Комиссариат в крупном населённом пункте</text>
+	</string>
+	<string id="cczmp_fac_mvd_style">
+		<text>Классическая полицейская форма</text>
+	</string>
+	<string id="cczmp_fac_mvd_transport_0">
+		<text>LADA Priora</text>
+	</string>
+	<string id="cczmp_fac_mvd_transport_1">
+		<text>УАЗ</text>
+	</string>
+	<string id="cczmp_fac_mvd_transport_2">
+		<text>Внедорожники</text>
+	</string>
+	<string id="cczmp_fac_mvd_task_0">
+		<text>Расследование преступлений</text>
+	</string>
+	<string id="cczmp_fac_mvd_task_1">
+		<text>Сбор досье</text>
+	</string>
+	<string id="cczmp_fac_mvd_task_2">
+		<text>Контроль трафика</text>
+	</string>
+	<string id="cczmp_fac_fsin_name">
+		<text>ФСИН</text>
+	</string>
+	<string id="cczmp_fac_fsin_location">
+		<text>Лагерь строгого режима на северо-западе карты</text>
+	</string>
+	<string id="cczmp_fac_fsin_style">
+		<text>Сине-серая форма с бронежилетами</text>
+	</string>
+	<string id="cczmp_fac_fsin_transport_0">
+		<text>КамАЗ для перевозки заключённых</text>
+	</string>
+	<string id="cczmp_fac_fsin_transport_1">
+		<text>ГАЗели</text>
+	</string>
+	<string id="cczmp_fac_scientists_name">
+		<text>Учёные</text>
+	</string>
+	<string id="cczmp_fac_scientists_location">
+		<text>Лаборатории «Янов», «Бункер Озёрный»</text>
+	</string>
+	<string id="cczmp_fac_scientists_style">
+		<text>Химзащита, научная одежда, очки</text>
+	</string>
+	<string id="cczmp_fac_scientists_transport_0">
+		<text>УАЗ с прицепом</text>
+	</string>
+	<string id="cczmp_fac_scientists_transport_1">
+		<text>Бронированные ВАЗ 2131</text>
+	</string>
+	<string id="cczmp_fac_mchs_name">
+		<text>МЧС</text>
+	</string>
+	<string id="cczmp_fac_mchs_location">
+		<text>Пожарная станция в Затоне/Янове</text>
+	</string>
+	<string id="cczmp_fac_mchs_style">
+		<text>Оранжевая форма, каски, инструменты</text>
+	</string>
+	<string id="cczmp_fac_mchs_transport_0">
+		<text>КРАЗ «Пожарный»</text>
+	</string>
+	<string id="cczmp_fac_mchs_transport_1">
+		<text>УАЗ</text>
+	</string>
+	<string id="cczmp_fac_mchs_transport_2">
+		<text>Катера</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_name">
+		<text>Минздрав</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_location">
+		<text>Лаборатория и мобильные госпитали</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_style">
+		<text>Бело-зелёная униформа, мед. экипировка</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_transport_0">
+		<text>Реанимации на базе УАЗ</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_transport_1">
+		<text>Грузовики с медикаментами</text>
+	</string>
+	<string id="cczmp_fac_killers_name">
+		<text>Киллеры</text>
+	</string>
+	<string id="cczmp_fac_killers_location">
+		<text>Абандон-хостел в лесу или заброшенная гостиница</text>
+	</string>
+	<string id="cczmp_fac_killers_style">
+		<text>Тёмные пиджаки, скрытое оружие, маски</text>
+	</string>
+	<string id="cczmp_fac_killers_transport_0">
+		<text>Чёрные BMW E38</text>
+	</string>
+	<string id="cczmp_fac_killers_transport_1">
+		<text>Мотоциклы</text>
+	</string>
+	<string id="cczmp_fac_omon_name">
+		<text>ОМОН</text>
+	</string>
+	<string id="cczmp_fac_omon_location">
+		<text>База в полуразрушенном административном здании</text>
+	</string>
+	<string id="cczmp_fac_omon_style">
+		<text>Классическая форма, каски, щиты</text>
+	</string>
+	<string id="cczmp_fac_omon_transport_0">
+		<text>ВАЗ 2114 «Милиция»</text>
+	</string>
+	<string id="cczmp_fac_omon_transport_1">
+		<text>Автобус ПАЗ</text>
+	</string>
+	<string id="cczmp_fac_omon_transport_2">
+		<text>Урал с решётками</text>
+	</string>
+	<string id="cczmp_fac_vympel_name">
+		<text>Вымпел</text>
+	</string>
+	<string id="cczmp_fac_vympel_location">
+		<text>Подземный командный центр под территорией лаборатории</text>
+	</string>
+	<string id="cczmp_fac_vympel_style">
+		<text>Элитная экипировка, приглушённые цвета</text>
+	</string>
+	<string id="cczmp_fac_vympel_transport_0">
+		<text>Камуфлированный ГАЗ «Тигр»</text>
+	</string>
+	<string id="cczmp_fac_vympel_transport_1">
+		<text>Чёрный Гелендваген</text>
+	</string>
+	<string id="cczmp_fac_alfa_name">
+		<text>Альфа</text>
+	</string>
+	<string id="cczmp_fac_alfa_location">
+		<text>Закрытая военная база на границе зоны</text>
+	</string>
+	<string id="cczmp_fac_alfa_style">
+		<text>Чёрная форма с тактической экипировкой</text>
+	</string>
+	<string id="cczmp_fac_alfa_transport_0">
+		<text>Бронированные УАЗ Патриот</text>
+	</string>
+	<string id="cczmp_fac_alfa_transport_1">
+		<text>Вертолёт Ми-8</text>
+	</string>
+	<string id="cczmp_fac_alfa_transport_2">
+		<text>БТР</text>
+	</string>
+	<string id="cczmp_fac_civilians_name">
+		<text>Гражданские</text>
+	</string>
+	<string id="cczmp_fac_civilians_location">
+		<text>Засекречено. Доступ к этим счетам есть только у деловых государственных структур и сотрудников НБЗ</text>
+	</string>
+</string_table>

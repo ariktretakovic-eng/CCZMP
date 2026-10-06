@@ -1,0 +1,613 @@
+--[[
+	CCZMP - Chernobyl Criminal Zone MultiPlayer
+	Module: NBZ (Narodny Bank Zony / People's Bank of the Zone)
+
+	Banking, deposits, credits, insurance and account blocking.
+
+	Design notes
+	------------
+	* Every tunable lives in configs\cczmp\bank\*.ltx. Those files are read with
+	  ini_file(), so the vanilla config graph is never touched and the module
+	  cannot collide with any other addon.
+	* Localization is game.translate_string() over st_cczmp_bank.xml, which the
+	  engine picks up automatically from configs\text\<lang>\.
+	* axr_main.script auto-executes every script in $game_scripts$ that defines
+	  on_game_start, so this file needs no manual loading and no vanilla patch.
+	* Persistent state lives in alife_storage_manager (survives relog and save
+	  reload). Start times are kept beside it as real CTime values through
+	  save_ctime/load_ctime, keyed by a per-record serial rather than by array
+	  index, so removing a record never shifts another record's deadline.
+]]
+
+-- ini_file() resolves against $game_config$ (= gamedata\configs\), NOT against
+-- the game root: the "configs\" prefix makes the engine look for
+-- gamedata\configs\configs\... , hand back an empty ini, and abort on the very
+-- first r_section() with "Can't open section 'settings'".
+local CFG = "cczmp\\bank\\"
+local FILES = { "settings", "deposits", "credits", "insurance", "accounts", "blocks" }
+
+local f_settings, f_deposits, f_credits, f_insurance, f_accounts, f_blocks
+
+local function ini(what)
+	if f_settings  == nil and what == "settings"  then f_settings  = ini_file(CFG .. "settings.ltx")  end
+	if f_deposits  == nil and what == "deposits"  then f_deposits  = ini_file(CFG .. "deposits.ltx")  end
+	if f_credits   == nil and what == "credits"   then f_credits   = ini_file(CFG .. "credits.ltx")   end
+	if f_insurance == nil and what == "insurance" then f_insurance = ini_file(CFG .. "insurance.ltx") end
+	if f_accounts  == nil and what == "accounts"  then f_accounts  = ini_file(CFG .. "accounts.ltx")  end
+	if f_blocks    == nil and what == "blocks"    then f_blocks    = ini_file(CFG .. "blocks.ltx")    end
+	if what == "settings"  then return f_settings  end
+	if what == "deposits"  then return f_deposits  end
+	if what == "credits"   then return f_credits   end
+	if what == "insurance" then return f_insurance end
+	if what == "accounts"  then return f_accounts  end
+	if what == "blocks"    then return f_blocks    end
+	return nil
+end
+
+-- A missing or malformed ini is fatal in X-Ray: r_section() aborts the process
+-- and no Lua pcall can catch it. section_exist() on an empty ini is safe, so the
+-- whole bank module is validated once and disabled instead of crashing mid-game.
+local cfg_ready = nil
+
+local function ready()
+	if cfg_ready == nil then
+		cfg_ready = true
+		for _, what in ipairs(FILES) do
+			if not ini(what) or not ini(what):section_exist(what) then
+				cfg_ready = false
+				printe("[CCZMP bank] config not found: $game_config$%s%s.ltx -- module disabled",
+					CFG, what)
+				break
+			end
+		end
+	end
+	return cfg_ready
+end
+
+local function s(what, section, key, default)
+	local file = ini(what)
+	if not file or type(section) ~= "string" or not file:section_exist(section)
+		or not file:line_exist(section, key) then return default end
+	local v = file:r_string(section, key)
+	if v == nil or v == "" then return default end
+	return v
+end
+
+local function number(value)
+	if type(value) ~= "number" and type(value) ~= "string" then return nil end
+	local v = tonumber(value)
+	if v == nil or v ~= v or v == math.huge or v == -math.huge then return nil end
+	return v
+end
+
+local function n(what, section, key, default)
+	return number(s(what, section, key, nil)) or default
+end
+
+-- X-Ray money is integral; reject fractions rather than silently minting change.
+local function valid_amount(value)
+	local v = number(value)
+	if not v or v <= 0 or v > 2147483647 or v ~= math.floor(v) then return nil end
+	return v
+end
+
+local function exists(what, section)
+	local file = ini(what)
+	return file ~= nil and type(section) == "string" and file:section_exist(section)
+end
+
+local function tr(key)
+	return game.translate_string(key)
+end
+
+-- money ------------------------------------------------------------------
+-- the engine exposes money(), give_money() and transfer_money(); there is no
+-- take_money(), spending is just give_money() with a negative amount
+local function money() return db.actor:money() end
+local function take(v) db.actor:give_money(-v) end
+local function give(v) db.actor:give_money(v) end
+
+-- time -------------------------------------------------------------------
+-- All arithmetic is in in-game seconds. Game time (not time_global) is used so
+-- that sleeping at night advances deadlines exactly as the player experiences.
+
+local DAY  = 86400.0
+local HOUR = 3600.0
+
+-- catalogue accessors (read only views for the UI) --------------------------------
+
+local function split_csv(t)
+	local out = {}
+	for x in string.gmatch(t or "", "[^,%s]+") do out[#out + 1] = x end
+	return out
+end
+
+-- persistent state -------------------------------------------------------
+
+local SKEY = "cczmp_bank"
+
+local function state()
+	local actor = db.actor
+	if actor == nil then return nil end
+	-- Disable transactions when a required config root is unavailable.
+	if not ready() then return nil end
+	local st = alife_storage_manager.get_game_object_state(actor, true)
+	if st[SKEY] == nil then
+		st[SKEY] = {
+			serial   = 0,
+			balance  = 0,
+			rating   = n("settings", "settings", "rating_start_score", 100),
+			deposits = {},
+			credits  = {},
+			policy   = {},
+			block    = {},
+		}
+	end
+	return st[SKEY]
+end
+
+-- uids are handed out from the persisted counter, never from a module local:
+-- a fresh Lua state every load would otherwise restart at 1 and collide with
+-- the ctime keys of records opened in an earlier session
+local function next_serial()
+	local st = state()
+	if st == nil then return nil end
+	st.serial = (st.serial or 0) + 1
+	return st.serial
+end
+
+local function ctime_key(prefix, id)
+	return ("nbz_%s_%d_t"):format(prefix, id)
+end
+
+local function set_ctime(prefix, id, ct) save_ctime(db.actor, ctime_key(prefix, id), ct) end
+local function get_ctime(prefix, id)      return load_ctime(db.actor, ctime_key(prefix, id)) end
+local function clear_ctime(prefix, id)    save_ctime(db.actor, ctime_key(prefix, id), nil) end
+
+local function elapsed_sec(prefix, id)
+	local ct = get_ctime(prefix, id)
+	if type(ct) ~= "userdata" and type(ct) ~= "table" then return nil end
+	return math.max(0, now():diffSec(ct))
+end
+
+-- gating -----------------------------------------------------------------
+
+local function block_duration(rule, days)
+	local d = number(days) or n("blocks", rule, "duration_days_min", 0)
+	if d <= 0 then d = n("blocks", rule, "duration_days", 7) end
+	if d <= 0 or not number(d * DAY) then d = 1 end
+	return d * DAY
+end
+
+local function blocked()
+	local st = state()
+	if st == nil then return true, nil end
+	local b = st.block
+	if b == nil or b.rule == nil then return false, nil end
+	if b.permanent then
+		-- Old permanent blocks could also carry the malformed numeric deadline.
+		if b.uid ~= nil then clear_ctime("blk", b.uid) end
+		return true, b
+	end
+
+	local ct = (b.uid ~= nil) and get_ctime("blk", b.uid) or nil
+	local duration = number(b.duration_sec)
+	if type(ct) ~= "userdata" and type(ct) ~= "table" then
+		-- Legacy CTimeAddSec values lost month/year information. Restart the
+		-- configured term, replacing the invalid pstor_ctime entry before save.
+		b.uid = b.uid or next_serial()
+		b.duration_sec = block_duration(b.rule)
+		set_ctime("blk", b.uid, now())
+		return true, b
+	end
+	-- Older genuine CTime deadlines remain readable; new records store starts.
+	local remaining = duration and (duration - math.max(0, now():diffSec(ct)))
+		or -now():diffSec(ct)
+	if remaining <= 0 then
+		if b.uid ~= nil then clear_ctime("blk", b.uid) end
+		st.block = {}
+		return false, nil
+	end
+	return true, b
+end
+
+-- seconds left on a temporary block, nil when the account is free
+function block_time_left()
+	local ok, b = blocked()
+	if not ok then return nil end
+	if b == nil or b.permanent then return -1 end
+	local ct = get_ctime("blk", b.uid)
+	return b.duration_sec and math.max(0, b.duration_sec - math.max(0, now():diffSec(ct)))
+		or math.max(0, -now():diffSec(ct))
+end
+
+local function can_take_credit()
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+	if blocked() then return false, "cczmp_bank_msg_blocked" end
+	local threshold = n("settings", "settings", "rating_credit_threshold", 40)
+	if st.rating < threshold then return false, "cczmp_bank_msg_low_rating" end
+	return true, nil
+end
+
+-- deposits ---------------------------------------------------------------
+
+local function deposit_interest(d, elapsed_days)
+	local rate = n("deposits", d.id, "rate", 0)
+	local per  = n("deposits", d.id, "rate_period_days", 365)
+	local period = s("deposits", d.id, "rate_period", "annual")
+	if period == "term" then
+		local term = n("deposits", d.id, "term_days", 365)
+		-- pro-rated against the full term so early exit never pays more than the term
+		local share = term > 0 and math.min(elapsed_days / term, 1.0) or 1.0
+		return math.floor(d.amount * rate * share)
+	end
+	if per <= 0 then per = 365 end
+	return math.floor(d.amount * rate * (elapsed_days / per))
+end
+
+function deposit_open(product, amount)
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+	if not exists("deposits", product) then return false, "cczmp_bank_msg_bad_product" end
+	if blocked() then return false, "cczmp_bank_msg_blocked" end
+	amount = valid_amount(amount)
+	if not amount then return false, "cczmp_bank_msg_too_small" end
+
+	local max_slots = n("settings", "settings", "deposit_max_slots", 3)
+	if #st.deposits >= max_slots then return false, "cczmp_bank_msg_slots_full" end
+	if amount < n("deposits", product, "min", 0) then return false, "cczmp_bank_msg_too_small" end
+	if money() < amount then return false, "cczmp_bank_msg_not_enough_money" end
+
+	local id = next_serial()
+	take(amount)
+	st.deposits[#st.deposits + 1] = { id = product, uid = id, amount = amount }
+	set_ctime("dep", id, now())
+	return true, nil, #st.deposits
+end
+
+function deposit_close(uid)
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+	if blocked() then return false, "cczmp_bank_msg_blocked" end
+
+	local idx, d
+	for i = 1, #st.deposits do
+		if st.deposits[i].uid == uid then idx, d = i, st.deposits[i] break end
+	end
+	if d == nil then return false, "cczmp_bank_msg_no_deposit" end
+
+	local sec     = elapsed_sec("dep", uid) or 0
+	local days    = sec / DAY
+	local term    = n("deposits", d.id, "term_days", 0)
+	local cond    = n("deposits", d.id, "withdraw_condition", 0)
+	local early   = days < term
+
+	if cond == 2 then return false, "cczmp_bank_msg_never_withdrawable" end
+	if cond == 1 then return false, "cczmp_bank_msg_needs_court" end
+
+	if early then
+		if n("deposits", d.id, "early_allow", 0) ~= 1 then
+			return false, "cczmp_bank_msg_early_denied"
+		end
+	end
+
+	local fee = early and n("deposits", d.id, "early_fee", 0) or 0
+	local payout = d.amount + deposit_interest(d, days) - fee
+	if payout < 0 then payout = 0 end
+
+	give(payout)
+	table.remove(st.deposits, idx)
+	clear_ctime("dep", uid)
+	return true, nil, payout
+end
+
+-- credits ----------------------------------------------------------------
+
+local function credit_accrued(c, elapsed_hours)
+	local rate = n("credits", c.id, "rate", 0)
+	local per  = n("credits", c.id, "rate_period_hours", 1)
+	if per <= 0 then per = 1 end
+	return math.floor(c.amount * rate * (elapsed_hours / per))
+end
+
+function credit_take(product, amount)
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+	if not exists("credits", product) then return false, "cczmp_bank_msg_bad_product" end
+
+	local ok, err = can_take_credit()
+	if not ok then return false, err end
+
+	local cap = n("credits", product, "amount", 0)
+	amount = valid_amount(amount)
+	if not amount or amount > cap then return false, "cczmp_bank_msg_amount_over_cap" end
+	if n("credits", product, "requires_guardian", 0) == 1 then
+		return false, "cczmp_bank_msg_needs_guardian"
+	end
+
+	local id = next_serial()
+	give(amount)
+	st.credits[#st.credits + 1] = { id = product, uid = id, amount = amount, paid = 0, overdue = false }
+	set_ctime("cr", id, now())
+	return true, nil, #st.credits
+end
+
+local function credit_default(c, hours)
+	local term = n("credits", c.id, "term_days", 0) * 24
+	local newly_overdue = not c.overdue and term > 0 and hours >= term
+	if not c.overdue and not newly_overdue then return end
+	if c.default_fee == nil then
+		local outstanding = math.max(0, c.amount + credit_accrued(c, term > 0 and term or hours)
+			- (c.paid or 0))
+		c.default_fee = math.floor(outstanding * math.max(0, n("credits", c.id, "penalty", 0.15)))
+	end
+	if not newly_overdue then return end
+	c.overdue = true
+	local applied = false
+	if s("credits", c.id, "on_default", "none") ~= "none" then
+		applied = apply_block("credit_fraud")
+	end
+	-- apply_block already charges the rating consequence when it succeeds.
+	local st = state()
+	if st and not applied then
+		st.rating = math.max(0, st.rating + n("settings", "settings", "rating_on_overdue", -25))
+	end
+end
+
+function credit_due(c)
+	local hours = (elapsed_sec("cr", c.uid) or 0) / HOUR
+	credit_default(c, hours)
+	return math.max(0, c.amount + credit_accrued(c, hours) + (c.default_fee or 0) - (c.paid or 0))
+end
+
+function credit_repay(uid, amount)
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+	if amount ~= nil then
+		amount = valid_amount(amount)
+		if not amount then return false, "cczmp_bank_msg_nothing_to_repay" end
+	end
+
+	local idx, c
+	for i = 1, #st.credits do
+		if st.credits[i].uid == uid then idx, c = i, st.credits[i] break end
+	end
+	if c == nil then return false, "cczmp_bank_msg_no_credit" end
+
+	local due = credit_due(c)
+	if not number(due) then return false, "cczmp_bank_msg_nothing_to_repay" end
+	if amount == nil then amount = due end
+	amount = valid_amount(math.floor(math.min(amount, due)))
+	if not amount then return false, "cczmp_bank_msg_nothing_to_repay" end
+	if money() < amount then return false, "cczmp_bank_msg_not_enough_money" end
+
+	take(amount)
+	c.paid = (c.paid or 0) + amount
+
+	if amount >= due then
+		table.remove(st.credits, idx)
+		clear_ctime("cr", uid)
+		st.rating = math.min(n("settings", "settings", "rating_max", 200),
+			st.rating + n("settings", "settings", "rating_on_repaid", 5))
+		return true, nil, true
+	end
+	return true, nil, false
+end
+
+-- blocking ---------------------------------------------------------------
+
+function apply_block(violation, days)
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+
+	if type(violation) ~= "string" then return false, "cczmp_bank_msg_bad_violation" end
+	local rule = "br_" .. violation
+	if not exists("blocks", rule) then return false, "cczmp_bank_msg_bad_violation" end
+	st.block_history = st.block_history or {}
+	if st.block.rule and n("blocks", st.block.rule, "repeatable", 1) == 0 then
+		st.block_history[st.block.rule] = true
+	end
+	if n("blocks", rule, "repeatable", 1) == 0 and st.block_history[rule] then
+		return false, "cczmp_bank_msg_already_blocked"
+	end
+
+	local dur = s("blocks", rule, "duration_days", "until_fixed")
+	local permanent = (dur == "permanent")
+	local until_fixed = st.block.until_fixed == true
+		or s("blocks", st.block.rule, "duration_days", nil) == "until_fixed"
+	if st.block.permanent and (not permanent or not until_fixed) then
+		return false, "cczmp_bank_msg_already_blocked"
+	end
+	if st.block.uid ~= nil then clear_ctime("blk", st.block.uid) end
+	local id = next_serial()
+
+	if dur == "until_fixed" or permanent then
+		st.block = { rule = rule, permanent = true, until_fixed = dur == "until_fixed", uid = id }
+	else
+		st.block = { rule = rule, permanent = false, uid = id, duration_sec = block_duration(rule, days) }
+		set_ctime("blk", id, now())
+	end
+	st.block_history[rule] = true
+
+	if n("blocks", rule, "confiscate", 0) == 1 then st.balance = 0 end
+	st.rating = math.max(0, st.rating + n("settings", "settings", "rating_on_overdue", -25))
+	return true, nil
+end
+
+function unblock()
+	local st = state()
+	if st == nil then return false end
+	if st.block.rule and n("blocks", st.block.rule, "repeatable", 1) == 0 then
+		st.block_history = st.block_history or {}
+		st.block_history[st.block.rule] = true
+	end
+	if st.block.uid ~= nil then clear_ctime("blk", st.block.uid) end
+	st.block = {}
+	return true
+end
+
+-- insurance --------------------------------------------------------------
+
+local PERIOD_DAYS = { day = 1, week = 7, month = 30 }
+
+local function ins_price(cls, period)
+	local days = PERIOD_DAYS[period] or 1
+	local key = (period == "week") and "week_price" or (period == "month") and "month_price" or "day_price"
+	local price = n("insurance", cls, key, 0)
+	local gross = n("insurance", cls, "day_price", 0) * days
+	return price, gross - price, days
+end
+
+function insurance_quote(cls, period)
+	if not exists("insurance", cls) then return nil end
+	local price, saving, days = ins_price(cls, period)
+	return { price = price, saving = saving, days = days, period = period }
+end
+
+function insurance_buy(cls, period)
+	local st = state()
+	if st == nil then return false, "cczmp_bank_msg_no_state" end
+	if not exists("insurance", cls) then return false, "cczmp_bank_msg_bad_product" end
+	if blocked() then return false, "cczmp_bank_msg_blocked" end
+
+	local price, _, days = ins_price(cls, period)
+	price = valid_amount(price)
+	if not price then return false, "cczmp_bank_msg_bad_product" end
+	if money() < price then return false, "cczmp_bank_msg_not_enough_money" end
+
+	take(price)
+	st.policy[cls] = { period = period, days = days }
+	return true, nil, price
+end
+
+function insurance_payout(cls)
+	local st = state()
+	if st == nil then return 0 end
+	local p = st.policy[cls]
+	if p == nil then return 0 end
+	local refund = math.floor(n("insurance", cls, "day_price", 0) * p.days
+		* n("settings", "settings", "insurance_refund", 0.5))
+	give(refund)
+	st.policy[cls] = nil
+	return refund
+end
+
+-- catalogue (read only, for the UI) ----------------------------------------------
+
+function deposit_products()
+	if not ready() then return {} end
+	local out = {}
+	for _, id in ipairs(split_csv(s("deposits", "deposits", "list", ""))) do
+		out[#out + 1] = {
+			id = id,
+			name = tr(s("deposits", id, "name_key", "")),
+			ad   = tr(s("deposits", id, "ad_key", "")),
+			min_amount = n("deposits", id, "min", 0),
+			term_days  = n("deposits", id, "term_days", 0),
+			rate = n("deposits", id, "rate", 0),
+			early_fee = n("deposits", id, "early_fee", 0),
+			early_allow = n("deposits", id, "early_allow", 0) == 1,
+			withdraw_condition = n("deposits", id, "withdraw_condition", 0),
+		}
+	end
+	return out
+end
+
+function credit_products()
+	if not ready() then return {} end
+	local out = {}
+	for _, id in ipairs(split_csv(s("credits", "credits", "list", ""))) do
+		out[#out + 1] = {
+			id = id,
+			name = tr(s("credits", id, "name_key", "")),
+			ad   = tr(s("credits", id, "ad_key", "")),
+			max_amount = n("credits", id, "amount", 0),
+			term_days = n("credits", id, "term_days", 0),
+			rate = n("credits", id, "rate", 0),
+			penalty = n("credits", id, "penalty", 0.15),
+			requires_guardian = n("credits", id, "requires_guardian", 0) == 1,
+			gang_only = n("credits", id, "gang_only", 0) == 1,
+			requires_approval = n("credits", id, "requires_approval", 0) == 1,
+			on_default = s("credits", id, "on_default", "none"),
+		}
+	end
+	return out
+end
+
+local function find_record(list, uid)
+	for i = 1, #list do
+		if list[i].uid == uid then return i, list[i] end
+	end
+end
+
+function deposit_records()
+	local st = state()
+	if st == nil then return {} end
+	local out = {}
+	for _, d in ipairs(st.deposits) do
+		local days = (elapsed_sec("dep", d.uid) or 0) / DAY
+		table.insert(out, {
+			uid = d.uid, id = d.id, amount = d.amount,
+			min_amount = n("deposits", d.id, "min", 0),
+			term_days = n("deposits", d.id, "term_days", 0),
+			rate = n("deposits", d.id, "rate", 0),
+			elapsed_days = days,
+			maturity = (days >= (n("deposits", d.id, "term_days", 0) or 0)),
+		})
+	end
+	return out
+end
+
+function credit_records()
+	local st = state()
+	if st == nil then return {} end
+	local out = {}
+	for _, c in ipairs(st.credits) do
+		out[#out + 1] = {
+			uid = c.uid, id = c.id, amount = c.amount,
+			term_days = n("credits", c.id, "term_days", 0),
+			paid = c.paid or 0,
+			due = credit_due(c),
+		}
+	end
+	return out
+end
+
+function account_blocked()
+	return blocked()
+end
+
+function rating()
+	local st = state()
+	return st and st.rating
+end
+
+function actor_money()
+	local actor = db.actor
+	return actor and actor:money()
+end
+
+-- periodic ---------------------------------------------------------------
+
+local tick = 0
+
+local function update()
+	tick = tick + 1
+	if tick < 30 then return end
+	tick = 0
+
+	local st = state()
+	if st == nil then return end
+	blocked()
+
+	for i = #st.credits, 1, -1 do
+		credit_due(st.credits[i])
+	end
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_update", update)
+	state()
+	blocked()
+end

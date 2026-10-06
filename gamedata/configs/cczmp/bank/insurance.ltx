@@ -1,0 +1,95 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: NBZ (Narodny Bank Zony)
+;; File:   insurance.ltx -- transport and property insurance
+;;
+;; Pricing rule derived from the brief: a policy costs less than the daily
+;; rate multiplied by its length, and the difference is the discount.
+;;   saving = day_price * days - price
+;; So only day_price / week_price / month_price are stored; the script derives
+;; every saving, and the whole table stays consistent if a price is retuned.
+;;
+;; classes whose `kind` is `transport` are matched against a vehicle's group;
+;; classes whose `kind` is `property` are matched against a property id.
+
+[insurance]
+list = ins_car, ins_official, ins_offroad, ins_truck, ins_air, ins_house, ins_dormitory, ins_apartments, ins_business, ins_other
+
+[ins_car]
+kind = transport
+name_key = cczmp_ins_car_name
+day_price = 15000
+week_price = 90000
+month_price = 250000
+covers = %trigger_vehicle_destroyed
+
+[ins_official]
+kind = transport
+name_key = cczmp_ins_official_name
+day_price = 25000
+week_price = 150000
+month_price = 450000
+covers = %trigger_vehicle_destroyed
+
+[ins_offroad]
+kind = transport
+name_key = cczmp_ins_offroad_name
+day_price = 18000
+week_price = 110000
+month_price = 330000
+covers = %trigger_vehicle_destroyed
+
+[ins_truck]
+kind = transport
+name_key = cczmp_ins_truck_name
+day_price = 30000
+week_price = 190000
+month_price = 550000
+covers = %trigger_vehicle_destroyed
+
+[ins_air]
+kind = transport
+name_key = cczmp_ins_air_name
+day_price = 100000
+week_price = 600000
+month_price = 1800000
+covers = %trigger_vehicle_destroyed
+
+[ins_house]
+kind = property
+name_key = cczmp_ins_house_name
+day_price = 30000
+week_price = 200000
+month_price = 350000
+covers = %trigger_property_destroyed
+
+[ins_dormitory]
+kind = property
+name_key = cczmp_ins_dormitory_name
+day_price = 75000
+week_price = 450000
+month_price = 1300000
+covers = %trigger_property_destroyed
+
+[ins_apartments]
+kind = property
+name_key = cczmp_ins_apartments_name
+day_price = 20000
+week_price = 130000
+month_price = 400000
+covers = %trigger_property_destroyed
+
+[ins_business]
+kind = property
+name_key = cczmp_ins_business_name
+day_price = 100000
+week_price = 600000
+month_price = 1800000
+covers = %trigger_property_destroyed
+
+[ins_other]
+kind = property
+name_key = cczmp_ins_other_name
+day_price = 50000
+week_price = 300000
+month_price = 950000
+covers = %trigger_property_destroyed

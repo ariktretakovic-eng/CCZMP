@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_bank_title">
+		<text>НАРОДНЫЙ БАНК ЗОНЫ</text>
+	</string>
+	<string id="cczmp_bank_balance">
+		<text>Баланс: %s руб.</text>
+	</string>
+	<string id="cczmp_bank_pocket">
+		<text>В кошельке: %s руб.</text>
+	</string>
+	<string id="cczmp_bank_rating">
+		<text>Кредитный рейтинг: %s</text>
+	</string>
+	<string id="cczmp_bank_rating_ok">
+		<text>Надёжный клиент</text>
+	</string>
+	<string id="cczmp_bank_rating_bad">
+		<text>Ненадёжный клиент</text>
+	</string>
+	<string id="cczmp_bank_blocked_permanent">
+		<text>Счёт заблокирован навсегда</text>
+	</string>
+	<string id="cczmp_bank_blocked_until">
+		<text>Счёт заблокирован ещё %s</text>
+	</string>
+	<string id="cczmp_bank_deposit_tab">
+		<text>ВКЛАДЫ</text>
+	</string>
+	<string id="cczmp_bank_credit_tab">
+		<text>КРЕДИТЫ</text>
+	</string>
+	<string id="cczmp_bank_insurance_tab">
+		<text>СТРАХОВАНИЕ</text>
+	</string>
+	<string id="cczmp_bank_accounts_tab">
+		<text>СЧЕТА</text>
+	</string>
+	<string id="cczmp_bank_deposit_open">
+		<text>Открыть вклад</text>
+	</string>
+	<string id="cczmp_bank_deposit_close">
+		<text>Закрыть вклад досрочно</text>
+	</string>
+	<string id="cczmp_bank_credit_take">
+		<text>Взять кредит</text>
+	</string>
+	<string id="cczmp_bank_credit_repay">
+		<text>Погасить кредит</text>
+	</string>
+	<string id="cczmp_bank_credit_due">
+		<text>К погашению: %s руб.</text>
+	</string>
+	<string id="cczmp_bank_insurance_buy">
+		<text>Оформить страховку</text>
+	</string>
+	<string id="cczmp_bank_insurance_saving">
+		<text>Экономия: %s руб.</text>
+	</string>
+	<string id="cczmp_bank_period_day">
+		<text>1 день</text>
+	</string>
+	<string id="cczmp_bank_period_week">
+		<text>7 дней</text>
+	</string>
+	<string id="cczmp_bank_period_month">
+		<text>30 дней</text>
+	</string>
+	<string id="cczmp_bank_account_redacted">
+		<text>засекречено</text>
+	</string>
+
+	<string id="cczmp_dep_zonal_standart_name">
+		<text>Зональный Стандарт</text>
+	</string>
+	<string id="cczmp_dep_zonal_standart_ad">
+		<text>Лучшее предложение для простого сталкера</text>
+	</string>
+	<string id="cczmp_dep_grey_metal_name">
+		<text>Серый Металл</text>
+	</string>
+	<string id="cczmp_dep_grey_metal_ad">
+		<text>Инвестируй — и много получай!</text>
+	</string>
+	<string id="cczmp_dep_survival_plus_name">
+		<text>Выживание+</text>
+	</string>
+	<string id="cczmp_dep_survival_plus_ad">
+		<text>Твоя надежда на стабильность... Будет оправдана!</text>
+	</string>
+	<string id="cczmp_dep_legendary_name">
+		<text>Легендарный накопительный</text>
+	</string>
+	<string id="cczmp_dep_legendary_ad">
+		<text>Легендарно высокий доход!</text>
+	</string>
+	<string id="cczmp_dep_no_withdraw_name">
+		<text>Вклад «Без права на вывод»</text>
+	</string>
+	<string id="cczmp_dep_no_withdraw_ad">
+		<text>Настоящий патриот Зоны — доверяет НБЗ навсегда</text>
+	</string>
+
+	<string id="cczmp_cr_start_push_name">
+		<text>Начальный толчок</text>
+	</string>
+	<string id="cczmp_cr_start_push_ad">
+		<text>Немного денег не помешает ни одному сталкеру</text>
+	</string>
+	<string id="cczmp_cr_for_business_name">
+		<text>Для дела</text>
+	</string>
+	<string id="cczmp_cr_for_business_ad">
+		<text>Вложишься в дело — дело отработает кредит</text>
+	</string>
+	<string id="cczmp_cr_wheels_blood_name">
+		<text>Колёса и кров</text>
+	</string>
+	<string id="cczmp_cr_wheels_blood_ad">
+		<text>Поднимем на колёсах — отдадим кровью</text>
+	</string>
+	<string id="cczmp_cr_prestige_name">
+		<text>Престиж</text>
+	</string>
+	<string id="cczmp_cr_prestige_ad">
+		<text>Кредит для тех, у кого есть залог и поручители</text>
+	</string>
+	<string id="cczmp_cr_dark_deal_name">
+		<text>Тёмная сделка</text>
+	</string>
+	<string id="cczmp_cr_dark_deal_ad">
+		<text>Без лимитов и без вопросов. Для тех, кто умеет молчать.</text>
+	</string>
+
+	<string id="cczmp_ins_car_name">
+		<text>Легковой автомобиль (гражданский)</text>
+	</string>
+	<string id="cczmp_ins_official_name">
+		<text>Служебный транспорт</text>
+	</string>
+	<string id="cczmp_ins_offroad_name">
+		<text>Внедорожники, джипы, пикапы</text>
+	</string>
+	<string id="cczmp_ins_truck_name">
+		<text>Грузовой транспорт</text>
+	</string>
+	<string id="cczmp_ins_air_name">
+		<text>Воздушный транспорт</text>
+	</string>
+	<string id="cczmp_ins_house_name">
+		<text>Дом</text>
+	</string>
+	<string id="cczmp_ins_dormitory_name">
+		<text>Общежитие (целое здание)</text>
+	</string>
+	<string id="cczmp_ins_apartments_name">
+		<text>Квартира</text>
+	</string>
+	<string id="cczmp_ins_business_name">
+		<text>Бизнес</text>
+	</string>
+	<string id="cczmp_ins_other_name">
+		<text>Прочая недвижимость</text>
+	</string>
+
+	<string id="cczmp_bank_msg_no_state">
+		<text>Ошибка: банковское состояние недоступно</text>
+	</string>
+	<string id="cczmp_bank_msg_bad_product">
+		<text>Такого банковского продукта не существует</text>
+	</string>
+	<string id="cczmp_bank_msg_bad_violation">
+		<text>Неизвестный тип нарушения</text>
+	</string>
+	<string id="cczmp_bank_msg_already_blocked">
+		<text>Счёт уже заблокирован по этой причине</text>
+	</string>
+	<string id="cczmp_bank_msg_blocked">
+		<text>Ваш счёт заблокирован</text>
+	</string>
+	<string id="cczmp_bank_msg_low_rating">
+		<text>Кредитный рейтинг слишком низкий для выдачи кредита</text>
+	</string>
+	<string id="cczmp_bank_msg_slots_full">
+		<text>Все счета вкладов заняты</text>
+	</string>
+	<string id="cczmp_bank_msg_too_small">
+		<text>Сумма ниже минимальной по этому вкладу</text>
+	</string>
+	<string id="cczmp_bank_msg_not_enough_money">
+		<text>Недостаточно денег в кошельке</text>
+	</string>
+	<string id="cczmp_bank_msg_not_enough_balance">
+		<text>Недостаточно средств на банковском счёте</text>
+	</string>
+	<string id="cczmp_bank_msg_no_deposit">
+		<text>Вклад не найден</text>
+	</string>
+	<string id="cczmp_bank_msg_no_credit">
+		<text>Кредит не найден</text>
+	</string>
+	<string id="cczmp_bank_msg_early_denied">
+		<text>Досрочное снятие по этому вкладу невозможно</text>
+	</string>
+	<string id="cczmp_bank_msg_needs_court">
+		<text>Досрочное снятие возможно только по решению суда</text>
+	</string>
+	<string id="cczmp_bank_msg_never_withdrawable">
+		<text>Средства по этому вкладу не снимаются</text>
+	</string>
+	<string id="cczmp_bank_msg_amount_over_cap">
+		<text>Сумма превышает максимум по этому кредиту</text>
+	</string>
+	<string id="cczmp_bank_msg_needs_guardian">
+		<text>Требуется залог или поручитель из госструктур</text>
+	</string>
+	<string id="cczmp_bank_msg_nothing_to_repay">
+		<text>Нет суммы к погашению</text>
+	</string>
+</string_table>

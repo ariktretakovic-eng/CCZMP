@@ -1,0 +1,82 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: NBZ (Narodny Bank Zony)
+;; File:   accounts.ltx -- bank accounts of the NChG state structures
+;;
+;; number values are display strings exactly as written in the project brief.
+;; accounts marked [redacted] have no number in the brief and must stay hidden
+;; from the player UI; access gates who may open them.
+
+[accounts]
+list = acc_omon, acc_schs, acc_alfa, acc_vympel, acc_mchs, acc_scientists, acc_minzdrav, acc_mvd, acc_fsin, acc_civilian
+
+[acc_omon]
+number = O9M9O9H9_09GOS
+org = omon
+access = state
+redacted = 0
+icon = ui_cczmp_icon_omon
+
+[acc_schs]
+number = redacted
+org = schs
+access = secret
+redacted = 1
+icon = ui_cczmp_icon_schs
+
+[acc_alfa]
+number = A8L8W8F8A8_08GOS
+org = alfa
+access = state
+redacted = 0
+icon = ui_cczmp_icon_alfa
+
+[acc_vympel]
+number = B6Y6M6P6E6L6_06GOS
+org = vympel
+access = state
+redacted = 0
+icon = ui_cczmp_icon_vympel
+
+[acc_mchs]
+number = M5CH5S5_05GOS
+org = mchs
+access = state
+redacted = 0
+icon = ui_cczmp_icon_mchs
+
+[acc_scientists]
+number = U0CH0Y0N0Y0E0_00GOS
+org = scientists
+access = state
+redacted = 0
+icon = ui_cczmp_icon_scientists
+
+[acc_minzdrav]
+number = M3I3N3Z3D3R3A3V_03GOS
+org = minzdrav
+access = state
+redacted = 0
+icon = ui_cczmp_icon_minzdrav
+
+[acc_mvd]
+number = M2V2D2_02GOS
+org = mvd
+access = state
+redacted = 0
+icon = ui_cczmp_icon_mvd
+
+[acc_fsin]
+number = redacted
+org = fsin
+access = secret
+redacted = 1
+icon = ui_cczmp_icon_fsin
+
+; the brief leaves this one fully redacted: reachable only by the
+; OMON / Alfa / Vympel / SCS structures and NBZ staff
+[acc_civilian]
+number = redacted
+org = civilian
+access = restricted
+redacted = 1
+icon = ui_cczmp_icon_civilian

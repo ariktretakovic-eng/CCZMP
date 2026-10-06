@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<w>
+	<cczmp_terminal x="0" y="0" width="1024" height="768" stretch="1">
+		<texture>ui_inGame2_inventory_back</texture>
+
+		<title x="340" y="18" width="344" height="40">
+			<text font="letterica18" color="ui_2" align="c" vert_align="c">cczmp_ui_title</text>
+		</title>
+
+		<status x="340" y="60" width="344" height="24">
+			<text font="letterica16" color="ui_3" align="l" vert_align="c">cczmp_ui_status</text>
+		</status>
+
+		<content x="340" y="88" width="344" height="470" always_show_scroll="0" can_select="1" item_height="18"
+			bottom_indent="10" right_ident="10" left_ident="20">
+			<font_s r="220" g="220" b="220"/>
+			<font r="150" g="150" b="150" font="letterica16"/>
+		</content>
+
+		<input_box x="340" y="570" width="220" height="28" stretch="1">
+			<texture>ui_inGame2_edit_box_2</texture>
+			<text x="4" font="letterica18" a="150" r="180" g="183" b="200" align="r" vert_align="c">st_cczmp_ui_input_amount</text>
+		</input_box>
+
+		<btn_confirm x="572" y="570" width="112" height="28" stretch="1" check_mode="0">
+			<text font="letterica16" align="c" vert_align="c">cczmp_ui_confirm</text>
+			<texture>ui_button_ordinary</texture>
+		</btn_confirm>
+		<btn_left x="340" y="602" width="112" height="28" stretch="1" check_mode="0">
+			<text font="letterica16" align="c" vert_align="c">cczmp_ui_prev</text>
+			<texture>ui_button_ordinary</texture>
+		</btn_left>
+		<btn_right x="572" y="602" width="112" height="28" stretch="1" check_mode="0">
+			<text font="letterica16" align="c" vert_align="c">cczmp_ui_next</text>
+			<texture>ui_button_ordinary</texture>
+		</btn_right>
+		<btn_close x="696" y="602" width="112" height="28" stretch="1" check_mode="0">
+			<text font="letterica16" align="c" vert_align="c">cczmp_ui_back</text>
+			<texture>ui_button_ordinary</texture>
+		</btn_close>
+	</cczmp_terminal>
+</w>

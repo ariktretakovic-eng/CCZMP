@@ -1,0 +1,96 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: NBZ (Narodny Bank Zony)
+;; File:   blocks.ltx -- account blocking rules from the project brief
+;;
+;; duration_days  a number freezes the account for that many game days
+;;                `permanent` never lifts it
+;;                `until_fixed` lifts it once the violation is corrected
+;; consequence     tag resolved by the script; drives log/alert emission
+;; repeatable      0 -> the rule fires once per offender
+
+; NB: LTX values are single-line. The engine has no "\" line continuation,
+; so a list must stay on one line or the backslash would parse as a token.
+[blocks]
+list = br_laundering, br_exploit, br_fake_transfer, br_interfere, br_foreign_withdraw, br_illegal_service, br_credit_fraud, br_mass_transfer, br_illegal_funds, br_bad_documents
+
+[br_laundering]
+violation = laundering
+duration_days = permanent
+consequence = investigation
+confiscate = 1
+pursuit = schs
+repeatable = 0
+
+[br_exploit]
+violation = exploit
+duration_days = 30
+consequence = ban
+confiscate = 0
+pursuit = none
+repeatable = 1
+
+[br_fake_transfer]
+violation = fake_transfer
+duration_days = 14
+duration_days_min = 7
+consequence = freeze_for_investigation
+confiscate = 0
+pursuit = security
+repeatable = 1
+
+[br_interfere]
+violation = interference
+duration_days = permanent
+consequence = pursuit
+confiscate = 0
+pursuit = schs
+repeatable = 0
+
+[br_foreign_withdraw]
+violation = foreign_withdraw
+duration_days = permanent
+consequence = imprisonment
+confiscate = 0
+pursuit = schs
+repeatable = 0
+
+[br_illegal_service]
+violation = illegal_service
+duration_days = 30
+consequence = surveillance
+confiscate = 0
+pursuit = none
+repeatable = 1
+
+[br_credit_fraud]
+violation = credit_fraud
+duration_days = 30
+duration_days_min = 14
+consequence = debt_and_arrest
+confiscate = 1
+pursuit = mvd
+repeatable = 1
+
+[br_mass_transfer]
+violation = mass_transfer
+duration_days = 7
+consequence = security_check
+confiscate = 0
+pursuit = security
+repeatable = 1
+
+[br_illegal_funds]
+violation = illegal_funds
+duration_days = 14
+consequence = confiscation
+confiscate = 1
+pursuit = security
+repeatable = 1
+
+[br_bad_documents]
+violation = bad_documents
+duration_days = until_fixed
+consequence = fix_documents
+confiscate = 0
+pursuit = none
+repeatable = 1

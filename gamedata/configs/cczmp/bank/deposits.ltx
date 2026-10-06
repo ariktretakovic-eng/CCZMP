@@ -1,0 +1,82 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: NBZ (Narodny Bank Zony)
+;; File:   deposits.ltx -- deposit products
+;;
+;; rate        interest rate as a fraction (0.007 = 0.7%)
+;; rate_period how `rate` is applied:
+;;               annual -> accrues over rate_period_days / 365
+;;               term   -> accrues once, over the whole term
+;; min         smallest accepted sum (0 = any)
+;; early_fee   penalty for closing before term_days, 0 = not allowed
+;; early_allow 1 = early closure allowed, 0 = refused
+;; withdraw_condition
+;;               0 = nothing, 1 = court order only, 2 = owner death only
+
+[deposits]
+list = dep_zonal_standart, dep_grey_metal, dep_survival_plus, dep_legendary, dep_no_withdraw
+
+[dep_zonal_standart]
+name_key = cczmp_dep_zonal_standart_name
+ad_key   = cczmp_dep_zonal_standart_ad
+min = 50000
+term_days = 30
+rate = 0.007
+rate_period = annual
+rate_period_days = 365
+early_fee = 2000
+early_allow = 1
+withdraw_condition = 0
+repeatable = 1
+
+[dep_grey_metal]
+name_key = cczmp_dep_grey_metal_name
+ad_key   = cczmp_dep_grey_metal_ad
+min = 100000
+term_days = 90
+rate = 0.014
+rate_period = annual
+rate_period_days = 365
+early_fee = 5000
+early_allow = 1
+withdraw_condition = 0
+repeatable = 1
+
+[dep_survival_plus]
+name_key = cczmp_dep_survival_plus_name
+ad_key   = cczmp_dep_survival_plus_ad
+min = 250000
+term_days = 180
+rate = 0.022
+rate_period = annual
+rate_period_days = 365
+early_fee = 0
+early_allow = 0
+withdraw_condition = 0
+repeatable = 1
+
+[dep_legendary]
+name_key = cczmp_dep_legendary_name
+ad_key   = cczmp_dep_legendary_ad
+min = 1000000
+term_days = 365
+rate = 0.03
+rate_period = annual
+rate_period_days = 365
+early_fee = 0
+early_allow = 0
+withdraw_condition = 1
+repeatable = 1
+
+; the "patriot" deposit: 0.5% a year, but you can never take it back
+[dep_no_withdraw]
+name_key = cczmp_dep_no_withdraw_name
+ad_key   = cczmp_dep_no_withdraw_ad
+min = 0
+term_days = 36500
+rate = 0.005
+rate_period = annual
+rate_period_days = 365
+early_fee = 0
+early_allow = 0
+withdraw_condition = 2
+repeatable = 1

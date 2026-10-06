@@ -1,0 +1,93 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: NBZ (Narodny Bank Zony)
+;; File:   credits.ltx -- credit products
+;;
+;; rate        interest rate as a fraction per rate_period (0.009 = 0.9%)
+;; rate_period how `rate` is applied:
+;;               hour  -> per game hour (rate_period_hours = 1)
+;;               day   -> per game day
+;;               cycle -> fixed interval, rate_period_hours
+;; amount      maximum principal
+;; penalty     late fee as a fraction of the outstanding debt
+;; requires_*  access gates checked before the credit is granted
+;; on_default  consequence tag resolved by the script
+;;               transport -> transport of the debtor is seized
+;;               property  -> property of the debtor is seized
+;;               none      -> debt only
+
+[credits]
+list = cr_start_push, cr_for_business, cr_wheels_blood, cr_prestige, cr_dark_deal
+
+[cr_start_push]
+name_key   = cczmp_cr_start_push_name
+ad_key     = cczmp_cr_start_push_ad
+amount     = 50000
+term_days  = 2
+rate       = 0.012
+rate_period = hour
+rate_period_hours = 1
+penalty    = 0.15
+requires_approval = 0
+requires_guardian  = 0
+gang_only  = 0
+on_default = none
+
+[cr_for_business]
+name_key   = cczmp_cr_for_business_name
+ad_key     = cczmp_cr_for_business_ad
+amount     = 250000
+term_days  = 5
+rate       = 0.009
+rate_period = hour
+rate_period_hours = 1
+penalty    = 0.15
+requires_approval = 0
+requires_guardian  = 0
+gang_only  = 0
+on_default = none
+
+; the brief is explicit: the debt survives and the transport is taken
+[cr_wheels_blood]
+name_key   = cczmp_cr_wheels_blood_name
+ad_key     = cczmp_cr_wheels_blood_ad
+amount     = 500000
+term_days  = 10
+rate       = 0.0065
+rate_period = hour
+rate_period_hours = 1
+penalty    = 0.15
+requires_approval = 0
+requires_guardian  = 0
+gang_only  = 0
+on_default = transport
+
+[cr_prestige]
+name_key   = cczmp_cr_prestige_name
+ad_key     = cczmp_cr_prestige_ad
+amount     = 1000000
+term_days  = 15
+rate       = 0.005
+rate_period = hour
+rate_period_hours = 1
+penalty    = 0.15
+requires_approval = 1
+requires_guardian  = 1
+gang_only  = 0
+on_default = none
+
+; undocumented in the brief beyond "for gangs, skips every limit";
+;; the 0.3% per 10 real minutes is reconstructed from the design text
+[cr_dark_deal]
+name_key   = cczmp_cr_dark_deal_name
+ad_key     = cczmp_cr_dark_deal_ad
+amount     = 2000000
+term_days  = 3
+rate       = 0.003
+rate_period = cycle
+rate_period_hours = 0.1666667
+penalty    = 0.15
+requires_approval = 0
+requires_guardian  = 0
+gang_only  = 1
+on_default = none
+dark_deal  = 1

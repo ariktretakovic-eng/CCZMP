@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_nchg_full_name">
+		<text>Независимое Чернобыльское Государство</text>
+	</string>
+	<string id="cczmp_nchg_motto">
+		<text>Независимость — наше спасение</text>
+	</string>
+	<string id="cczmp_nchg_flag">
+		<text>Флаг НЧГ: ЧАЭС и знак радиационной опасности</text>
+	</string>
+	<string id="cczmp_nchg_emblem">
+		<text>Герб НЧГ: девиз государства и его главная достопримечательность — ЧАЭС</text>
+	</string>
+	<string id="cczmp_nchg_preamble">
+		<text>Мы, народ Чернобыльской зоны отчуждения, объединённые общей судьбой и историей, провозглашаем создание Независимого Чернобыльского Государства — во имя свободы, безопасности и сохранения нашей земли.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_1">
+		<text>Глава I. Основы строя</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a1">
+		<text>Статья 1. НЧГ является суверенным военным государством.</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a2">
+		<text>Статья 2. Государственной религией и идеологией является выживание и защита территории.</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a3">
+		<text>Статья 3. Территория НЧГ неприкосновенна. Любое нарушение границ приравнивается к военной агрессии.</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a4">
+		<text>Статья 4. Символы НЧГ: флаг (ЧАЭС и знак радиации) и герб (девиз и главная достопримечательность — ЧАЭС).</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_2">
+		<text>Глава II. Граждане</text>
+	</string>
+	<string id="cczmp_nchg_ch_2_a1">
+		<text>Статья 1. Гражданином НЧГ является каждый, кто официально отказался от гражданства других стран и прожил в зоне не менее 1 года.</text>
+	</string>
+	<string id="cczmp_nchg_ch_2_a2">
+		<text>Статья 2. Основные права гражданина: право на жизнь, право на защиту, право на труд, право на участие в политике.</text>
+	</string>
+	<string id="cczmp_nchg_ch_2_a3">
+		<text>Статья 3. Основные обязанности гражданина: служба в армии или государственных органах, соблюдение Конституции и законов, защита территории НЧГ от внешних и внутренних угроз.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_3">
+		<text>Глава III. Президент и власть</text>
+	</string>
+	<string id="cczmp_nchg_ch_3_a1">
+		<text>Статья 1. Президент НЧГ является главой государства и вооружённых сил.</text>
+	</string>
+	<string id="cczmp_nchg_ch_3_a2">
+		<text>Статья 2. Президент избирается на 5 лет, но может быть досрочно смещён Народным Советом.</text>
+	</string>
+	<string id="cczmp_nchg_ch_3_a3">
+		<text>Статья 3. Президент обязан: руководить армией, подписывать законы, назначать министров, следить за безопасностью государства.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_4">
+		<text>Глава IV. Органы власти</text>
+	</string>
+	<string id="cczmp_nchg_ch_4_a1">
+		<text>Статья 1. Народный Совет — орган, представляющий все организации (группировки) зоны.</text>
+	</string>
+	<string id="cczmp_nchg_ch_4_a2">
+		<text>Статья 2. Прокуратура и Суды НЧГ — органы правосудия.</text>
+	</string>
+	<string id="cczmp_nchg_ch_4_a3">
+		<text>Статья 3. Чернобыльская служба охраны (ЧСО) — элитный орган, обеспечивающий безопасность Президента и государства.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_5">
+		<text>Глава V. Экономика</text>
+	</string>
+	<string id="cczmp_nchg_ch_5_a1">
+		<text>Статья 1. Экономика НЧГ основана на производстве (фабрики, заводы) и торговле (магазины, ларьки, аптеки).</text>
+	</string>
+	<string id="cczmp_nchg_ch_5_a2">
+		<text>Статья 2. Валюта НЧГ — Чернобыльский Рубль (ЧР).</text>
+	</string>
+	<string id="cczmp_nchg_ch_5_a3">
+		<text>Статья 3. Государство имеет право устанавливать контрольные цены на товары первой необходимости.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_6">
+		<text>Глава VI. Безопасность</text>
+	</string>
+	<string id="cczmp_nchg_ch_6_a1">
+		<text>Статья 1. Вооружённые силы НЧГ являются гарантом независимости.</text>
+	</string>
+	<string id="cczmp_nchg_ch_6_a2">
+		<text>Статья 2. Любой гражданин обязан пройти военную подготовку.</text>
+	</string>
+	<string id="cczmp_nchg_ch_6_a3">
+		<text>Статья 3. Государство имеет право на применение смертной казни к изменникам, предателям и шпионам.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_7">
+		<text>Глава VII. Заключительные положения</text>
+	</string>
+	<string id="cczmp_nchg_ch_7_a1">
+		<text>Статья 1. Изменения в Конституцию могут вноситься только Народным Советом либо Президентом.</text>
+	</string>
+	<string id="cczmp_nchg_ch_7_a2">
+		<text>Статья 2. Конституция вступает в силу немедленно после её принятия.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_8">
+		<text>Глава VIII. Юриспруденция</text>
+	</string>
+	<string id="cczmp_nchg_ch_8_a1">
+		<text>Статья 1. Юриспруденция НЧГ представляет собой систему органов и должностных лиц, обеспечивающих справедливость, защиту прав, соблюдение законов и поддержание внутреннего порядка. Все лица, занимающие юридические должности, действуют в интересах НЧГ, подчиняясь Конституции и общим законам.</text>
+	</string>
+	<string id="cczmp_nchg_ch_8_a2">
+		<text>Статья 2. Основные должности в сфере юриспруденции: прокурор, следователь, судья, адвокат, юрист-консультант, нотариус.</text>
+	</string>
+	<string id="cczmp_nchg_ch_8_a3">
+		<text>Статья 3. Обязанности лиц, занимающих юридические должности, установлены настоящей главой и Конституцией НЧГ.</text>
+	</string>
+
+	<string id="cczmp_office_prosecutor">
+		<text>Прокурор</text>
+	</string>
+	<string id="cczmp_office_prosecutor_duties">
+		<text>Надзор за исполнением законов, возбуждение дел.</text>
+	</string>
+	<string id="cczmp_office_investigator">
+		<text>Следователь</text>
+	</string>
+	<string id="cczmp_office_investigator_duties">
+		<text>Ведение расследований, сбор доказательств, установление виновных.</text>
+	</string>
+	<string id="cczmp_office_judge">
+		<text>Судья</text>
+	</string>
+	<string id="cczmp_office_judge_duties">
+		<text>Рассмотрение дел, вынесение решений.</text>
+	</string>
+	<string id="cczmp_office_defender">
+		<text>Адвокат</text>
+	</string>
+	<string id="cczmp_office_defender_duties">
+		<text>Защита обвиняемых, представление интересов граждан.</text>
+	</string>
+	<string id="cczmp_office_counsel">
+		<text>Юрист-консультант</text>
+	</string>
+	<string id="cczmp_office_counsel_duties">
+		<text>Консультирование по правовым вопросам, помощь в заключении договоров.</text>
+	</string>
+	<string id="cczmp_office_notary">
+		<text>Нотариус</text>
+	</string>
+	<string id="cczmp_office_notary_duties">
+		<text>Заверение сделок, удостоверение документов.</text>
+	</string>
+
+	<string id="cczmp_uk_1_1">
+		<text>Нанесение телесных травм гражданину</text>
+	</string>
+	<string id="cczmp_uk_1_2">
+		<text>Нанесение телесных травм работнику гос. структур</text>
+	</string>
+	<string id="cczmp_uk_1_3">
+		<text>Убийство гражданина с огнестрельного оружия</text>
+	</string>
+	<string id="cczmp_uk_1_4">
+		<text>Убийство работника гос. структур с огнестрельного оружия</text>
+	</string>
+	<string id="cczmp_uk_1_5">
+		<text>Убийство по неосторожности (кулаками)</text>
+	</string>
+	<string id="cczmp_uk_1_6">
+		<text>Нападение на высокопоставленных лиц</text>
+	</string>
+	<string id="cczmp_uk_2_1">
+		<text>Хулиганство</text>
+	</string>
+	<string id="cczmp_uk_2_2">
+		<text>Порча гос. транспорта</text>
+	</string>
+	<string id="cczmp_uk_2_3">
+		<text>Оскорбление сотрудников гос. структур</text>
+	</string>
+	<string id="cczmp_uk_2_4">
+		<text>Оскорбление высокопоставленных лиц</text>
+	</string>
+	<string id="cczmp_uk_2_5">
+		<text>Ложная информация: выдача себя за работника государственных структур</text>
+	</string>
+	<string id="cczmp_uk_2_6">
+		<text>Угрозы насилием или физической расправой</text>
+	</string>
+	<string id="cczmp_uk_2_7">
+		<text>Угрозы насилием высокопоставленным лицам и работникам гос. структур</text>
+	</string>
+	<string id="cczmp_uk_3_1">
+		<text>Террористический акт: расстрел людей на улице, захват заложников</text>
+	</string>
+	<string id="cczmp_uk_3_2">
+		<text>Продажа оружия</text>
+	</string>
+	<string id="cczmp_uk_3_3">
+		<text>Ношение оружия в открытом виде расценивается как терроризм</text>
+	</string>
+	<string id="cczmp_uk_4_1">
+		<text>Предложение взятки должностному лицу</text>
+	</string>
+	<string id="cczmp_uk_4_2">
+		<text>Взятие взятки должностным лицом</text>
+	</string>
+	<string id="cczmp_uk_4_3">
+		<text>Освобождение из-под стражи за взятку</text>
+	</string>
+	<string id="cczmp_uk_5_1">
+		<text>Проникновение на территорию армии</text>
+	</string>
+	<string id="cczmp_uk_5_2">
+		<text>Нахождение в офисе ФСБ без сопровождения сотрудника ФСБ</text>
+	</string>
+	<string id="cczmp_uk_5_3">
+		<text>Нахождение на территории ФСБ без сопровождения сотрудника ФСБ</text>
+	</string>
+	<string id="cczmp_uk_5_4">
+		<text>Нахождение на закрытой служебной парковке у здания МВД без сопровождения сотрудника МВД/ФСБ</text>
+	</string>
+	<string id="cczmp_uk_6_1">
+		<text>Неподчинение</text>
+	</string>
+	<string id="cczmp_uk_6_2">
+		<text>За повторное неподчинение</text>
+	</string>
+	<string id="cczmp_uk_7_1">
+		<text>Продажа или употребление</text>
+	</string>
+	<string id="cczmp_uk_7_2">
+		<text>Хранение</text>
+	</string>
+	<string id="cczmp_uk_7_3">
+		<text>Хранение краденых материалов</text>
+	</string>
+	<string id="cczmp_uk_8_1">
+		<text>Угон транспортного средства</text>
+	</string>
+	<string id="cczmp_uk_8_2">
+		<text>Угон либо попытка угона военной техники</text>
+	</string>
+	<string id="cczmp_uk_9_1">
+		<text>Соучастие в преступлении: от 1 года до 5 лет лишения свободы, в зависимости от инкриминируемого преступления</text>
+	</string>
+	<string id="cczmp_uk_10_1">
+		<text>Уход с места ДТП</text>
+	</string>
+	<string id="cczmp_uk_10_2">
+		<text>Создание ситуации для ДТП</text>
+	</string>
+	<string id="cczmp_uk_11_1">
+		<text>Продажа военной техники</text>
+	</string>
+	<string id="cczmp_uk_11_2">
+		<text>Незаконный оборот оружия и патронов, а также воровство оружия или патронов</text>
+	</string>
+
+	<string id="cczmp_ak_1_1">
+		<text>Мат в общественном месте</text>
+	</string>
+	<string id="cczmp_ak_1_2">
+		<text>Агрессия в адрес граждан</text>
+	</string>
+	<string id="cczmp_ak_1_3">
+		<text>Провокации на митинги</text>
+	</string>
+	<string id="cczmp_ak_2_1">
+		<text>Превышение скорости</text>
+	</string>
+	<string id="cczmp_ak_2_2">
+		<text>Проезд на красный</text>
+	</string>
+	<string id="cczmp_ak_2_3">
+		<text>Уход от погони</text>
+	</string>
+	<string id="cczmp_ak_2_4">
+		<text>Вождение без прав</text>
+	</string>
+	<string id="cczmp_ak_3_1">
+		<text>Проникновение в охраняемую зону</text>
+	</string>
+	<string id="cczmp_ak_3_2">
+		<text>Создание лагеря без разрешения</text>
+	</string>
+	<string id="cczmp_ak_3_3">
+		<text>Торговля без лицензии</text>
+	</string>
+	<string id="cczmp_ak_3_4">
+		<text>Ношение формы гос. структур без допуска</text>
+	</string>
+	<string id="cczmp_ak_4_1">
+		<text>Отказ предъявить документы</text>
+	</string>
+	<string id="cczmp_ak_4_2">
+		<text>Побег при проверке</text>
+	</string>
+	<string id="cczmp_ak_4_3">
+		<text>Провокация сотрудников</text>
+	</string>
+	<string id="cczmp_ak_4_4">
+		<text>Нарушение при досмотре</text>
+	</string>
+	<string id="cczmp_ak_5_1">
+		<text>Брошенный транспорт в неположенном месте</text>
+	</string>
+	<string id="cczmp_ak_5_2">
+		<text>Использование громкоговорителя без причины</text>
+	</string>
+	<string id="cczmp_ak_5_3">
+		<text>Самовольная установка КПП</text>
+	</string>
+
+	<string id="cczmp_fp_1_low">
+		<text>Нарушение запрета разглашения внутренней информации госструктур</text>
+	</string>
+	<string id="cczmp_fp_1_high">
+		<text>Слив конфиденциальной информации госструктур</text>
+	</string>
+	<string id="cczmp_fp_2_low">
+		<text>Повторное нарушение обязательного ношения формы на службе</text>
+	</string>
+	<string id="cczmp_fp_2_high">
+		<text>Умышленное игнорирование обязательного ношения формы</text>
+	</string>
+	<string id="cczmp_fp_3_low">
+		<text>Отсутствие служебного удостоверения</text>
+	</string>
+	<string id="cczmp_fp_3_high">
+		<text>Отказ предъявить служебное удостоверение по требованию</text>
+	</string>
+	<string id="cczmp_fp_4_low">
+		<text>Взятка до 10 000 рублей</text>
+	</string>
+	<string id="cczmp_fp_4_high">
+		<text>Взятка свыше 10 000 рублей</text>
+	</string>
+	<string id="cczmp_fp_5_low">
+		<text>Нецензурная речь в сторону старших по званию</text>
+	</string>
+	<string id="cczmp_fp_5_high">
+		<text>Прямой конфликт с начальством</text>
+	</string>
+	<string id="cczmp_fp_6_low">
+		<text>Выход на дежурство в состоянии опьянения, первое нарушение</text>
+	</string>
+	<string id="cczmp_fp_6_high">
+		<text>Выход на дежурство в состоянии опьянения, повторное нарушение</text>
+	</string>
+	<string id="cczmp_fp_7_low">
+		<text>Обнаруженный артефакт у госслужащего</text>
+	</string>
+	<string id="cczmp_fp_7_high">
+		<text>Повторное нарушение запрета на хранение артефактов</text>
+	</string>
+	<string id="cczmp_fp_8_low">
+		<text>Передача оружия гражданскому лицу</text>
+	</string>
+	<string id="cczmp_fp_9_low">
+		<text>Отсутствие рапорта или видеофиксации спецоперации</text>
+	</string>
+	<string id="cczmp_fp_9_high">
+		<text>Повторное невыполнение обязанности фиксировать спецоперации</text>
+	</string>
+	<string id="cczmp_fp_10_low">
+		<text>Использование спецсредств без причины</text>
+	</string>
+	<string id="cczmp_fp_10_high">
+		<text>Повторное применение спецсредств без разрешения</text>
+	</string>
+
+	<string id="cczmp_law_msg_no_state">
+		<text>Ошибка: судебное состояние недоступно</text>
+	</string>
+	<string id="cczmp_law_msg_bad_offence">
+		<text>Такой состав преступления не зарегистрирован</text>
+	</string>
+</string_table>

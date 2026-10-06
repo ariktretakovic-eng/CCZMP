@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_nchg_full_name">
+		<text>Independent Chernobyl State</text>
+	</string>
+	<string id="cczmp_nchg_motto">
+		<text>Independence is our salvation</text>
+	</string>
+	<string id="cczmp_nchg_flag">
+		<text>NChG flag: the Chernobyl plant and a radiation sign</text>
+	</string>
+	<string id="cczmp_nchg_emblem">
+		<text>NChG emblem: the state motto and its landmark, the Chernobyl plant</text>
+	</string>
+	<string id="cczmp_nchg_preamble">
+		<text>We, the people of the Chernobyl exclusion zone, united by a common fate and history, proclaim the creation of the Independent Chernobyl State for the sake of freedom, safety and the preservation of our land.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_1">
+		<text>Chapter I. Foundations of the System</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a1">
+		<text>Article 1. The NChG is a sovereign military state.</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a2">
+		<text>Article 2. The state religion and ideology are survival and defence of the territory.</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a3">
+		<text>Article 3. The territory of the NChG is inviolable. Any violation of the borders is equated with military aggression.</text>
+	</string>
+	<string id="cczmp_nchg_ch_1_a4">
+		<text>Article 4. Symbols of the NChG: the flag (the plant and a radiation sign) and the emblem (the motto and the landmark, the plant).</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_2">
+		<text>Chapter II. Citizens</text>
+	</string>
+	<string id="cczmp_nchg_ch_2_a1">
+		<text>Article 1. A citizen of the NChG is anyone who formally renounced the citizenship of other countries and has lived in the zone for at least one year.</text>
+	</string>
+	<string id="cczmp_nchg_ch_2_a2">
+		<text>Article 2. The basic rights of a citizen: the right to life, the right to protection, the right to work, the right to take part in politics.</text>
+	</string>
+	<string id="cczmp_nchg_ch_2_a3">
+		<text>Article 3. The basic duties of a citizen: service in the army or state bodies, observance of the Constitution and the laws, and defence of the NChG territory against external and internal threats.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_3">
+		<text>Chapter III. The President and Power</text>
+	</string>
+	<string id="cczmp_nchg_ch_3_a1">
+		<text>Article 1. The President of the NChG is the head of state and of the armed forces.</text>
+	</string>
+	<string id="cczmp_nchg_ch_3_a2">
+		<text>Article 2. The President is elected for five years but may be removed early by the People's Council.</text>
+	</string>
+	<string id="cczmp_nchg_ch_3_a3">
+		<text>Article 3. The President must: command the army, sign laws, appoint ministers, and oversee state security.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_4">
+		<text>Chapter IV. Organs of Power</text>
+	</string>
+	<string id="cczmp_nchg_ch_4_a1">
+		<text>Article 1. The People's Council is the body representing every organisation (gang) of the zone.</text>
+	</string>
+	<string id="cczmp_nchg_ch_4_a2">
+		<text>Article 2. The Prosecutor's Office and the Courts of the NChG are the organs of justice.</text>
+	</string>
+	<string id="cczmp_nchg_ch_4_a3">
+		<text>Article 3. The Chernobyl Guard Service (ChSO) is an elite body ensuring the safety of the President and of the state.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_5">
+		<text>Chapter V. Economy</text>
+	</string>
+	<string id="cczmp_nchg_ch_5_a1">
+		<text>Article 1. The economy of the NChG rests on production (factories, plants) and trade (shops, stalls, pharmacies).</text>
+	</string>
+	<string id="cczmp_nchg_ch_5_a2">
+		<text>Article 2. The currency of the NChG is the Chernobyl Rouble (ChR).</text>
+	</string>
+	<string id="cczmp_nchg_ch_5_a3">
+		<text>Article 3. The state has the right to set controlled prices on essential goods.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_6">
+		<text>Chapter VI. Security</text>
+	</string>
+	<string id="cczmp_nchg_ch_6_a1">
+		<text>Article 1. The armed forces of the NChG are the guarantor of independence.</text>
+	</string>
+	<string id="cczmp_nchg_ch_6_a2">
+		<text>Article 2. Every citizen is obliged to undergo military training.</text>
+	</string>
+	<string id="cczmp_nchg_ch_6_a3">
+		<text>Article 3. The state has the right to apply the death penalty to traitors, betrayers and spies.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_7">
+		<text>Chapter VII. Final Provisions</text>
+	</string>
+	<string id="cczmp_nchg_ch_7_a1">
+		<text>Article 1. Amendments to the Constitution may be introduced only by the People's Council or by the President.</text>
+	</string>
+	<string id="cczmp_nchg_ch_7_a2">
+		<text>Article 2. The Constitution enters into force immediately upon its adoption.</text>
+	</string>
+
+	<string id="cczmp_nchg_ch_8">
+		<text>Chapter VIII. Jurisprudence</text>
+	</string>
+	<string id="cczmp_nchg_ch_8_a1">
+		<text>Article 1. The jurisprudence of the NChG is a system of bodies and officials ensuring fairness, protection of rights, observance of the laws and maintenance of public order. All holders of legal office act in the interests of the NChG, subject to the Constitution and the general laws.</text>
+	</string>
+	<string id="cczmp_nchg_ch_8_a2">
+		<text>Article 2. The main offices in jurisprudence are: prosecutor, investigator, judge, defence lawyer, legal counsel and notary.</text>
+	</string>
+	<string id="cczmp_nchg_ch_8_a3">
+		<text>Article 3. The duties of holders of legal office are set out in this chapter and in the Constitution of the NChG.</text>
+	</string>
+
+	<string id="cczmp_office_prosecutor">
+		<text>Prosecutor</text>
+	</string>
+	<string id="cczmp_office_prosecutor_duties">
+		<text>Supervision of law enforcement and initiation of cases.</text>
+	</string>
+	<string id="cczmp_office_investigator">
+		<text>Investigator</text>
+	</string>
+	<string id="cczmp_office_investigator_duties">
+		<text>Conducting investigations, gathering evidence, identifying the guilty.</text>
+	</string>
+	<string id="cczmp_office_judge">
+		<text>Judge</text>
+	</string>
+	<string id="cczmp_office_judge_duties">
+		<text>Hearing cases and passing decisions.</text>
+	</string>
+	<string id="cczmp_office_defender">
+		<text>Defence lawyer</text>
+	</string>
+	<string id="cczmp_office_defender_duties">
+		<text>Defending the accused and representing the interests of citizens.</text>
+	</string>
+	<string id="cczmp_office_counsel">
+		<text>Legal counsel</text>
+	</string>
+	<string id="cczmp_office_counsel_duties">
+		<text>Legal advice and assistance in concluding contracts.</text>
+	</string>
+	<string id="cczmp_office_notary">
+		<text>Notary</text>
+	</string>
+	<string id="cczmp_office_notary_duties">
+		<text>Certifying transactions and documents.</text>
+	</string>
+
+	<string id="cczmp_uk_1_1">
+		<text>Assault on a citizen</text>
+	</string>
+	<string id="cczmp_uk_1_2">
+		<text>Assault on a state employee</text>
+	</string>
+	<string id="cczmp_uk_1_3">
+		<text>Murder of a citizen with a firearm</text>
+	</string>
+	<string id="cczmp_uk_1_4">
+		<text>Murder of a state employee with a firearm</text>
+	</string>
+	<string id="cczmp_uk_1_5">
+		<text>Negligent homicide (with fists)</text>
+	</string>
+	<string id="cczmp_uk_1_6">
+		<text>Assault on a high-ranking official</text>
+	</string>
+	<string id="cczmp_uk_2_1">
+		<text>Hooliganism</text>
+	</string>
+	<string id="cczmp_uk_2_2">
+		<text>Damage to state transport</text>
+	</string>
+	<string id="cczmp_uk_2_3">
+		<text>Insulting state employees</text>
+	</string>
+	<string id="cczmp_uk_2_4">
+		<text>Insulting high-ranking officials</text>
+	</string>
+	<string id="cczmp_uk_2_5">
+		<text>False information: posing as a state employee</text>
+	</string>
+	<string id="cczmp_uk_2_6">
+		<text>Threatening violence or physical retaliation</text>
+	</string>
+	<string id="cczmp_uk_2_7">
+		<text>Threatening violence against high-ranking officials and state employees</text>
+	</string>
+	<string id="cczmp_uk_3_1">
+		<text>Terrorist act: shooting people in the street, taking hostages</text>
+	</string>
+	<string id="cczmp_uk_3_2">
+		<text>Sale of weapons</text>
+	</string>
+	<string id="cczmp_uk_3_3">
+		<text>Carrying a weapon in the open is treated as terrorism</text>
+	</string>
+	<string id="cczmp_uk_4_1">
+		<text>Offering a bribe to an official</text>
+	</string>
+	<string id="cczmp_uk_4_2">
+		<text>Accepting a bribe as an official</text>
+	</string>
+	<string id="cczmp_uk_4_3">
+		<text>Release from custody in exchange for a bribe</text>
+	</string>
+	<string id="cczmp_uk_5_1">
+		<text>Trespassing on army territory</text>
+	</string>
+	<string id="cczmp_uk_5_2">
+		<text>Being inside an FSB office without an FSB escort</text>
+	</string>
+	<string id="cczmp_uk_5_3">
+		<text>Being on FSB territory without an FSB escort</text>
+	</string>
+	<string id="cczmp_uk_5_4">
+		<text>Being on the closed official parking lot by the MVD building without an MVD/FSB escort</text>
+	</string>
+	<string id="cczmp_uk_6_1">
+		<text>Disobedience</text>
+	</string>
+	<string id="cczmp_uk_6_2">
+		<text>Repeated disobedience</text>
+	</string>
+	<string id="cczmp_uk_7_1">
+		<text>Sale or use</text>
+	</string>
+	<string id="cczmp_uk_7_2">
+		<text>Storage</text>
+	</string>
+	<string id="cczmp_uk_7_3">
+		<text>Storage of stolen materials</text>
+	</string>
+	<string id="cczmp_uk_8_1">
+		<text>Theft of a vehicle</text>
+	</string>
+	<string id="cczmp_uk_8_2">
+		<text>Theft or attempted theft of military equipment</text>
+	</string>
+	<string id="cczmp_uk_9_1">
+		<text>Complicity in a crime: 1 to 5 years, depending on the offence charged</text>
+	</string>
+	<string id="cczmp_uk_10_1">
+		<text>Leaving the scene of an accident</text>
+	</string>
+	<string id="cczmp_uk_10_2">
+		<text>Creating a situation that causes an accident</text>
+	</string>
+	<string id="cczmp_uk_11_1">
+		<text>Sale of military equipment</text>
+	</string>
+	<string id="cczmp_uk_11_2">
+		<text>Illegal trafficking in weapons and ammunition, and theft of weapons or ammunition</text>
+	</string>
+
+	<string id="cczmp_ak_1_1">
+		<text>Swearing in public</text>
+	</string>
+	<string id="cczmp_ak_1_2">
+		<text>Aggression towards citizens</text>
+	</string>
+	<string id="cczmp_ak_1_3">
+		<text>Provoking rallies</text>
+	</string>
+	<string id="cczmp_ak_2_1">
+		<text>Speeding</text>
+	</string>
+	<string id="cczmp_ak_2_2">
+		<text>Running a red light</text>
+	</string>
+	<string id="cczmp_ak_2_3">
+		<text>Evading a pursuit</text>
+	</string>
+	<string id="cczmp_ak_2_4">
+		<text>Driving without a licence</text>
+	</string>
+	<string id="cczmp_ak_3_1">
+		<text>Entering a guarded zone</text>
+	</string>
+	<string id="cczmp_ak_3_2">
+		<text>Setting up a camp without permission</text>
+	</string>
+	<string id="cczmp_ak_3_3">
+		<text>Trading without a licence</text>
+	</string>
+	<string id="cczmp_ak_3_4">
+		<text>Wearing a state uniform without clearance</text>
+	</string>
+	<string id="cczmp_ak_4_1">
+		<text>Refusing to present documents</text>
+	</string>
+	<string id="cczmp_ak_4_2">
+		<text>Fleeing during an inspection</text>
+	</string>
+	<string id="cczmp_ak_4_3">
+		<text>Provoking officers</text>
+	</string>
+	<string id="cczmp_ak_4_4">
+		<text>Obstructing a search</text>
+	</string>
+	<string id="cczmp_ak_5_1">
+		<text>Abandoning a vehicle in an improper place</text>
+	</string>
+	<string id="cczmp_ak_5_2">
+		<text>Using a loudspeaker without cause</text>
+	</string>
+	<string id="cczmp_ak_5_3">
+		<text>Unauthorised installation of a checkpoint</text>
+	</string>
+
+	<string id="cczmp_fp_1_low">
+		<text>Violation of the ban on disclosing internal state information</text>
+	</string>
+	<string id="cczmp_fp_1_high">
+		<text>Leak of confidential state information</text>
+	</string>
+	<string id="cczmp_fp_2_low">
+		<text>Repeated failure to wear the uniform while on duty</text>
+	</string>
+	<string id="cczmp_fp_2_high">
+		<text>Deliberate refusal to wear the required uniform</text>
+	</string>
+	<string id="cczmp_fp_3_low">
+		<text>Not carrying a service ID</text>
+	</string>
+	<string id="cczmp_fp_3_high">
+		<text>Refusing to present a service ID on demand</text>
+	</string>
+	<string id="cczmp_fp_4_low">
+		<text>Bribe of up to 10,000 roubles</text>
+	</string>
+	<string id="cczmp_fp_4_high">
+		<text>Bribe over 10,000 roubles</text>
+	</string>
+	<string id="cczmp_fp_5_low">
+		<text>Abusive language towards superiors</text>
+	</string>
+	<string id="cczmp_fp_5_high">
+		<text>Direct conflict with superiors</text>
+	</string>
+	<string id="cczmp_fp_6_low">
+		<text>Reporting for duty while intoxicated, first offence</text>
+	</string>
+	<string id="cczmp_fp_6_high">
+		<text>Reporting for duty while intoxicated, repeated offence</text>
+	</string>
+	<string id="cczmp_fp_7_low">
+		<text>An artefact found on a state employee</text>
+	</string>
+	<string id="cczmp_fp_7_high">
+		<text>Repeated violation of the ban on storing artefacts</text>
+	</string>
+	<string id="cczmp_fp_8_low">
+		<text>Handing a weapon to a civilian</text>
+	</string>
+	<string id="cczmp_fp_9_low">
+		<text>No report or video record of a special operation</text>
+	</string>
+	<string id="cczmp_fp_9_high">
+		<text>Repeated failure to document special operations</text>
+	</string>
+	<string id="cczmp_fp_10_low">
+		<text>Use of special means without cause</text>
+	</string>
+	<string id="cczmp_fp_10_high">
+		<text>Repeated use of special means without authorisation</text>
+	</string>
+
+	<string id="cczmp_law_msg_no_state">
+		<text>Error: legal state unavailable</text>
+	</string>
+	<string id="cczmp_law_msg_bad_offence">
+		<text>No such offence is registered</text>
+	</string>
+</string_table>

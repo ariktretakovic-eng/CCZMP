@@ -1,0 +1,50 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: NBZ (Narodny Bank Zony / People's Bank of the Zone)
+;; File:   settings.ltx -- global tunables for the banking module
+;;
+;; All timings are expressed in game days unless stated otherwise.
+;; The module converts them to real time with real_seconds_per_game_day, so the
+;; whole economy can be retuned from this one file without touching scripts.
+
+[settings]
+; how long one in-game day lasts in real seconds. 600 = 10 real minutes.
+real_seconds_per_game_day = 600
+real_seconds_per_game_hour = 25
+
+; commission charged by the bank (fraction of the amount)
+commission_open   = 0.02
+commission_close  = 0.01
+commission_credit = 0.03
+commission_insure = 0.05
+
+; deposits
+deposit_max_slots = 3
+
+; credits
+credit_max_debt = 5000000
+; penalty applied on the outstanding debt when a credit term expires
+credit_penalty_rate = 0.15
+; default interest when a credit product omits its own rate
+credit_default_hourly_rate = 0.009
+
+; the doc caps every "honest" credit at 0.9% per game hour; the "dark deal"
+; product is the single documented exception and has to be whitelisted here
+credit_dark_deal_flag = 1
+
+; insurance
+; cover fraction refunded when the insured property is destroyed
+insurance_refund = 0.5
+
+; banking history kept for the credit rating
+rating_window_days = 30
+rating_start_score = 100
+rating_on_overdue = -25
+rating_on_repaid = 5
+rating_min = 0
+rating_max = 200
+; a player below this score cannot take a credit
+rating_credit_threshold = 40
+
+; logging
+; 0 = silent, 1 = errors only, 2 = full transaction log
+debug_level = 1

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_bank_title">
+		<text>PEOPLE'S BANK OF THE ZONE</text>
+	</string>
+	<string id="cczmp_bank_balance">
+		<text>Balance: %s RUB</text>
+	</string>
+	<string id="cczmp_bank_pocket">
+		<text>In wallet: %s RUB</text>
+	</string>
+	<string id="cczmp_bank_rating">
+		<text>Credit rating: %s</text>
+	</string>
+	<string id="cczmp_bank_rating_ok">
+		<text>Reliable client</text>
+	</string>
+	<string id="cczmp_bank_rating_bad">
+		<text>Unreliable client</text>
+	</string>
+	<string id="cczmp_bank_blocked_permanent">
+		<text>Account blocked permanently</text>
+	</string>
+	<string id="cczmp_bank_blocked_until">
+		<text>Account blocked for %s more</text>
+	</string>
+	<string id="cczmp_bank_deposit_tab">
+		<text>DEPOSITS</text>
+	</string>
+	<string id="cczmp_bank_credit_tab">
+		<text>CREDITS</text>
+	</string>
+	<string id="cczmp_bank_insurance_tab">
+		<text>INSURANCE</text>
+	</string>
+	<string id="cczmp_bank_accounts_tab">
+		<text>ACCOUNTS</text>
+	</string>
+	<string id="cczmp_bank_deposit_open">
+		<text>Open deposit</text>
+	</string>
+	<string id="cczmp_bank_deposit_close">
+		<text>Close deposit early</text>
+	</string>
+	<string id="cczmp_bank_credit_take">
+		<text>Take credit</text>
+	</string>
+	<string id="cczmp_bank_credit_repay">
+		<text>Repay credit</text>
+	</string>
+	<string id="cczmp_bank_credit_due">
+		<text>Outstanding: %s RUB</text>
+	</string>
+	<string id="cczmp_bank_insurance_buy">
+		<text>Buy policy</text>
+	</string>
+	<string id="cczmp_bank_insurance_saving">
+		<text>You save: %s RUB</text>
+	</string>
+	<string id="cczmp_bank_period_day">
+		<text>1 day</text>
+	</string>
+	<string id="cczmp_bank_period_week">
+		<text>7 days</text>
+	</string>
+	<string id="cczmp_bank_period_month">
+		<text>30 days</text>
+	</string>
+	<string id="cczmp_bank_account_redacted">
+		<text>redacted</text>
+	</string>
+
+	<string id="cczmp_dep_zonal_standart_name">
+		<text>Zonal Standart</text>
+	</string>
+	<string id="cczmp_dep_zonal_standart_ad">
+		<text>The best offer for a simple stalker</text>
+	</string>
+	<string id="cczmp_dep_grey_metal_name">
+		<text>Grey Metal</text>
+	</string>
+	<string id="cczmp_dep_grey_metal_ad">
+		<text>Invest — and get a lot!</text>
+	</string>
+	<string id="cczmp_dep_survival_plus_name">
+		<text>Survival+</text>
+	</string>
+	<string id="cczmp_dep_survival_plus_ad">
+		<text>Your hope for stability... will be justified!</text>
+	</string>
+	<string id="cczmp_dep_legendary_name">
+		<text>Legendary Accumulation</text>
+	</string>
+	<string id="cczmp_dep_legendary_ad">
+		<text>Legendarily high income!</text>
+	</string>
+	<string id="cczmp_dep_no_withdraw_name">
+		<text>No Withdrawal Deposit</text>
+	</string>
+	<string id="cczmp_dep_no_withdraw_ad">
+		<text>A true patriot of the Zone trusts PBZ forever</text>
+	</string>
+
+	<string id="cczmp_cr_start_push_name">
+		<text>Starting Push</text>
+	</string>
+	<string id="cczmp_cr_start_push_ad">
+		<text>A little money never hurt any stalker</text>
+	</string>
+	<string id="cczmp_cr_for_business_name">
+		<text>For Business</text>
+	</string>
+	<string id="cczmp_cr_for_business_ad">
+		<text>Put it into business and business will pay the credit back</text>
+	</string>
+	<string id="cczmp_cr_wheels_blood_name">
+		<text>Wheels and Blood</text>
+	</string>
+	<string id="cczmp_cr_wheels_blood_ad">
+		<text>We will lift you on wheels and pay it back in blood</text>
+	</string>
+	<string id="cczmp_cr_prestige_name">
+		<text>Prestige</text>
+	</string>
+	<string id="cczmp_cr_prestige_ad">
+		<text>A credit for those who have collateral and state guarantors</text>
+	</string>
+	<string id="cczmp_cr_dark_deal_name">
+		<text>Dark Deal</text>
+	</string>
+	<string id="cczmp_cr_dark_deal_ad">
+		<text>No limits, no questions. For those who know how to keep quiet.</text>
+	</string>
+
+	<string id="cczmp_ins_car_name">
+		<text>Passenger car (civilian)</text>
+	</string>
+	<string id="cczmp_ins_official_name">
+		<text>Official transport</text>
+	</string>
+	<string id="cczmp_ins_offroad_name">
+		<text>Offroad, jeeps, pickups</text>
+	</string>
+	<string id="cczmp_ins_truck_name">
+		<text>Truck transport</text>
+	</string>
+	<string id="cczmp_ins_air_name">
+		<text>Air transport</text>
+	</string>
+	<string id="cczmp_ins_house_name">
+		<text>House</text>
+	</string>
+	<string id="cczmp_ins_dormitory_name">
+		<text>Dormitory building</text>
+	</string>
+	<string id="cczmp_ins_apartments_name">
+		<text>Apartment</text>
+	</string>
+	<string id="cczmp_ins_business_name">
+		<text>Business</text>
+	</string>
+	<string id="cczmp_ins_other_name">
+		<text>Other real estate</text>
+	</string>
+
+	<string id="cczmp_bank_msg_no_state">
+		<text>Error: banking state unavailable</text>
+	</string>
+	<string id="cczmp_bank_msg_bad_product">
+		<text>No such banking product</text>
+	</string>
+	<string id="cczmp_bank_msg_bad_violation">
+		<text>Unknown violation type</text>
+	</string>
+	<string id="cczmp_bank_msg_already_blocked">
+		<text>Account is already blocked for this reason</text>
+	</string>
+	<string id="cczmp_bank_msg_blocked">
+		<text>Your account is blocked</text>
+	</string>
+	<string id="cczmp_bank_msg_low_rating">
+		<text>Credit rating is too low to grant a credit</text>
+	</string>
+	<string id="cczmp_bank_msg_slots_full">
+		<text>All deposit slots are taken</text>
+	</string>
+	<string id="cczmp_bank_msg_too_small">
+		<text>Amount is below the minimum for this deposit</text>
+	</string>
+	<string id="cczmp_bank_msg_not_enough_money">
+		<text>Not enough money in your wallet</text>
+	</string>
+	<string id="cczmp_bank_msg_not_enough_balance">
+		<text>Not enough funds on your bank account</text>
+	</string>
+	<string id="cczmp_bank_msg_no_deposit">
+		<text>Deposit not found</text>
+	</string>
+	<string id="cczmp_bank_msg_no_credit">
+		<text>Credit not found</text>
+	</string>
+	<string id="cczmp_bank_msg_early_denied">
+		<text>Early withdrawal is not available for this deposit</text>
+	</string>
+	<string id="cczmp_bank_msg_needs_court">
+		<text>Early withdrawal is possible only by court order</text>
+	</string>
+	<string id="cczmp_bank_msg_never_withdrawable">
+		<text>Funds in this deposit cannot be withdrawn</text>
+	</string>
+	<string id="cczmp_bank_msg_amount_over_cap">
+		<text>Amount exceeds the maximum for this credit</text>
+	</string>
+	<string id="cczmp_bank_msg_needs_guardian">
+		<text>Collateral or a state guarantor is required</text>
+	</string>
+	<string id="cczmp_bank_msg_nothing_to_repay">
+		<text>Nothing to repay</text>
+	</string>
+</string_table>

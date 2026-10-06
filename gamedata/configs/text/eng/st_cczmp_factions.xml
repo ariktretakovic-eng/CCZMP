@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="cczmp_fac_zonastroy_name">
+		<text>ZONASTROY</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_location">
+		<text>Oktyabrskaya industrial zone, eastern outskirts of Pripyat</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_0">
+		<text>Worker</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_1">
+		<text>Mason</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_2">
+		<text>Construction engineer</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_3">
+		<text>Site foreman</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_rank_4">
+		<text>Building supervisor</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_0">
+		<text>KAMAZ concrete mixer</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_1">
+		<text>EO-3323 excavator</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_2">
+		<text>KS-4561 crawler crane</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_3">
+		<text>Engineer unit pickup</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_transport_4">
+		<text>'Miner' armoured car</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_0">
+		<text>Construction and restoration of NChG buildings</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_1">
+		<text>Building new fortifications, checkpoints and bridges</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_2">
+		<text>Erecting protective domes and underground shelters</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_3">
+		<text>Cooperating with ChERNEnergo and ComNet on power and communications networks</text>
+	</string>
+	<string id="cczmp_fac_zonastroy_task_4">
+		<text>Repairing strategic sites after emissions</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_name">
+		<text>ChERNEnergo</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_location">
+		<text>Main substation 'Radar-3', north-east of Pripyat, underground level of the complex</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_0">
+		<text>Electrician</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_1">
+		<text>Equipment technician</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_2">
+		<text>Senior technician</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_3">
+		<text>Operations engineer</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_rank_4">
+		<text>Senior engineer</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_0">
+		<text>Shift UAZ 'Energiya'</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_1">
+		<text>GAZ-3308 truck</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_2">
+		<text>Mobile power plant PES-3</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_transport_3">
+		<text>Buggy for patrolling high-voltage lines</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_0">
+		<text>Maintaining and restoring the NChG power grid</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_1">
+		<text>Supplying power to bases, antennas and laboratories</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_2">
+		<text>Repairing lines after emissions and fighting</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_3">
+		<text>Building temporary protective energy fields</text>
+	</string>
+	<string id="cczmp_fac_chernenergo_task_4">
+		<text>Cooperating with ComNet and MonolitStroy when building and connecting sites</text>
+	</string>
+	<string id="cczmp_fac_comnet_name">
+		<text>ComNet NChG</text>
+	</string>
+	<string id="cczmp_fac_comnet_location">
+		<text>Abandoned radio complex 'Vektor-5', south of Yantar</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_0">
+		<text>Radio technician</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_1">
+		<text>Signaller</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_2">
+		<text>Senior signaller</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_3">
+		<text>Network coordinator</text>
+	</string>
+	<string id="cczmp_fac_comnet_rank_4">
+		<text>Senior coordinator</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_0">
+		<text>Radio van 'Lavina'</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_1">
+		<text>Off-roader with antenna array</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_2">
+		<text>Small reconnaissance drones</text>
+	</string>
+	<string id="cczmp_fac_comnet_transport_3">
+		<text>Boat for coastal communications</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_0">
+		<text>Maintaining radio contact between bases and patrols</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_1">
+		<text>Monitoring anomalous radio signals and psi waves</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_2">
+		<text>Restoring satellite channels</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_3">
+		<text>Encrypting and decrypting faction traffic</text>
+	</string>
+	<string id="cczmp_fac_comnet_task_4">
+		<text>Supporting ChERNEnergo and MonolitStroy when installing new antennas</text>
+	</string>
+	<string id="cczmp_fac_sud_name">
+		<text>NChG Court</text>
+	</string>
+	<string id="cczmp_fac_sud_location">
+		<text>The NChG Court building in central Pripyat, near Independence Square</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_0">
+		<text>Court clerk</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_1">
+		<text>Judge's assistant</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_2">
+		<text>Bailiff</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_3">
+		<text>Magistrate</text>
+	</string>
+	<string id="cczmp_fac_sud_rank_4">
+		<text>Judge of the first instance</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_0">
+		<text>Audi A6 (judge's official car)</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_1">
+		<text>Volkswagen Passat (case paperwork)</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_2">
+		<text>UAZ 'Bukhanka' (prisoner transport)</text>
+	</string>
+	<string id="cczmp_fac_sud_transport_3">
+		<text>Mercedes-Benz S-Class (chief of court)</text>
+	</string>
+	<string id="cczmp_fac_sud_task_0">
+		<text>Holding hearings on cases referred by SK and the Prosecutor's Office</text>
+	</string>
+	<string id="cczmp_fac_sud_task_1">
+		<text>Passing verdicts and decisions on the evidence</text>
+	</string>
+	<string id="cczmp_fac_sud_task_2">
+		<text>Ensuring a fair and impartial hearing</text>
+	</string>
+	<string id="cczmp_fac_sud_task_3">
+		<text>Supervising execution of court decisions through bailiffs</text>
+	</string>
+	<string id="cczmp_fac_sud_task_4">
+		<text>Keeping a case and verdict register accessible only to state bodies</text>
+	</string>
+	<string id="cczmp_fac_sud_task_5">
+		<text>Allowing cases to be reopened on appeal and complaint</text>
+	</string>
+	<string id="cczmp_fac_sud_task_6">
+		<text>Protecting the rights of NChG citizens and upholding legality across the territory</text>
+	</string>
+	<string id="cczmp_fac_sk_name">
+		<text>NChG Investigative Committee</text>
+	</string>
+	<string id="cczmp_fac_sk_location">
+		<text>Former administrative complex No. 14 in central Pripyat (rumoured to be the former KGB headquarters)</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_0">
+		<text>Trainee investigator</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_1">
+		<text>Junior investigator</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_2">
+		<text>Investigator</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_3">
+		<text>Senior investigator</text>
+	</string>
+	<string id="cczmp_fac_sk_rank_4">
+		<text>Investigator of especially important cases</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_0">
+		<text>Toyota Land Cruiser 200 (SK armoured car)</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_1">
+		<text>UAZ Patriot (operational group)</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_2">
+		<text>Mercedes-Benz E-Class (investigator's official car)</text>
+	</string>
+	<string id="cczmp_fac_sk_transport_3">
+		<text>Mi-8 SK helicopter (rare, on the chief's order only)</text>
+	</string>
+	<string id="cczmp_fac_sk_task_0">
+		<text>Interrogation, searches and detention of suspects in NChG cases</text>
+	</string>
+	<string id="cczmp_fac_sk_task_1">
+		<text>Criminal cases against lawbreakers and corrupt officials</text>
+	</string>
+	<string id="cczmp_fac_sk_task_2">
+		<text>Oversight of FSIN, DPS, Military and Customs for abuse of authority</text>
+	</string>
+	<string id="cczmp_fac_sk_task_3">
+		<text>Gathering intelligence on criminal groups and artefact traders</text>
+	</string>
+	<string id="cczmp_fac_sk_task_4">
+		<text>Running special operations jointly with other bodies (by Presidential order)</text>
+	</string>
+	<string id="cczmp_fac_sk_task_5">
+		<text>Reporting to the NChG Security Council and to the President personally</text>
+	</string>
+	<string id="cczmp_fac_schs_name">
+		<text>CHS (Secret Chernobyl Service)</text>
+	</string>
+	<string id="cczmp_fac_schs_location">
+		<text>Classified bunker near the destroyed plant</text>
+	</string>
+	<string id="cczmp_fac_schs_style">
+		<text>Civilian clothes, concealed equipment</text>
+	</string>
+	<string id="cczmp_fac_schs_transport_0">
+		<text>Unmarked minibus</text>
+	</string>
+	<string id="cczmp_fac_schs_transport_1">
+		<text>Civilian cars</text>
+	</string>
+	<string id="cczmp_fac_schs_task_0">
+		<text>Intelligence</text>
+	</string>
+	<string id="cczmp_fac_schs_task_1">
+		<text>Surveillance</text>
+	</string>
+	<string id="cczmp_fac_schs_task_2">
+		<text>Infiltration of gangs</text>
+	</string>
+	<string id="cczmp_fac_schs_task_3">
+		<text>Arrest on suspicion of treason</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_name">
+		<text>NChG Prosecutor's Office</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_location">
+		<text>Pripyat, the building bearing the prosecutor's emblem</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_0">
+		<text>Volkswagen Touareg</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_1">
+		<text>Toyota RAV4</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_2">
+		<text>Toyota Land Rover</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_3">
+		<text>Toyota Land Cruiser 200 (tinted)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_transport_4">
+		<text>Mercedes-Benz E200 (blue, lettered 'Prosecutor's Office')</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_equip_0">
+		<text>Uniforms with shoulder boards</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_equip_1">
+		<text>Prosecutor's cap</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_equip_2">
+		<text>Shiny shoes</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_0">
+		<text>M-16 (ordinary prosecutors)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_1">
+		<text>Silenced PM (ordinary prosecutors)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_2">
+		<text>MSG-V1 with suppressor (senior prosecutors)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_3">
+		<text>Silenced USP (senior prosecutors)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_4">
+		<text>Teg 9, upgraded 24-round version (chief prosecutor)</text>
+	</string>
+	<string id="cczmp_fac_prokuratura_weapon_5">
+		<text>MP-7 with adjustable optics (chief prosecutor)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_name">
+		<text>Kaban Repair Shop</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_location">
+		<text>Zone where the Scrapyard meets the Vehicle Graveyard</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_0">
+		<text>ZIL-131 with a workshop body</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_1">
+		<text>UAZ 452 'Bukhanka' with 'STO' decals</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_2">
+		<text>Pickups with the 'Kaban' logo</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_3">
+		<text>Moskvitch 412</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_4">
+		<text>Lada 2107 on reinforced suspension</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_transport_5">
+		<text>Converted BTR (mobile base in dangerous zones)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_0">
+		<text>Repairing and tuning weapons and vehicles</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_1">
+		<text>Producing modified equipment</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_2">
+		<text>Trading in parts, PDAs and tools</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_3">
+		<text>The black market — possibly supplying illegal weapons to gangs on order</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_4">
+		<text>Maintaining neutrality between factions</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_task_5">
+		<text>Taking part in the 'Rare Artefacts' shadow auction</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_0">
+		<text>Working coveralls</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_1">
+		<text>Leather apron</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_2">
+		<text>Gloves</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_3">
+		<text>Occasionally a body armour under the clothes</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_4">
+		<text>Colours: black with yellow elements, boar logo on the back</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_equip_5">
+		<text>Senior technicians wear welding masks with a night-vision mod</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_0">
+		<text>Sawn-off shotguns</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_1">
+		<text>PP 'Bizon'</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_2">
+		<text>PP 'Syuha'</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_3">
+		<text>MP-5</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_4">
+		<text>AK-74M with grenade launcher (masters)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_5">
+		<text>RPK (base defence)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_6">
+		<text>Nail guns</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_7">
+		<text>Shock mines</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_weapon_8">
+		<text>Custom traps built from batteries and spare parts</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_feature_0">
+		<text>They know every hidden passage and stash on the Scrapyard</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_feature_1">
+		<text>They can roll back a player's PDA, erase traces, or find any log</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_feature_2">
+		<text>Their own radio channels: 'Tekhno-01' (Kaban only) and 'Tekhno-00' (Kaban, Sabbers and Operators)</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_extra_0">
+		<text>Mobile workshops in Zaton, Agroprom and sometimes even in the Red Forest</text>
+	</string>
+	<string id="cczmp_fac_sto_kanban_extra_1">
+		<text>The 'Black Hangar', a secret tuning site for experimental vehicles</text>
+	</string>
+	<string id="cczmp_fac_sabbers_name">
+		<text>Sabbers</text>
+	</string>
+	<string id="cczmp_fac_sabbers_location">
+		<text>Scrapyard, flea market, near the depot, towards the 'PMC X-Soldiers' base</text>
+	</string>
+	<string id="cczmp_fac_sabbers_base">
+		<text>Sound centre 'Pyos'</text>
+	</string>
+	<string id="cczmp_fac_sabbers_task_0">
+		<text>Installing and upgrading subwoofers in official, gang and civilian cars</text>
+	</string>
+	<string id="cczmp_fac_sabbers_equip_0">
+		<text>Stalker coveralls smeared with grease, like their Kaban brothers</text>
+	</string>
+	<string id="cczmp_fac_barrikada_name">
+		<text>Street Guard 'Barrikada'</text>
+	</string>
+	<string id="cczmp_fac_barrikada_location">
+		<text>An occupied metro station</text>
+	</string>
+	<string id="cczmp_fac_barrikada_style">
+		<text>Leather jackets, masks, red armbands</text>
+	</string>
+	<string id="cczmp_fac_barrikada_transport_0">
+		<text>Buses converted into barricades</text>
+	</string>
+	<string id="cczmp_fac_barrikada_transport_1">
+		<text>Cars fitted with loudspeakers</text>
+	</string>
+	<string id="cczmp_fac_operators_name">
+		<text>Operators</text>
+	</string>
+	<string id="cczmp_fac_operators_location">
+		<text>Depot, railway station, airfield</text>
+	</string>
+	<string id="cczmp_fac_operators_style">
+		<text>Coveralls, driver accessories</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_0">
+		<text>Trains</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_1">
+		<text>KAMAZ trucks</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_2">
+		<text>Taxis</text>
+	</string>
+	<string id="cczmp_fac_operators_transport_3">
+		<text>Helicopters</text>
+	</string>
+	<string id="cczmp_fac_operators_task_0">
+		<text>Control of logistics — drivers, engine drivers, pilots</text>
+	</string>
+	<string id="cczmp_fac_fanatiki_name">
+		<text>Fanatics</text>
+	</string>
+	<string id="cczmp_fac_fanatiki_location">
+		<text>Centre of the Zone, old temples, antennas</text>
+	</string>
+	<string id="cczmp_fac_fanatiki_style">
+		<text>Robo-religious, masks, Monolith symbols</text>
+	</string>
+	<string id="cczmp_fac_pmc_name">
+		<text>PMC X-Soldiers</text>
+	</string>
+	<string id="cczmp_fac_pmc_location">
+		<text>Closed camps with helicopter pads</text>
+	</string>
+	<string id="cczmp_fac_pmc_style">
+		<text>Modern gear, mercenaries</text>
+	</string>
+	<string id="cczmp_fac_pmc_transport_0">
+		<text>BTR armoured carriers</text>
+	</string>
+	<string id="cczmp_fac_pmc_transport_1">
+		<text>Military jeeps</text>
+	</string>
+	<string id="cczmp_fac_snipers_name">
+		<text>Veteran Snipers</text>
+	</string>
+	<string id="cczmp_fac_snipers_location">
+		<text>Old military bases</text>
+	</string>
+	<string id="cczmp_fac_snipers_style">
+		<text>Camouflage, balaclavas, marksman gear</text>
+	</string>
+	<string id="cczmp_fac_snipers_transport_0">
+		<text>UAZs</text>
+	</string>
+	<string id="cczmp_fac_snipers_transport_1">
+		<text>Motorcycles</text>
+	</string>
+	<string id="cczmp_fac_chetkie_name">
+		<text>Tough Guys</text>
+	</string>
+	<string id="cczmp_fac_chetkie_location">
+		<text>Ruins of the shopping centre or the station</text>
+	</string>
+	<string id="cczmp_fac_chetkie_style">
+		<text>Adidas tracksuits, gold chains, flat caps</text>
+	</string>
+	<string id="cczmp_fac_chetkie_transport_0">
+		<text>Lada Samara</text>
+	</string>
+	<string id="cczmp_fac_chetkie_transport_1">
+		<text>VAZ 21134</text>
+	</string>
+	<string id="cczmp_fac_chetkie_transport_2">
+		<text>VAZ 2107</text>
+	</string>
+	<string id="cczmp_fac_stalkers_name">
+		<text>Stalkers</text>
+	</string>
+	<string id="cczmp_fac_stalkers_location">
+		<text>Villages, temporary camps</text>
+	</string>
+	<string id="cczmp_fac_stalkers_style">
+		<text>Anything, from a tracksuit to body armour</text>
+	</string>
+	<string id="cczmp_fac_stalkers_transport_0">
+		<text>Whatever they find — motorcycles, old UAZs</text>
+	</string>
+	<string id="cczmp_fac_karateli_name">
+		<text>'Karateli' Gang</text>
+	</string>
+	<string id="cczmp_fac_karateli_location">
+		<text>Abandoned mortuaries and psychiatric clinics</text>
+	</string>
+	<string id="cczmp_fac_karateli_style">
+		<text>Medical gowns smeared with blood</text>
+	</string>
+	<string id="cczmp_fac_karateli_transport_0">
+		<text>Pickups with skull symbols</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_name">
+		<text>'Zone of Power' Prisoners' Union</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_location">
+		<text>Abandoned prisons and camps</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_style">
+		<text>Prison tattoos, bushats</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_transport_0">
+		<text>Trucks</text>
+	</string>
+	<string id="cczmp_fac_zona_vlasti_transport_1">
+		<text>Armoured cars with a hand-cut slit</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_name">
+		<text>Corruption Syndicate</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_location">
+		<text>Elite houses, business centres</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_style">
+		<text>Suits, dark glasses, expensive watches</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_transport_0">
+		<text>BMW</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_transport_1">
+		<text>Lexus</text>
+	</string>
+	<string id="cczmp_fac_korrsyndikat_transport_2">
+		<text>Premium class</text>
+	</string>
+	<string id="cczmp_fac_tehno_name">
+		<text>Techno Bandits</text>
+	</string>
+	<string id="cczmp_fac_tehno_location">
+		<text>Destroyed research institutes</text>
+	</string>
+	<string id="cczmp_fac_tehno_style">
+		<text>Welding masks, wiring harness</text>
+	</string>
+	<string id="cczmp_fac_tehno_transport_0">
+		<text>Homemade armoured cars</text>
+	</string>
+	<string id="cczmp_fac_cobra_name">
+		<text>'Black Cobra' Gang</text>
+	</string>
+	<string id="cczmp_fac_cobra_location">
+		<text>Mountains and mines where detection is impossible</text>
+	</string>
+	<string id="cczmp_fac_cobra_style">
+		<text>Black armbands, cobra insignia</text>
+	</string>
+	<string id="cczmp_fac_cobra_transport_0">
+		<text>Camouflaged pickups</text>
+	</string>
+	<string id="cczmp_fac_cobra_transport_1">
+		<text>Motorcycles</text>
+	</string>
+	<string id="cczmp_fac_sector0_name">
+		<text>Sector '0'</text>
+	</string>
+	<string id="cczmp_fac_sector0_location">
+		<text>Underground server rooms, encrypted headquarters</text>
+	</string>
+	<string id="cczmp_fac_sector0_style">
+		<text>Tactical clothing and electronic gadgets</text>
+	</string>
+	<string id="cczmp_fac_sector0_transport_0">
+		<text>Black minibuses without plates</text>
+	</string>
+	<string id="cczmp_fac_iskra_name">
+		<text>Spark Group</text>
+	</string>
+	<string id="cczmp_fac_iskra_location">
+		<text>The old power plant</text>
+	</string>
+	<string id="cczmp_fac_iskra_style">
+		<text>Firefighter gear with skulls</text>
+	</string>
+	<string id="cczmp_fac_iskra_transport_0">
+		<text>Homemade buggies</text>
+	</string>
+	<string id="cczmp_fac_iskra_transport_1">
+		<text>Pickups with flamethrowers</text>
+	</string>
+	<string id="cczmp_fac_militsiya_name">
+		<text>Militsiya</text>
+	</string>
+	<string id="cczmp_fac_militsiya_location">
+		<text>Novichki village (police station)</text>
+	</string>
+	<string id="cczmp_fac_militsiya_style">
+		<text>1990s uniform, caps, truncheons</text>
+	</string>
+	<string id="cczmp_fac_militsiya_transport_0">
+		<text>VAZ 2114</text>
+	</string>
+	<string id="cczmp_fac_militsiya_transport_1">
+		<text>UAZ 'Bukhanka'</text>
+	</string>
+	<string id="cczmp_fac_mvd_name">
+		<text>MVD (Ministry of Internal Affairs)</text>
+	</string>
+	<string id="cczmp_fac_mvd_location">
+		<text>The commissariat in a large settlement</text>
+	</string>
+	<string id="cczmp_fac_mvd_style">
+		<text>Classic police uniform</text>
+	</string>
+	<string id="cczmp_fac_mvd_transport_0">
+		<text>LADA Priora</text>
+	</string>
+	<string id="cczmp_fac_mvd_transport_1">
+		<text>UAZ</text>
+	</string>
+	<string id="cczmp_fac_mvd_transport_2">
+		<text>Off-roaders</text>
+	</string>
+	<string id="cczmp_fac_mvd_task_0">
+		<text>Investigating crimes</text>
+	</string>
+	<string id="cczmp_fac_mvd_task_1">
+		<text>Collecting dossiers</text>
+	</string>
+	<string id="cczmp_fac_mvd_task_2">
+		<text>Traffic control</text>
+	</string>
+	<string id="cczmp_fac_fsin_name">
+		<text>FSIN (Prison Service)</text>
+	</string>
+	<string id="cczmp_fac_fsin_location">
+		<text>Strict-regime camp in the north-west of the map</text>
+	</string>
+	<string id="cczmp_fac_fsin_style">
+		<text>Blue-grey uniform with body armour</text>
+	</string>
+	<string id="cczmp_fac_fsin_transport_0">
+		<text>KAMAZ for transporting prisoners</text>
+	</string>
+	<string id="cczmp_fac_fsin_transport_1">
+		<text>GAZelle vans</text>
+	</string>
+	<string id="cczmp_fac_scientists_name">
+		<text>Scientists</text>
+	</string>
+	<string id="cczmp_fac_scientists_location">
+		<text>The 'Yanov' and 'Bunker Ozerny' laboratories</text>
+	</string>
+	<string id="cczmp_fac_scientists_style">
+		<text>Hazmat suit, lab coat, goggles</text>
+	</string>
+	<string id="cczmp_fac_scientists_transport_0">
+		<text>UAZ with trailer</text>
+	</string>
+	<string id="cczmp_fac_scientists_transport_1">
+		<text>Armoured VAZ 2131</text>
+	</string>
+	<string id="cczmp_fac_mchs_name">
+		<text>EMERCOM</text>
+	</string>
+	<string id="cczmp_fac_mchs_location">
+		<text>Fire station in Zaton / Yaniv</text>
+	</string>
+	<string id="cczmp_fac_mchs_style">
+		<text>Orange uniform, helmets, tools</text>
+	</string>
+	<string id="cczmp_fac_mchs_transport_0">
+		<text>KRAZ fire engine</text>
+	</string>
+	<string id="cczmp_fac_mchs_transport_1">
+		<text>UAZ</text>
+	</string>
+	<string id="cczmp_fac_mchs_transport_2">
+		<text>Boats</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_name">
+		<text>Minzdrav</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_location">
+		<text>Laboratory and mobile hospitals</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_style">
+		<text>White and green uniform, medical equipment</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_transport_0">
+		<text>UAZ-based intensive care vehicles</text>
+	</string>
+	<string id="cczmp_fac_minzdrav_transport_1">
+		<text>Trucks loaded with medicine</text>
+	</string>
+	<string id="cczmp_fac_killers_name">
+		<text>Killers</text>
+	</string>
+	<string id="cczmp_fac_killers_location">
+		<text>Abandoned hostel in the forest or a derelict hotel</text>
+	</string>
+	<string id="cczmp_fac_killers_style">
+		<text>Dark jackets, concealed weapons, masks</text>
+	</string>
+	<string id="cczmp_fac_killers_transport_0">
+		<text>Black BMW E38</text>
+	</string>
+	<string id="cczmp_fac_killers_transport_1">
+		<text>Motorcycles</text>
+	</string>
+	<string id="cczmp_fac_omon_name">
+		<text>OMON</text>
+	</string>
+	<string id="cczmp_fac_omon_location">
+		<text>Base in a half-ruined administrative building</text>
+	</string>
+	<string id="cczmp_fac_omon_style">
+		<text>Classic uniform, helmets, shields</text>
+	</string>
+	<string id="cczmp_fac_omon_transport_0">
+		<text>VAZ 2114 'Militsiya'</text>
+	</string>
+	<string id="cczmp_fac_omon_transport_1">
+		<text>PAZ bus</text>
+	</string>
+	<string id="cczmp_fac_omon_transport_2">
+		<text>Ural with barred windows</text>
+	</string>
+	<string id="cczmp_fac_vympel_name">
+		<text>Vympel</text>
+	</string>
+	<string id="cczmp_fac_vympel_location">
+		<text>Underground command centre beneath the laboratory</text>
+	</string>
+	<string id="cczmp_fac_vympel_style">
+		<text>Elite gear, muted colours</text>
+	</string>
+	<string id="cczmp_fac_vympel_transport_0">
+		<text>Camouflaged GAZ Tigr</text>
+	</string>
+	<string id="cczmp_fac_vympel_transport_1">
+		<text>Black Gelendwagen</text>
+	</string>
+	<string id="cczmp_fac_alfa_name">
+		<text>Alpha</text>
+	</string>
+	<string id="cczmp_fac_alfa_location">
+		<text>A closed military base on the edge of the Zone</text>
+	</string>
+	<string id="cczmp_fac_alfa_style">
+		<text>Black uniform with tactical gear</text>
+	</string>
+	<string id="cczmp_fac_alfa_transport_0">
+		<text>Armoured UAZ Patriot</text>
+	</string>
+	<string id="cczmp_fac_alfa_transport_1">
+		<text>Mi-8 helicopter</text>
+	</string>
+	<string id="cczmp_fac_alfa_transport_2">
+		<text>BTR</text>
+	</string>
+	<string id="cczmp_fac_civilians_name">
+		<text>Civilians</text>
+	</string>
+	<string id="cczmp_fac_civilians_location">
+		<text>Redacted. Only state business structures and NBZ staff may access these accounts</text>
+	</string>
+</string_table>
