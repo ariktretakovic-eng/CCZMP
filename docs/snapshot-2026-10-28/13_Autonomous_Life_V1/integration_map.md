@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/integration_map.md)
+
 # Autonomous Life V1 — confirmed integration map, 28 October 2026
 
 Working source: D:\CCZMP PROJECT. This is a staged vertical slice, not a claim of completed V1.

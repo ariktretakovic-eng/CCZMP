@@ -2,14 +2,14 @@
   "schema_version": 1,
   "updated": "2026-10-29",
   "scope": "Tracked public repository files; not the full installed game or dependency graph.",
-  "file_count": 182,
+  "file_count": 272,
   "counts_by_root": {
     "(корень)": 10,
     "CCZMP": 36,
-    "docs": 72,
+    "docs": 161,
     "gamedata": 32,
     "modules": 31,
-    "tools": 1
+    "tools": 2
   },
   "files": [
     {
@@ -223,6 +223,362 @@
     {
       "path": "docs/archive/INDEX-legacy-2026-10-02.md",
       "category": "Исторический индекс установки"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Factions/Description.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Mechanics/Banking_Services.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Mechanics/Laws.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_1.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_2.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_3.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_4.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CCZMP_Complete_File.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/CONTRIBUTING.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/INDEX.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/TRANSLATION.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/CHANGES_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/INDEX.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/INDEXING_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/ROADMAP_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/STATUS_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/SYSTEMS_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/TECHNICAL_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/TRANSPORT_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/archive/INDEX-legacy-2026-10-02.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/00_Technical_Guides/CCZMP_technical_guide.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/00_Technical_Guides/OPERATIONS.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/01_Master_Concept/STALKER_X_CCZMP_MASTER_CONCEPT-1.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/02_Economy_Industry/CCZMP_ECONOMY_INDUSTRY_TECH_SPEC_v1.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/CCZMP_items_hacking_guide.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/ELECTRONICS_SK_GUIDE_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/LOCKS_NEXT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/PDA_SLOT_NEXT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/TUNING_NEXT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/__README_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/cczmp_items_continuation_20261009.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/cczmp_items_locks_20261009.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/cczmp_items_tuning_20261010.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/README_AIRCRAFT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/README_taxi.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/TANK_GUIDE_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/Transport.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/VEHICLE_SIGNALS_README_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/armor_20261016__README_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/taxi_world_20261015__README_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/vehicles_work__HANDOFF_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/vehicles_work__README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/CIVIC.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/CRIME_DISTRICT_GUIDE_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/DOCUMENTS.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/STATE_UNIFORMS.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/Documents_and_Law.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/README_radio.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/README_radio_air.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/README_radio_legacy.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/Voice_of_Pripyat.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/Workshop.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/CCZMP_STABILIZATION_PLAN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/README_STABILIZATION.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/stabilization_work_20261012__TEST_REPORT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/verification__results.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/AUDIT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/LATEST_INTEGRATION_WORKLIST.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/STATUS_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/12_Project_Audit_2026-10-28/CCZMP_SYSTEMS_REGISTER_2026-10-28.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/12_Project_Audit_2026-10-28/CCZMP_TRANSPORT_CURRENT_2026-10-28.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/API_CONTRACTS.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/CONFIG.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/FILES.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/KNOWN_LIMITATIONS.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/PERFORMANCE.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/REPORT_EN.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/ROLLBACK.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/TEST_REPORT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/WARM_LOAD.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/integration_map.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_AUTONOMOUS_LIFE_V1_TECH_SPEC_EN_2026-10-28.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_CITY_SYSTEMS_2026-10-19.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_DONOR_COMPLETION_2026-10-18.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_GADGETS_111_2026-10-19.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_PROJECT_FULL_REPORT_2026-10-28.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_TRANSPORT_STATUS_2026-10-18.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/CCZMP_VEHICLE_FIX_2026-10-18.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/docs/snapshot-2026-10-28/START_HERE_2026-10-28.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/modules/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/modules/cczmp-locks/INTEGRATION.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/modules/cczmp-locks/README.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/modules/cczmp-locks/TEST_REPORT.md",
+      "category": "English documentation"
+    },
+    {
+      "path": "docs/en/translation-manifest.json",
+      "category": "English documentation"
     },
     {
       "path": "docs/snapshot-2026-10-28/00_Технические_руководства/CCZMP_technical_guide.md",
@@ -735,6 +1091,10 @@
     {
       "path": "report.py",
       "category": "Инструменты локального графа Anomaly"
+    },
+    {
+      "path": "tools/check_docs_translations.py",
+      "category": "Инструменты публичной документации"
     },
     {
       "path": "tools/update_docs_index.py",

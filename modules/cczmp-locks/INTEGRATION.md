@@ -1,3 +1,5 @@
+**Русский** · [English](../../docs/en/modules/cczmp-locks/INTEGRATION.md)
+
 # Интеграция CCZMP Locks и границы API
 
 Зависимости модуля видны непосредственно из [`cczmp_locks.script`](gamedata/scripts/cczmp_locks.script). Это не внешний бинарный плагин X-Ray: он использует Lua API Anomaly и инфраструктуру CCZMP.

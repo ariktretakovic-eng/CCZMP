@@ -1,3 +1,5 @@
+**Русский** · [English](docs/en/README.md)
+
 # STALKER X CCZMP
 
 **RP-проект на базе S.T.A.L.K.E.R. Anomaly 1.5.1 / X-Ray (Monolith)**

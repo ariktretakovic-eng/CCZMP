@@ -1,3 +1,5 @@
+**Русский** · [English](en/docs/ROADMAP_EN.md)
+
 # Roadmap STALKER X CCZMP
 
 Обновлено 29.10.2026. [Статус](STATUS_RU.md) · [Реестр систем](SYSTEMS_RU.md) · [Индекс](INDEX.md)

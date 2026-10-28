@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/ELECTRONICS_SK_GUIDE_EN.md)
+
 # Электроника и выезды СК — STALKER X CCZMP
 
 Версия: 15 октября 2026. Механики работают внутри игрового мира Anomaly 1.5.1.

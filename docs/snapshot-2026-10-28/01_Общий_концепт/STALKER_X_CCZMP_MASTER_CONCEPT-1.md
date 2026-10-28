@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/01_Master_Concept/STALKER_X_CCZMP_MASTER_CONCEPT-1.md)
+
 # STALKER X CCZMP — мастер-концепция проекта
 
 **Версия:** 0.1 · **Статус:** концепция и долгосрочное видение, НЕ список реализованных функций.  

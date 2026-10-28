@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/VEHICLE_SIGNALS_README_EN.md)
+
 # Свет и сигналы транспорта — 16.10.2026
 
 Управление:

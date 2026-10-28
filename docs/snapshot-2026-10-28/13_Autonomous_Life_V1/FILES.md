@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/FILES.md)
+
 # File manifest
 
 Protected save/settings hashes unchanged: 47 / 47.

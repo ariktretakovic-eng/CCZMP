@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/DOCUMENTS.md)
+
 # Паспорта и удостоверения CCZMP
 
 Установлено в офлайн-версию Anomaly 1.5.1.

@@ -1,3 +1,5 @@
+**Русский** · [English](../en/docs/snapshot-2026-10-28/CCZMP_AUTONOMOUS_LIFE_V1_TECH_SPEC_EN_2026-10-28.md)
+
 # CCZMP Autonomous Life V1 — техническое задание на автономную жизнь NPC
 
 **Проект:** STALKER X CCZMP · S.T.A.L.K.E.R. Anomaly 1.5.1 / X-Ray  

@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/LOCKS_NEXT.md)
+
 # CCZMP continuation checkpoint: code cases — 2026-10-09
 
 Authorized device: KOMPUTER only. Project D:\CCZMP PROJECT. Do not use other devices/user folders.

@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/02_Economy_Industry/CCZMP_ECONOMY_INDUSTRY_TECH_SPEC_v1.md)
+
 # STALKER X CCZMP — Техническая спецификация экономики, коммерции и промышленности
 
 **Документ:** CCZMP-ECO-TECH-001 · **Версия:** 1.0 (проект ТЗ) · **Дата:** 17.10.2026 · **Язык:** русский · **Кодировка:** UTF-8  

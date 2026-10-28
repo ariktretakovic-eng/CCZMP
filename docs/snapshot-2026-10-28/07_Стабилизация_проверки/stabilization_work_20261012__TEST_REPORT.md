@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/07_Stabilization_Testing/stabilization_work_20261012__TEST_REPORT.md)
+
 # Проверка первого этапа S0/S1
 
 ## Локальные проверки Lua 5.1

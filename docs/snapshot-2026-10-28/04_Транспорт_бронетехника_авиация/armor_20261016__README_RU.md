@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/armor_20261016__README_EN.md)
+
 # Тяжёлая техника: проверка ресурсов и расчётный стенд
 
 Дата: 16.10.2026. Проект: STALKER X CCZMP, Anomaly 1.5.1.

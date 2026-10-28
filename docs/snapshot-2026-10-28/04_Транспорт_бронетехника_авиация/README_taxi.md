@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/README_taxi.md)
+
 # Такси — STALKER x CCZMP / Anomaly 1.5.1
 
 Разработка 12.10.2026. Проверки ещё выполняются; готовность сервиса не подтверждена.

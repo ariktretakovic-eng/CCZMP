@@ -1,3 +1,5 @@
+**Русский** · [English](../../../en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/STATUS_EN.md)
+
 # CCZMP — доноры, пакет 22 октября 2026
 
 ## Состояние

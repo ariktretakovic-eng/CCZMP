@@ -1,3 +1,5 @@
+**Русский** · [English](../../docs/en/modules/cczmp-locks/README.md)
+
 # CCZMP Locks — исходный модуль и проверяемый тестовый стенд
 
 **Проект:** [STALKER X CCZMP](../../README.md) · **База:** S.T.A.L.K.E.R. Anomaly 1.5.1 / X-Ray · **Снимок исходников:** 09.10.2026 · **Контрольная проверка:** 29.10.2026

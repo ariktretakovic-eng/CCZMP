@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/PDA_SLOT_NEXT.md)
+
 # Latest baseline: PDA contacts hotfix, 2026-10-10
 
 Installed after the tuning release: gamedata/scripts/ui_pda_contacts_tab.script. Resolve online NPCs and story contacts with level.object_by_id rather than cached db.storage wrappers; enforce the 50-cell grid capacity. No changes to PDA models/HUD, engine executables or save format. Tests: tools/tests/test_cczmp_pda_contacts.py.

@@ -1,0 +1,531 @@
+{
+  "schema_version": 1,
+  "source_commit": "3662e36433b102b2a43b870a91cbf7850e845f03",
+  "translated_on": "2026-10-29",
+  "source_document_count": 87,
+  "method": "Machine-assisted translation with a fixed project glossary, preserved technical examples, structural/link checks and editorial review of entry points. Historical documents retain their original scope and dates.",
+  "documents": [
+    {
+      "source": "CCZMP/Concept/Группировки/Описание.ltx",
+      "english": "docs/en/CCZMP/Concept/Factions/Description.md",
+      "source_blob_sha": "198c53727d4948f97f678fb90b7eee4d60122050",
+      "source_sha256": "06ef1f62192db3920b8c23fad62e7cccdfbcc1e324269a74fd00b4e622d4c6c0"
+    },
+    {
+      "source": "CCZMP/Concept/Механики/Банковские услуги.ltx",
+      "english": "docs/en/CCZMP/Concept/Mechanics/Banking_Services.md",
+      "source_blob_sha": "d131ed1354936cf8071d4a568d5c283dfbeb767c",
+      "source_sha256": "6d9e27ee90f2e96852574e93fc66560b57b0b7d83d1380caee34ea08a1920f5d"
+    },
+    {
+      "source": "CCZMP/Concept/Механики/Законы.ltx",
+      "english": "docs/en/CCZMP/Concept/Mechanics/Laws.md",
+      "source_blob_sha": "7d03de7e3c954e4ddd1c7aa771aa8826f2f7370b",
+      "source_sha256": "2cbd2bcfccdcfeb2cc126ad527df3d64d6ee92a16e1deac11e60b865b3e0002c"
+    },
+    {
+      "source": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 1) Основной сюжет.ltx",
+      "english": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_1.md",
+      "source_blob_sha": "5e687a71b0b1c453cf710b71ee128daf403c50b7",
+      "source_sha256": "f182492755838a1077f5fcdd82564f23c408fe7c2f92fa9ce39fbb43b15dcafd"
+    },
+    {
+      "source": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 2) Основной сюжет.ltx",
+      "english": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_2.md",
+      "source_blob_sha": "f4a80492fbdc9ff21a980c20018a62eed4443392",
+      "source_sha256": "cd5ec46d1073f945627f4168ed02667040dba515d154fdecd9531e4cf10c2e3f"
+    },
+    {
+      "source": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 3) Основной сюжет.ltx",
+      "english": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_3.md",
+      "source_blob_sha": "49c1f2155f173755166f7c383500a10eaa37ade2",
+      "source_sha256": "2428323b35350f5487bc6f45057284d751b2f579d4108f78bc37cd2739372967"
+    },
+    {
+      "source": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 4) Основной сюжет.ltx",
+      "english": "docs/en/CCZMP/Concept/Story/Main/Main_Story_Part_4.md",
+      "source_blob_sha": "520f3cd3d23668091f2c3888e2266ee9fb107081",
+      "source_sha256": "90b7b7214ce269cd82b599a61b89944b3b320779cf0c3cd6f3d341e34a4aeb41"
+    },
+    {
+      "source": "CCZMP/README.ltx",
+      "english": "docs/en/CCZMP/README.md",
+      "source_blob_sha": "e3eccadecdf3067042deda3474cd9d29cbff2e38",
+      "source_sha256": "c37a0e68ba8513d642610e27e3165df70df7a5ae6d58d6cb0cae07235993b573"
+    },
+    {
+      "source": "CCZMP_полный_файл.ltx",
+      "english": "docs/en/CCZMP_Complete_File.md",
+      "source_blob_sha": "eed2747cf1153920f1f40b193863b88bb8568444",
+      "source_sha256": "704706c023494cfe14a1946cc37e80f9c2d37582d1c58b99b02570b80ecd4466"
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "english": "docs/en/CONTRIBUTING.md",
+      "source_blob_sha": "c18071a5052f45ee2cc2f2fa800efe35d1067981",
+      "source_sha256": "591eb6c89fd64b48bad095aeec85be825bda633119d91678cdcd3abb205879ad"
+    },
+    {
+      "source": "INDEX.md",
+      "english": "docs/en/INDEX.md",
+      "source_blob_sha": "c13ae7e46db56ff834bfa13ac074a3188bbfa164",
+      "source_sha256": "f398013eebe3c9d10b31374562b8484fa44c12e0e75eca2d6b75c23e571a59f6"
+    },
+    {
+      "source": "README.md",
+      "english": "docs/en/README.md",
+      "source_blob_sha": "f21c3d404cb23df040278b2b4d22a9522c16a8e0",
+      "source_sha256": "edaef32a134006cd5e05191767da671f092ca5d8707204efeae3ebf8ebd6e95c"
+    },
+    {
+      "source": "docs/CHANGES_RU.md",
+      "english": "docs/en/docs/CHANGES_EN.md",
+      "source_blob_sha": "2f037d4ba93cd50b19b47d5a9c4d0bf8c20e2e3d",
+      "source_sha256": "37bb148937d2658458a56885fcc23383dd316afe5ee6001a95f0616c847adb0a"
+    },
+    {
+      "source": "docs/INDEX.md",
+      "english": "docs/en/docs/INDEX.md",
+      "source_blob_sha": "43512b5f3019de44586286d7f0442673b27c131a",
+      "source_sha256": "7ca120aaaac401a8f29162a4d9ee0aa0639a30c46d65f42bd8ca58b428a7d1cb"
+    },
+    {
+      "source": "docs/INDEXING_RU.md",
+      "english": "docs/en/docs/INDEXING_EN.md",
+      "source_blob_sha": "df7d288fc859de7e420dbad59baa706e2ca88759",
+      "source_sha256": "5079fa3426514cc88fe00cdbf8b9efafce62a35f0011b665e8e75d69ce78def5"
+    },
+    {
+      "source": "docs/README.md",
+      "english": "docs/en/docs/README.md",
+      "source_blob_sha": "006985ccc84c93ebb1baac76ccbaa2fb9a0c5b0e",
+      "source_sha256": "f256e8c27bc388370f470eddc8166a840550e110e6eb268cf1c49aa573455af8"
+    },
+    {
+      "source": "docs/ROADMAP_RU.md",
+      "english": "docs/en/docs/ROADMAP_EN.md",
+      "source_blob_sha": "27b0c1e9979a43554fe0cc113e80a669d92120e8",
+      "source_sha256": "b61c74e6fad137064d7e614ccd7b32a78402b61e34a2ebb926dd80a1363ee79f"
+    },
+    {
+      "source": "docs/STATUS_RU.md",
+      "english": "docs/en/docs/STATUS_EN.md",
+      "source_blob_sha": "9b6f7dbb8529d58bac23cb114697be4605210404",
+      "source_sha256": "f2ea7eba2a11c4ef69fd0af58adeffb51f2efa4353173d3d52193eea5761eadb"
+    },
+    {
+      "source": "docs/SYSTEMS_RU.md",
+      "english": "docs/en/docs/SYSTEMS_EN.md",
+      "source_blob_sha": "062e36ce2f6482dac8f1c57002067ea4dce6b4ba",
+      "source_sha256": "d5a389d74c88239685ee31a60fcfc51bfce443c177f238546db4e1cab5901473"
+    },
+    {
+      "source": "docs/TECHNICAL_RU.md",
+      "english": "docs/en/docs/TECHNICAL_EN.md",
+      "source_blob_sha": "f4b1064d7181df7d4efc60b87cf5aeac9e02c809",
+      "source_sha256": "39ee2818411cb2cb71fefff846e96015930cdc3220f6dc38f446aff20641d9d8"
+    },
+    {
+      "source": "docs/TRANSPORT_RU.md",
+      "english": "docs/en/docs/TRANSPORT_EN.md",
+      "source_blob_sha": "57581f177f5787d1684c2fd9746e679e83685bea",
+      "source_sha256": "ba7016c3cf09dda90b85b9cbe5fc73dc13ad4b4fdc1dc968020d89dbd1044c1b"
+    },
+    {
+      "source": "docs/archive/INDEX-legacy-2026-10-02.md",
+      "english": "docs/en/docs/archive/INDEX-legacy-2026-10-02.md",
+      "source_blob_sha": "d7ab57d8a672c7bd376cd9c7084c613a0bf26c64",
+      "source_sha256": "b5104b29fe5461d6a765ecfa857c7bce132ad9b73d390b9246b00f27a9012d78"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/00_Технические_руководства/CCZMP_technical_guide.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/00_Technical_Guides/CCZMP_technical_guide.md",
+      "source_blob_sha": "375a96942ed205eecaf25034648bcc56fff0f09b",
+      "source_sha256": "9affed835fe524709b02712e04224e924eebee1f84b4bd468f8b0702d16fecd5"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/00_Технические_руководства/OPERATIONS.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/00_Technical_Guides/OPERATIONS.md",
+      "source_blob_sha": "877993fb031e531c151f41fa8dc90b3009980ae1",
+      "source_sha256": "74bc03f97c7d086b63a02b2442e866b740660334e5d679fbf4e014ea80a81482"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/01_Общий_концепт/STALKER_X_CCZMP_MASTER_CONCEPT-1.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/01_Master_Concept/STALKER_X_CCZMP_MASTER_CONCEPT-1.md",
+      "source_blob_sha": "db97f6b8ef47ae68ed7c4eaa944a2838eb231264",
+      "source_sha256": "831e88171a2764738f148ca23365bccf7fe5ef9e6472eb790bec818470a69254"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/02_Экономика_промышленность/CCZMP_ECONOMY_INDUSTRY_TECH_SPEC_v1.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/02_Economy_Industry/CCZMP_ECONOMY_INDUSTRY_TECH_SPEC_v1.md",
+      "source_blob_sha": "c6518246b0ff6216374ee8dbb31bca30e9fde860",
+      "source_sha256": "7ceaefec5632b37058c13a5fd298dcecf23842427741d35bdcfd079d9bcc84f2"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/CCZMP_items_hacking_guide.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/CCZMP_items_hacking_guide.md",
+      "source_blob_sha": "a3bc6c9779854d030b49eda36532c2f5a2aae870",
+      "source_sha256": "3aa46f7a7e0ba00c4d5bca062b0092eccb2a4b7f11316e8baed8c7f83a230638"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/ELECTRONICS_SK_GUIDE_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/ELECTRONICS_SK_GUIDE_EN.md",
+      "source_blob_sha": "8b02bd0abf25e09fbeea7b027778b8278dccf106",
+      "source_sha256": "ddebe9a17a5c7d7a2fb0be706f49cb118009d2404d1958c25b64f6d01e2cd6b3"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/LOCKS_NEXT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/LOCKS_NEXT.md",
+      "source_blob_sha": "819ca62bf6aeafd92e3e1797466f138c8e055db4",
+      "source_sha256": "31c095f17ce48a8759baf3af1bdaf7f27c2df9df74050e181b8504ae27626609"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/PDA_SLOT_NEXT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/PDA_SLOT_NEXT.md",
+      "source_blob_sha": "0bc3c51b58b3ff7cd30e4c2311b99e006779deb5",
+      "source_sha256": "2aa1c272362c6023b78a4d8c9ffce1e77be227b03cb750fd3482898375fcb44e"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/TUNING_NEXT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/TUNING_NEXT.md",
+      "source_blob_sha": "caab71a945e64898bc329bfc79f3b3981237b832",
+      "source_sha256": "e4908ff772d85fe780176d2e622fb948768bbcf751e1bfe13bc889af0353eec6"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/__README_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/__README_EN.md",
+      "source_blob_sha": "147cefb391f7a2cdf85f838c88ee0915db216627",
+      "source_sha256": "c628c3355cd39ccf6ee9a015953d05b470725c78c071e55bc7522b2920594816"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/cczmp_items_continuation_20261009.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/cczmp_items_continuation_20261009.md",
+      "source_blob_sha": "6bd4b978c3033317c519920345837376f5b87055",
+      "source_sha256": "387cf6b3add060f8362f4c956b75047aa22656a84ad14b78acd42cadd516a13a"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/cczmp_items_locks_20261009.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/cczmp_items_locks_20261009.md",
+      "source_blob_sha": "d1d7f909f3f60a9c00fd0d11582081e8cf1112f7",
+      "source_sha256": "afebda84218dd10af316b161bb2f0504c89e8d540fcd425da348ae3ea67741bc"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/cczmp_items_tuning_20261010.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/cczmp_items_tuning_20261010.md",
+      "source_blob_sha": "466ee6f6d8c921f598ac633e614dee123568cc01",
+      "source_sha256": "5b0dd5feaef3476a17c521a105ff73ef29da9ca0c037c38f0c76fb2d35aa3308"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/README_AIRCRAFT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/README_AIRCRAFT.md",
+      "source_blob_sha": "62323ff7709b1e7a5e8f9c611a9384655a2326e1",
+      "source_sha256": "8e75e9d14132de00047aaa2db06488bcb70f0b687b83f9d3763e45006b2754e1"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/README_taxi.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/README_taxi.md",
+      "source_blob_sha": "0ff45f96040df5cd6104cd26635e9d4ae528f757",
+      "source_sha256": "7a313990070a27811f9b308fb25b576352bfe479b2d8058e3cd682efa5042b21"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/TANK_GUIDE_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/TANK_GUIDE_EN.md",
+      "source_blob_sha": "3fd7a7dfb68a5a746406828cc0c8f166ffbb98c5",
+      "source_sha256": "a1e32dec4d9f0a48ea805c76ca0e110841b9eeca35fd731886bbd570ca3de736"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/VEHICLE_SIGNALS_README_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/VEHICLE_SIGNALS_README_EN.md",
+      "source_blob_sha": "9b2960665fec9d0f9f7f840fbc964e95e7396bd4",
+      "source_sha256": "b878024de8970825f45861105eaa80a0434df5716f2e3c574bf3fe1ce7dec102"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/armor_20261016__README_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/armor_20261016__README_EN.md",
+      "source_blob_sha": "bcee99a90925445a3f4eea9b12a286275b045435",
+      "source_sha256": "d2787ee1065ed5509e7db7a4dec9593084f707349e1daee3bf542b05ad9cac09"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/taxi_world_20261015__README_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/taxi_world_20261015__README_EN.md",
+      "source_blob_sha": "c751e3661bc679b3d7d67626c9edd2cb279ddcc3",
+      "source_sha256": "2e52fc39ac1aa4bc8aba0d22172799e04a080066e0cdfde8b80ccdfcaa5ef1f5"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/vehicles_work__HANDOFF_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/vehicles_work__HANDOFF_EN.md",
+      "source_blob_sha": "1cf758b0da56ffe7f5470eb3242286434933a111",
+      "source_sha256": "83c3196d91a91b9e1ac6de153eef985b106d5224fba3973b4786744bfda2f062"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/vehicles_work__README.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/vehicles_work__README.md",
+      "source_blob_sha": "8944d54d9c3748b1c7c11ec8c94ece1aac063fa8",
+      "source_sha256": "a9f3e5f088bdf9807bf19c9291040469a014a649168a51ca446ed6743dfc1cdb"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/Транспорт.txt",
+      "english": "docs/en/docs/snapshot-2026-10-28/04_Vehicles_Armor_Aviation/Transport.md",
+      "source_blob_sha": "2c0b0fcdb6294e67cb5c56c7a87026c0ba67878c",
+      "source_sha256": "37f646edc49ac02f8d333b7d466bd3fe9726fb33cd074a5dbac4dce07bc5a72d"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/05_Организации_документы_мир/CIVIC.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/CIVIC.md",
+      "source_blob_sha": "a903f4553e225320ee648aa5efd78ff2a073d632",
+      "source_sha256": "652dd2fa8a34290d8d07b6955ec04f5088e5fe2a52a307d1cff27e02bf2f4e82"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/05_Организации_документы_мир/CRIME_DISTRICT_GUIDE_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/CRIME_DISTRICT_GUIDE_EN.md",
+      "source_blob_sha": "d17a3b9b274a7ca904c86b51b419a57411edbe35",
+      "source_sha256": "ca60c8fd294c88d10f54f71cf10b6959d9345cc9101f2241e561e476a4f2ee74"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/05_Организации_документы_мир/DOCUMENTS.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/DOCUMENTS.md",
+      "source_blob_sha": "d44d9e7f20a92c0ff825d995a068aec4f9739a58",
+      "source_sha256": "424282fa9c1cb9a6ce304bc76424dec6bf1984d4b10a31ac7829619eee1cfd3b"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/05_Организации_документы_мир/STATE_UNIFORMS.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/STATE_UNIFORMS.md",
+      "source_blob_sha": "7a54591625e77ef322adda536d71cac179e35cb6",
+      "source_sha256": "34cf85d54aca4d1262ba7e09b8ab3fd53ad804ef28f6b2dc312355157586e363"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/06_Радио_звук/README_radio.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/README_radio.md",
+      "source_blob_sha": "4af9ffe56d8af24971b2fead4a961fe7a17c441b",
+      "source_sha256": "1c983c82864126d20ed6cd9b8ac4faefd05ba88abaa92aafe76e8afd95eebca8"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/06_Радио_звук/README_radio_air.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/README_radio_air.md",
+      "source_blob_sha": "72116ee04d972d93c0a92c8f5ee13c704b64ac5b",
+      "source_sha256": "de59f440b471577ba686c29ed1931ddc2a241670bb515794ef9582ef4052f3f5"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/06_Радио_звук/README_радио.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/README_radio_legacy.md",
+      "source_blob_sha": "d3432904d80754e989119ea29f47685a93c01d6b",
+      "source_sha256": "1110d66e5b0478c7f454caf4d6df105204ff4d7d6379e1fbad09c26c2e7a6bbd"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/06_Радио_звук/Голос Припяти.txt",
+      "english": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/Voice_of_Pripyat.md",
+      "source_blob_sha": "ff27cbae1574fbd9009f226000fe9fc3f2d016fd",
+      "source_sha256": "9fed82a9bfd1dd8d0732c31f3018554d6db6b0b32f2e043c89e6d3e9117aa7d1"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/06_Радио_звук/Документы и закон.txt",
+      "english": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/Documents_and_Law.md",
+      "source_blob_sha": "20058bcdb42ed04be0aac96f80ae1cb1f6a38ba7",
+      "source_sha256": "d41943a8e5f6eed263a6d32ddb26d6db8ede4f8ad4cb551e7d9821ab9fc000e8"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/06_Радио_звук/Мастерская.txt",
+      "english": "docs/en/docs/snapshot-2026-10-28/06_Radio_Audio/Workshop.md",
+      "source_blob_sha": "56a8651230c187ae9224bed029f7e686e54077f6",
+      "source_sha256": "907fd438f0d4e24dd016e6293c5e770d459f3b3e88c7259fb437b3704077be20"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/CCZMP_STABILIZATION_PLAN.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/CCZMP_STABILIZATION_PLAN.md",
+      "source_blob_sha": "1b6a72af09e3a61946d44f8e7ebc5f0dfa8bd86b",
+      "source_sha256": "ca290d2416f743c1e81f6cea682dfc5f4e1bb09e2c571159cf128933965b968a"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/README_STABILIZATION.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/README_STABILIZATION.md",
+      "source_blob_sha": "17597eb55a6926f7f4fdd3ba454d5bb71075d492",
+      "source_sha256": "257b5c27e3989edf45236b24239416b9c901d7c5a1010942164396538f1bf221"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/stabilization_work_20261012__TEST_REPORT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/stabilization_work_20261012__TEST_REPORT.md",
+      "source_blob_sha": "c6479c0948452d8435af40ea36f7ea2bf041423d",
+      "source_sha256": "34269b6677531e2714137c862b36e9e21ade84ef0fbba735946e3bacc70d201b"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/verification__results.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/07_Stabilization_Testing/verification__results.md",
+      "source_blob_sha": "0a5427e51a1ebf9afde767c006d486776af3f3c0",
+      "source_sha256": "6a747d271a318123ce27597b700b56d8924e0970b269d67f214d7d93ed0bb928"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/11_Обновления_2026-10-28/Документы/AUDIT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/AUDIT.md",
+      "source_blob_sha": "c38e5b69f148ccdc67d58c8d63408c8d0d295e65",
+      "source_sha256": "5ba0910ea13862dcf750dea761b92b464a7bd25e4c2eaeafa9f46792f796cc0f"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/11_Обновления_2026-10-28/Документы/LATEST_INTEGRATION_WORKLIST.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/LATEST_INTEGRATION_WORKLIST.md",
+      "source_blob_sha": "7c8815b801d851fbc9cac6b08ae1c46cafbfac32",
+      "source_sha256": "f7bb1c7b6dc1c3b6f8747b088dc19380973388f5fe808cbf986c680034175e17"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/11_Обновления_2026-10-28/Документы/STATUS_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/11_Updates_2026-10-28/Documents/STATUS_EN.md",
+      "source_blob_sha": "f4fe481e46ac1ca8c28652220d0b2e82fe62fd43",
+      "source_sha256": "b30d2c1063552e5d048649387437952250585395d06afd8e460163d83326d9b9"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/12_Аудит_проекта_2026-10-28/CCZMP_SYSTEMS_REGISTER_2026-10-28.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/12_Project_Audit_2026-10-28/CCZMP_SYSTEMS_REGISTER_2026-10-28.md",
+      "source_blob_sha": "972aca7be9cad2c8a12d19bef17858dbd53c498c",
+      "source_sha256": "ed091d07477a4d2d07b7d8f799d3903ab512cbdbf486a523a06f160959dc7585"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/12_Аудит_проекта_2026-10-28/CCZMP_TRANSPORT_CURRENT_2026-10-28.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/12_Project_Audit_2026-10-28/CCZMP_TRANSPORT_CURRENT_2026-10-28.md",
+      "source_blob_sha": "e4bc91d6e637448dbe48e659d873e961ec3b347b",
+      "source_sha256": "38937671382a8b48868935a2d0c9fd2c7f645305ef48aab977067c1165ea1ebf"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/API_CONTRACTS.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/API_CONTRACTS.md",
+      "source_blob_sha": "c33a802edf54d14488f406a1e4f20c89e553bc59",
+      "source_sha256": "656b10ed74f8e372e748b025c7e1e5f166dee2fd68cc3d63eee51ecc641a2c82"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/CONFIG.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/CONFIG.md",
+      "source_blob_sha": "ac9ffa5751f5c89077e2ebcb97829740d767b94e",
+      "source_sha256": "ab7d8e14814b07cfa395cf9908455e77c7695373d0c407678e9da49c6659cfb5"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/FILES.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/FILES.md",
+      "source_blob_sha": "ffc26b51a27ac7e515f7eb566cbd5a5365fae4fd",
+      "source_sha256": "fc5986136cdae948b95931ff605c9ad39a26c94c68a8dc73d17312582c109887"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/KNOWN_LIMITATIONS.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/KNOWN_LIMITATIONS.md",
+      "source_blob_sha": "e2c07fb73f0f3b1c672bc2034bcadeeb7c4e6fe2",
+      "source_sha256": "3bec0710f5fb6ad0d11671305ae2b3c286565960afc04a0beac2a75bb8751b20"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/PERFORMANCE.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/PERFORMANCE.md",
+      "source_blob_sha": "e00677d23e5a390a790b060a81bf83d3964197a6",
+      "source_sha256": "0432afd261154efa5a3423bb0f22d96a006790cadf6808dd2466f6523c650ace"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/README.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/README.md",
+      "source_blob_sha": "86d2b642b5a9b0731dbfeb8318a930baccd82189",
+      "source_sha256": "f0e7fa7e740e3c9be96abab72b42d4634c24ba0c47a9adf430d93b916b9c3823"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/REPORT_RU.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/REPORT_EN.md",
+      "source_blob_sha": "cd38fc6326c0fe8e432d820f9673fc346266799c",
+      "source_sha256": "6adcd81216a1e45b9fc941f8ad771f2715175bcdaab68bd365c5e956ddaf4b2e"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/ROLLBACK.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/ROLLBACK.md",
+      "source_blob_sha": "65d16cfa524302db467de0a56f0096430614cb99",
+      "source_sha256": "7003f928ee7604f4824556cb0e3390509a565ca09695ff64dbafc8aed9cb1999"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/TEST_REPORT.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/TEST_REPORT.md",
+      "source_blob_sha": "fcb991524870a01a3ef12426aabb56349f90105d",
+      "source_sha256": "60cbb9d2562b5c0319ad935ac80df1081a2120f72a3299fc2a54bbd540c6f8d5"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/WARM_LOAD.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/WARM_LOAD.md",
+      "source_blob_sha": "d9f51139e56a052462d05a81cdae1334b2b1e5be",
+      "source_sha256": "f884ae389b27a457374602977703cf8acb49156b77a9990346d33cea9f12136d"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/integration_map.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/integration_map.md",
+      "source_blob_sha": "289e3dc6352e9fac0ee981b4d58e5b0334ea91c1",
+      "source_sha256": "2d6c0ddd4642f388f64414ec9c7019007f2cfa65c5388b7b17218c6e6028c41e"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_AUTONOMOUS_LIFE_V1_TECH_SPEC_RU_2026-10-28.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_AUTONOMOUS_LIFE_V1_TECH_SPEC_EN_2026-10-28.md",
+      "source_blob_sha": "ce3695927de15dfdeb4c2e4532d21f5048fded9b",
+      "source_sha256": "6f5e4982f48cfa702ed192171097987d42647e3fd2777c1b73dcb78e68819c66"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_CITY_SYSTEMS_2026-10-19.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_CITY_SYSTEMS_2026-10-19.md",
+      "source_blob_sha": "cbe50d47a5ea90dacf0385619219523c5874a869",
+      "source_sha256": "494802662adceee76af9e6136623e90b293388b15fc9a059b9fc6da9eaa7d1b3"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_DONOR_COMPLETION_2026-10-18.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_DONOR_COMPLETION_2026-10-18.md",
+      "source_blob_sha": "45e99ea34ac9b6dff0e49c5c0ee62ad4a0530f5d",
+      "source_sha256": "71b2a5cb6b7a6c68f2cd93f0932971398aff69201671236dfe4bed72c67d0996"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_GADGETS_111_2026-10-19.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_GADGETS_111_2026-10-19.md",
+      "source_blob_sha": "99b57306f9781849aa88dafbb2052dd35582050e",
+      "source_sha256": "488e43a682a502a9312064e612afae4c1e69edb23282f25a3c4e7b1aa1c21dea"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_PROJECT_FULL_REPORT_2026-10-28.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_PROJECT_FULL_REPORT_2026-10-28.md",
+      "source_blob_sha": "7d6335ac1b0947f2df7a53216ff374c2d724c197",
+      "source_sha256": "d20bc7b9e6ab2f784ff3f8cd9258362e4ef6fbabb7fdab5e6edde772bfe18348"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_TRANSPORT_STATUS_2026-10-18.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_TRANSPORT_STATUS_2026-10-18.md",
+      "source_blob_sha": "196c162377098d78e1b4f8ba03fa123c2dbe889e",
+      "source_sha256": "260f098887b719d62839fa62f86a43beb633f726e37b88f24f8884941c58a27c"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/CCZMP_VEHICLE_FIX_2026-10-18.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/CCZMP_VEHICLE_FIX_2026-10-18.md",
+      "source_blob_sha": "ad52e520e1d9041e1a2bcd9c0faef9cc58e80484",
+      "source_sha256": "ed17d76ef23bb47cfe7912d72e2bc16d9b8b29761a525ad3e8c053c4a666ad1a"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/README.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/README.md",
+      "source_blob_sha": "2ff6bcae4ab4122717a36049b95bb8cb051d0eb1",
+      "source_sha256": "db4cbc5882f9adf67b733adf63a2db9cae8440062f02d0851110d2550b7533f9"
+    },
+    {
+      "source": "docs/snapshot-2026-10-28/START_HERE_2026-10-28.md",
+      "english": "docs/en/docs/snapshot-2026-10-28/START_HERE_2026-10-28.md",
+      "source_blob_sha": "dc8db90a7d02befe4c04dc29be63623708114a0d",
+      "source_sha256": "68a220debd80fdbbec74ba69a0448c680c1e2f8ffb94ecdb16d5dda88dd42c8f"
+    },
+    {
+      "source": "modules/README.md",
+      "english": "docs/en/modules/README.md",
+      "source_blob_sha": "9bb0c55699bd05781a9b07b7e6e9ab99f3e4c127",
+      "source_sha256": "b07b1f0e487e68fc4eb8e5953341e6b4a014b5f2a9959688624a17220dc755d2"
+    },
+    {
+      "source": "modules/cczmp-locks/INTEGRATION.md",
+      "english": "docs/en/modules/cczmp-locks/INTEGRATION.md",
+      "source_blob_sha": "5e508d42e551c67edfdb886715f47eba3c69d963",
+      "source_sha256": "39aff9eb2d0599e9c4f951e561101712fd5e540312b7ee0fd5bf5f6a9c823fcb"
+    },
+    {
+      "source": "modules/cczmp-locks/README.md",
+      "english": "docs/en/modules/cczmp-locks/README.md",
+      "source_blob_sha": "acc2a62cd0535841cadd7b096d92d918523c4809",
+      "source_sha256": "26fbe85940690bcb280a57bd41b884c2b22e9440c6ed20df8822115090d14330"
+    },
+    {
+      "source": "modules/cczmp-locks/TEST_REPORT.md",
+      "english": "docs/en/modules/cczmp-locks/TEST_REPORT.md",
+      "source_blob_sha": "f05e8f562f4ea3062a7dcb46dafba090e9b4f7fd",
+      "source_sha256": "54ea8e06056791a87399bae7c5dd954ea106f0c26880b06c783517052d663195"
+    }
+  ]
+}

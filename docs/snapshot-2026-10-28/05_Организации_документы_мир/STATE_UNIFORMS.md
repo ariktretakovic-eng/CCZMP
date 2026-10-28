@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/05_Organizations_Documents_World/STATE_UNIFORMS.md)
+
 # CCZMP — государственные шевроны и четыре ранга спецназа
 
 Установлено 09.10.2026 в D:\CCZMP PROJECT. Целевая игра: Anomaly 1.5.1, офлайн.

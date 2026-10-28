@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/CONFIG.md)
+
 # Конфигурация Autonomous Life V1
 
 Файл: `D:\CCZMP PROJECT\gamedata\configs\cczmp\life_v1.ltx`.

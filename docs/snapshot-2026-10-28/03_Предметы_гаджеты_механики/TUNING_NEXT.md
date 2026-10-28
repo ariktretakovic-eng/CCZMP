@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/03_Items_Gadgets_Mechanics/TUNING_NEXT.md)
+
 # CCZMP baseline — 2026-10-10
 
 Latest user request: pause feature development while the user prepares a new specification; explain in-game use and implementation; suggest a development-team name.

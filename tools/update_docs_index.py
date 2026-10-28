@@ -16,7 +16,8 @@ import sys
 from urllib.parse import quote, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUTS = {'docs/INDEX.md', 'docs/FILES.json'}
+OUTPUTS = {'docs/INDEX.md', 'docs/FILES.json', 'docs/en/docs/INDEX.md'}
+TRANSLATIONS = ROOT / 'docs/en/translation-manifest.json'
 
 
 def tracked_paths(source):
@@ -32,6 +33,8 @@ def tracked_paths(source):
 
 
 def category(path):
+    if path.startswith('docs/en/'):
+        return 'English documentation'
     if path.startswith('docs/archive/'):
         return 'Исторический индекс установки'
     if path.startswith('docs/snapshot-2026-10-28/'):
@@ -63,6 +66,8 @@ def title(path):
 
 
 def build(paths, updated):
+    translation_data = json.loads(TRANSLATIONS.read_text(encoding='utf-8')) if TRANSLATIONS.exists() else {'documents': []}
+    translations = {x['source']: x['english'] for x in translation_data['documents']}
     counts = Counter(p.split('/')[0] if '/' in p else '(корень)' for p in paths)
     records = [{'path': p, 'category': category(p)} for p in paths]
     manifest = {
@@ -76,6 +81,7 @@ def build(paths, updated):
     lines = [
         '# Полный индекс опубликованной документации', '',
         f'Обновлено {updated}. Состав построен по отслеживаемым файлам Git.', '',
+        '**Русский** · [English](en/docs/INDEX.md)', '',
         '[Начать здесь](README.md) · [Статус](STATUS_RU.md) · [80 направлений](SYSTEMS_RU.md) · '
         '[Транспорт](TRANSPORT_RU.md) · [Состав всех файлов](FILES.json) · '
         '[Пересборка](INDEXING_RU.md)', '',
@@ -83,16 +89,17 @@ def build(paths, updated):
         'более позднее ядро жизни 22 жителей и публичный стенд Locks. ТЗ описывает цель, '
         'а не доказательство реализации.', '',
     ]
-    docs = [p for p in paths if p.endswith('.md') or
+    docs = [p for p in paths if not p.startswith('docs/en/') and (p.endswith('.md') or
             (p.startswith('docs/') and p.endswith('.txt')) or
             (p.startswith('CCZMP/Concept/') and p.endswith('.ltx')) or
-            p in {'CCZMP/README.ltx', 'CCZMP_полный_файл.ltx'}]
+            p in {'CCZMP/README.ltx', 'CCZMP_полный_файл.ltx'})]
     for group in dict.fromkeys(category(p) for p in docs):
         members = [p for p in docs if category(p) == group]
-        lines += [f'## {group} ({len(members)})', '', '| Документ | Путь |', '|---|---|']
+        lines += [f'## {group} ({len(members)})', '', '| Документ | English | Путь |', '|---|---|---|']
         for p in members:
             target = quote(posixpath.relpath(p, 'docs'), safe='/._-')
-            lines.append(f'| [{title(p)}]({target}) | `{p}` |')
+            english = '[EN](' + quote(posixpath.relpath(translations[p], 'docs'), safe='/._-') + ')' if p in translations else '—'
+            lines.append(f'| [{title(p)}]({target}) | {english} | `{p}` |')
         lines.append('')
     lines += ['## Состав репозитория', '',
               f'Всего **{len(paths)} файлов**, включая код, конфиги и архивные материалы; '
@@ -100,7 +107,27 @@ def build(paths, updated):
     lines += [f'| `{key}` | {value} |' for key, value in sorted(counts.items())]
     lines += ['', 'Полные пути, включая не-документные файлы: [FILES.json](FILES.json). '
               'Бинарные модели, сохранения и полная локальная база зависимостей сюда не входят.', '']
+    en_base = 'docs/en/docs'
+    en_lines = ['# Complete English documentation index', '',
+                '[Русский](../../INDEX.md) · **English** · [Project overview](../README.md) · '
+                '[Translation notes](../TRANSLATION.md)', '',
+                f'Updated {updated}. English counterparts for **{len(translations)} source documents**, '
+                'including technical guides, concepts, dated reports and legacy material.', '',
+                'Dated reports retain the conclusions and limitations of their original stage. '
+                'Specifications describe intended behavior, not evidence of completion. '
+                'Identifiers, executable examples and original file paths are preserved.', '',
+                '| Document | English | Русский |', '|---|---|---|']
+    for source, english in translations.items():
+        en_target = quote(posixpath.relpath(english, en_base), safe='/._-')
+        ru_target = quote(posixpath.relpath(source, en_base), safe='/._-')
+        en_lines.append(f'| {title(english)} | [Read]({en_target}) | [RU]({ru_target}) |')
+    en_lines += ['', '## Maintenance', '',
+                 '[Rebuild the indexes](INDEXING_EN.md) · [Translation coverage](../translation-manifest.json) · '
+                 '[All repository files](../../FILES.json)', '',
+                 f'The repository contains **{len(paths)} tracked files**; this includes both languages, '
+                 'code and configuration files. It is not the number of implemented systems.', '']
     return {'docs/INDEX.md': '\n'.join(lines),
+            'docs/en/docs/INDEX.md': '\n'.join(en_lines),
             'docs/FILES.json': json.dumps(manifest, ensure_ascii=False, indent=2) + '\n'}
 
 

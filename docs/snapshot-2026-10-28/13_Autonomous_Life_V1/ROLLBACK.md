@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/13_Autonomous_Life_V1/ROLLBACK.md)
+
 # Безопасное отключение и откат
 
 1. Закрыть игру. Сохранить отдельную копию текущих `appdata/savedgames`.

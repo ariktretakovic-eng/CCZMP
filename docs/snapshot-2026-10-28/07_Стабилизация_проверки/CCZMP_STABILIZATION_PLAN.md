@@ -1,3 +1,5 @@
+**Русский** · [English](../../en/docs/snapshot-2026-10-28/07_Stabilization_Testing/CCZMP_STABILIZATION_PLAN.md)
+
 # STALKER X CCZMP — стабилизация и первый рабочий город
 
 Дата: 12 октября 2026, время пользователя. Версия 0.1.
