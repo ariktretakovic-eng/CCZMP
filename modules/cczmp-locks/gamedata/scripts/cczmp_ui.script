@@ -1,0 +1,702 @@
+-- CCZMP - Chernobyl Criminal Zone MultiPlayer
+-- Module: terminal UI
+--
+-- A single player-accessible terminal that drives the existing service
+-- modules (cczmp_bank, cczmp_factions, cczmp_law). The menu controller is
+-- pure Lua so it is covered by the mocked test-suite; the CUIScriptWnd shim
+-- below is a thin, standard binding to cczmp_terminal.xml.
+--
+-- Open with F6 (DIK_F6). The engine auto-runs on_game_start for every script
+-- in $game_scripts$ (see axr_main.script), so this needs no manual injection.
+
+-- ==========================================================================
+-- money formatting
+-- ==========================================================================
+
+local function fmt(n)
+	if type(n) ~= "number" then return "0" end
+	local s = string.format("%d", math.floor(n + 0.5))
+	if #s <= 3 then return s end
+	local out = ""
+	while #s > 3 do
+		out = " " .. string.sub(s, #s - 2) .. out
+		s = string.sub(s, 1, #s - 3)
+	end
+	return s .. out
+end
+
+local function money_str(n)
+	return fmt(n) .. " " .. game.translate_string("cczmp_ui_currency")
+end
+
+-- ==========================================================================
+-- controller
+-- ==========================================================================
+
+local CCZMPCtrl = {}
+CCZMPCtrl.__index = CCZMPCtrl
+
+function CCZMPCtrl:new()
+	return setmetatable({
+		page = "main",
+		input = "",
+		sel = 1,
+		lines = {},
+		chosen = nil,
+		last_mode = nil,
+		return_to = "main",
+	}, CCZMPCtrl)
+end
+
+local function bank()  return _G.cczmp_bank    end
+local function items_prompt(page)
+    return cczmp_items_ui and cczmp_items_ui.is_prompt and cczmp_items_ui.is_prompt(page)or false
+end
+
+local function fac()   return _G.cczmp_factions end
+local function law()   return _G.cczmp_law     end
+
+local function safe(mod, fn, ...)
+	if not mod then return nil end
+	local f = mod[fn]
+	if type(f) ~= "function" then return nil end
+	return f(...)
+end
+
+-- page builders ---------------------------------------------------------
+
+function CCZMPCtrl:build_main()
+	local out = {}
+	local bal, rating, mem
+	local bk = bank()
+	if bk then
+		bal = safe(bk, "actor_money") or 0
+		rating = safe(bk, "rating")
+		local is_blocked = safe(bk, "account_blocked")
+		mem = (is_blocked and "cczmp_ui_blocked") or "cczmp_ui_free"
+	else
+		bal, rating, mem = 0, "-", "cczmp_ui_msg_error"
+	end
+	out[#out + 1] = {text = "cczmp_ui_balance", arg = money_str(bal), act = "noop"}
+	out[#out + 1] = {text = "cczmp_ui_rating", arg = tostring(rating or "-"), act = "noop"}
+	out[#out + 1] = {text = mem, act = "noop"}
+	out[#out + 1] = {text = "cczmp_ui_deposits", act = "goto:deposits"}
+	out[#out + 1] = {text = "cczmp_ui_credits", act = "goto:credits"}
+	out[#out + 1] = {text = "cczmp_ui_tab_factions", act = "goto:faction"}
+	out[#out + 1] = {text = "cczmp_ui_tab_law", act = "goto:law"}
+	out[#out + 1] = {text = "cczmp_ops_menu", act = "goto:ops_home"}
+	out[#out + 1] = {text = "cczmp_civic_hub", act = "goto:civic_overview"}
+	out[#out + 1] = {text = "cczmp_items_menu", act = "goto:items_home"}
+	out[#out + 1] = {text = "cczmp_ui_tab_close", act = "goto:close"}
+	return out
+end
+
+function CCZMPCtrl:build_deposits()
+	local out = {}
+	local bk = bank()
+	if not bk then
+		out[#out + 1] = {text = "cczmp_ui_msg_error", act = "noop"}
+	else
+		local prods = safe(bk, "deposit_products") or {}
+		for i, p in ipairs(prods) do
+			out[#out + 1] = {text = ("  [%d] %s  min %s  %s%%"):format(
+				i, p.name or p.id, money_str(p.min_amount or 0),
+				tostring((tonumber(p.rate) or 0) * 100)),
+				act = "pick_deposit:" .. i}
+		end
+		local recs = safe(bk, "deposit_records") or {}
+		if #recs == 0 then
+			out[#out + 1] = {text = "cczmp_ui_msg_no_record", act = "noop"}
+		else
+			for _, r in ipairs(recs) do
+				out[#out + 1] = {text = (game.translate_string("cczmp_ui_deposit_row")):format(
+					r.uid, money_str(r.amount), math.floor(r.elapsed_days or 0)),
+					act = "close_deposit:" .. r.uid}
+			end
+		end
+	end
+	out[#out + 1] = {text = "cczmp_ui_back", act = "goto:main"}
+	return out
+end
+
+function CCZMPCtrl:build_credits()
+	local out = {}
+	local bk = bank()
+	if not bk then
+		out[#out + 1] = {text = "cczmp_ui_msg_error", act = "noop"}
+	else
+		local prods = safe(bk, "credit_products") or {}
+		for i, p in ipairs(prods) do
+			out[#out + 1] = {text = ("  [%d] %s  max %s  %s%%"):format(
+				i, p.name or p.id, money_str(p.max_amount or 0),
+				tostring((tonumber(p.rate) or 0) * 100)),
+				act = "pick_credit:" .. i}
+		end
+		local recs = safe(bk, "credit_records") or {}
+		if #recs == 0 then
+			out[#out + 1] = {text = "cczmp_ui_msg_no_record", act = "noop"}
+		else
+			for _, r in ipairs(recs) do
+				out[#out + 1] = {text = (game.translate_string("cczmp_ui_credit_row")):format(
+					r.uid, money_str(r.due)),
+					act = "repay_credit:" .. r.uid}
+			end
+		end
+	end
+	out[#out + 1] = {text = "cczmp_ui_back", act = "goto:main"}
+	return out
+end
+
+function CCZMPCtrl:build_faction()
+	local out = {}
+	local fc = fac()
+	if not fc then
+		out[#out + 1] = {text = "cczmp_ui_msg_error", act = "noop"}
+	else
+		local cur = safe(fc, "faction")
+		if cur then
+			out[#out + 1] = {text = "cczmp_ui_member", arg = safe(fc,"get_name",cur) or cur,
+				arg2 = safe(fc,"get_rank_name",cur,safe(fc,"rank") or 0) or "-", act = "noop"}
+		else
+			out[#out + 1] = {text = "cczmp_ui_no_member", act = "noop"}
+		end
+		out[#out + 1] = {text = "---", act = "noop"}
+		for _, id in ipairs(safe(fc, "all") or {}) do
+			out[#out + 1] = {text = safe(fc, "get_name", id) or id,
+				act = "org:" .. id}
+		end
+		out[#out + 1] = {text = "cczmp_ui_back", act = "goto:main"}
+	end
+	return out
+end
+
+function CCZMPCtrl:build_law()
+	local out = {}
+	local lw = law()
+	if not lw then
+		out[#out + 1] = {text = "cczmp_ui_msg_error", act = "noop"}
+	else
+		local jailed = tostring(safe(lw, "is_jailed") or false)
+		local debt = safe(lw, "get_debt") or 0
+		out[#out + 1] = {text = "cczmp_ui_jailed", arg = jailed, act = "noop"}
+		out[#out + 1] = {text = "cczmp_ui_debt", arg = money_str(debt), act = "noop"}
+		local rec = safe(lw, "get_record") or {}
+		if #rec == 0 then
+			out[#out + 1] = {text = "cczmp_ui_record_empty", act = "noop"}
+		else
+			for _, e in ipairs(rec) do
+				out[#out + 1] = {text = tostring(e), act = "noop"}
+			end
+		end
+		out[#out + 1] = {text = "cczmp_ui_back", act = "goto:main"}
+	end
+	return out
+end
+
+
+function CCZMPCtrl:build_org_detail()
+    local fc=fac()
+    local id=self.org_id
+    if not fc or not safe(fc,"exists",id) then
+        return {{text="cczmp_ui_msg_error",act="goto:faction"}}
+    end
+    local out={
+        {text=safe(fc,"get_name",id) or id,act="noop"},
+        {text="cczmp_ui_org_base",arg=game.translate_string(safe(fc,"actor_community",id) or "-"),act="noop"}
+    }
+    if safe(fc,"faction")==id then
+        out[#out+1]={text="cczmp_ui_leave",act="leave"}
+    else
+        out[#out+1]={text="cczmp_ui_join",act="join:"..id}
+    end
+    if self.debug_mode then
+        if id=="alfa" or id=="vympel" then
+            for n=0,3 do
+                out[#out+1]={text="cczmp_models_spawn_rank_"..(n+1),act="spawn_rank:"..id..":"..n}
+            end
+        else
+            out[#out+1]={text="cczmp_ui_spawn_member",act="spawn_member:"..id}
+        end
+    end
+    out[#out+1]={text="cczmp_ops_menu",act="goto:ops_home"}
+    if self.debug_mode and safe(fc,"faction")==id then
+        out[#out+1]={text="cczmp_ops_debug_rank",act="goto:ops_ranks"}
+    end
+    out[#out+1]={text="cczmp_ui_org_location",arg=safe(fc,"get_location",id) or "-",act="noop"}
+    local tasks=safe(fc,"get_tasks",id) or {}
+    for _,t in ipairs(tasks) do out[#out+1]={text=t,act="noop"} end
+    out[#out+1]={text="cczmp_ui_back",act="goto:faction"}
+    return out
+end
+
+function CCZMPCtrl:build_lines()
+    if cczmp_items_ui and cczmp_items_ui.owns(self.page) then return cczmp_items_ui.build(self) end
+    if cczmp_civic_ui and cczmp_civic_ui.owns(self.page) then return cczmp_civic_ui.build(self) end
+    if cczmp_operations_ui and cczmp_operations_ui.owns(self.page) then return cczmp_operations_ui.build(self) end
+	if self.page == "org_detail" then return self:build_org_detail()
+	elseif self.page == "main"     then return self:build_main()
+	elseif self.page == "deposits" then return self:build_deposits()
+	elseif self.page == "credits"  then return self:build_credits()
+	elseif self.page == "faction"  then return self:build_faction()
+	elseif self.page == "law"      then return self:build_law()
+	end
+	return {}
+end
+
+function CCZMPCtrl:refresh()
+	self.lines = self:build_lines()
+	if #self.lines == 0 then self.lines = {{text = "cczmp_ui_msg_no_record", act = "noop"}} end
+	if self.sel > #self.lines then self.sel = #self.lines end
+	if self.sel < 1 then self.sel = 1 end
+end
+
+-- input ----------------------------------------------------------------
+
+function CCZMPCtrl:digit(d)
+	if self.page ~= "prompt" then return false end
+	if #self.input >= 9 then return false end
+	self.input = self.input .. tostring(d)
+	return true
+end
+
+function CCZMPCtrl:backspace()
+	if self.page == "prompt" and #self.input > 0 then
+		self.input = string.sub(self.input, 1, #self.input - 1)
+	end
+end
+
+-- navigation -----------------------------------------------------------
+
+function CCZMPCtrl:move(delta)
+	self.sel = self.sel + delta
+	if self.sel < 1 then self.sel = 1 end
+	if self.sel > #self.lines then self.sel = #self.lines end
+end
+
+function CCZMPCtrl:selected()
+	return self.lines[self.sel]
+end
+
+function CCZMPCtrl:handle_action(act)
+    if type(act)=="string" and act:find("^items_") and cczmp_items_ui then return cczmp_items_ui.handle(self,act) end
+    if type(act)=="string" and act:find("^civic_") and cczmp_civic_ui then return cczmp_civic_ui.handle(self,act) end
+    if type(act)=="string" and act:find("^ops_") and cczmp_operations_ui then return cczmp_operations_ui.handle(self,act) end
+	if type(act) ~= "string" then return "noop" end
+	local kind, rest = act, ""
+	local colon = string.find(act, ":", 1, true)
+	if colon then
+		kind = string.sub(act, 1, colon - 1)
+		rest = string.sub(act, colon + 1)
+	end
+	if kind == "goto" then
+		if rest == "close" then return "close" end
+		self.page = rest
+		self.input = ""
+		self.sel = 1
+		return nil
+	elseif kind == "pick_deposit" then
+		self.last_mode = "deposit"
+		self.return_to, self.chosen = "deposits", rest
+		self.page, self.input, self.sel = "prompt", "", 1
+		return "prompt"
+	elseif kind == "pick_credit" then
+		self.last_mode = "credit"
+		self.return_to, self.chosen = "credits", rest
+		self.page, self.input, self.sel = "prompt", "", 1
+		return "prompt"
+	elseif kind == "close_deposit" then
+		self.last_mode = "close"
+		self.return_to, self.chosen = "deposits", rest
+		self.page, self.input, self.sel = "prompt", "", 1
+		return "prompt"
+	elseif kind == "repay_credit" then
+		self.last_mode = "repay"
+		self.return_to, self.chosen = "credits", rest
+		self.page, self.input, self.sel = "prompt", "", 1
+		return "prompt"
+	elseif kind == "org" then
+		self.org_id=rest; self.page="org_detail"; self.sel=3
+		return nil
+    elseif kind == "spawn_rank" then
+        if not self.debug_mode then return "cczmp_ui_join_denied" end
+        local id,rank=rest:match("^([%w_]+):(%d+)$")
+        rank=tonumber(rank)
+        if (id~="alfa" and id~="vympel") or not rank or rank>3 then return "cczmp_ui_msg_error" end
+        local ok,err=safe(_G.cczmp_native,"spawn_member",id,rank)
+        return ok and "spawned_member" or (err or "cczmp_ui_msg_error")
+	elseif kind == "spawn_member" then
+        if not self.debug_mode then return "cczmp_ui_join_denied" end
+        local ok,err=safe(_G.cczmp_native,"spawn_member",rest)
+        return ok and "spawned_member" or (err or "cczmp_ui_msg_error")
+	elseif kind == "join" then
+		local fc = fac()
+		if not fc then return "noop" end
+		local ok,err = safe(fc, "switch_actor", rest, self.debug_mode)
+		return ok and "joined" or (err or "cczmp_ui_join_denied")
+	elseif kind == "leave" then
+		local fc = fac()
+		if not fc then return "noop" end
+		local ok,err = safe(fc, "leave_actor")
+		return ok and "left" or (err or "cczmp_ui_msg_error")
+	elseif kind == "noop" then
+		return "noop"
+	end
+	return nil
+end
+
+function CCZMPCtrl:confirm()
+	if self.page == "prompt" then return self:do_amount() end
+	local l = self:selected()
+	if not l then return "noop" end
+	return self:handle_action(l.act or "noop")
+end
+
+function CCZMPCtrl:do_amount()
+	local bk = bank()
+	if not bk then return "noop" end
+	local uid = tonumber(self.chosen) or 0
+	local amt
+	if self.input ~= "" then
+		if not self.input:match("^%d+$") then return "cczmp_ui_bad_amount" end
+		amt = tonumber(self.input)
+		if not amt or amt<=0 or amt>2147483647 then return "cczmp_ui_bad_amount" end
+	end
+	if self.last_mode == "deposit" then
+		local prods = safe(bk, "deposit_products") or {}
+		local p = prods[uid]
+		if not p then return "noop" end
+		amt = amt or p.min_amount
+		local ok, err = bk.deposit_open(p.id, amt)
+		return ok and "opened_deposit" or (err or "noop")
+	elseif self.last_mode == "credit" then
+		local prods = safe(bk, "credit_products") or {}
+		local p = prods[uid]
+		if not p then return "noop" end
+		amt = amt or p.max_amount
+		local ok, err = bk.credit_take(p.id, amt)
+		return ok and "took_credit" or (err or "noop")
+	elseif self.last_mode == "close" then
+		local ok, err, payout = bk.deposit_close(uid)
+		return ok and ("closed_deposit:" .. tostring(payout or 0)) or (err or "noop")
+	elseif self.last_mode == "repay" then
+		local ok, err = bk.credit_repay(uid, amt)
+		return ok and "repaid" or (err or "noop")
+	end
+	return "noop"
+end
+
+function CCZMPCtrl:back()
+    if cczmp_items_ui and cczmp_items_ui.owns(self.page) then return cczmp_items_ui.back(self) end
+    if cczmp_civic_ui and cczmp_civic_ui.owns(self.page) then return cczmp_civic_ui.back(self) end
+    if self.page=="ops_prompt" then self.page=self.ops_return or "ops_home";self.input="";self.sel=1;return nil end
+    if self.page=="ops_case" then self.page="ops_cases";self.sel=1;return nil end
+    if self.page=="ops_ranks" then self.page="org_detail";self.sel=3;return nil end
+    if self.page:find("^ops_") then self.page=self.page=="ops_home" and "main" or "ops_home";self.sel=1;return nil end
+	if self.page == "prompt" then
+		self.page = self.return_to
+		self.input = ""
+		return nil
+	end
+	if self.page == "main" then return "close" end
+	self.page = "main"
+	self.input = ""
+	self.sel = 1
+	return nil
+end
+
+-- ==========================================================================
+-- engine-facing entry points
+-- ==========================================================================
+
+local ctrl = nil
+function get_ctrl()
+	if ctrl == nil then ctrl = CCZMPCtrl:new() end
+	return ctrl
+end
+
+function on_game_start()
+	RegisterScriptCallback("on_key_press", on_key_press)
+end
+
+function on_key_press(dik)
+	if dik == DIK_keys.DIK_F6 and not (GUI and GUI:IsShown()) then
+		terminal_open()
+	end
+end
+
+function terminal_open(page, debug_mode)
+	if GUI then terminal_close() end
+	local c = get_ctrl()
+	c.page = page or "main"
+	c.debug_mode = debug_mode == true
+	c.input = ""
+	c.sel = 1
+	if cczmp_operations_ui and db.actor then cczmp_operations_ui.capture_target(c) end
+	c:refresh()
+	GUI = nil
+	if CUIScriptWnd then
+		GUI = CCZMPTerminalUI(c)
+		if not GUI:IsShown() then
+			GUI:ShowDialog(true)
+            if cczmp_items_ui and cczmp_items_ui.is_prompt(GUI.ctrl.page) and type(GUI.edit.CaptureFocus)=="function"then GUI.edit:CaptureFocus(true)end
+			Register_UI("cczmp_terminal", "cczmp_ui", "GUI")
+		end
+	end
+end
+
+function terminal_input(digit)
+	local c = get_ctrl()
+	if digit == -1 then
+		c:backspace()
+	elseif type(digit) == "number" and digit >= 0 and digit <= 9 then
+		c:digit(digit)
+	end
+	if GUI then GUI:refresh_input() end
+end
+
+function terminal_confirm()
+	if GUI then return GUI:OnConfirm() end
+	local c=get_ctrl(); local r=c:confirm(); c:refresh(); return r
+end
+
+function terminal_move(delta)
+	local c = get_ctrl()
+	c:move(delta)
+	if GUI then GUI:sync() end
+end
+
+function terminal_back()
+	local c = get_ctrl()
+	local r = c:back()
+	if GUI then GUI:sync() end
+	return r
+end
+
+function terminal_close()
+	if GUI then
+        if GUI.edit and type(GUI.edit.CaptureFocus)=="function"then GUI.edit:CaptureFocus(false)end
+		GUI:HideDialog()
+		GUI:Show(false)
+		GUI = nil
+	end
+	Unregister_UI("cczmp_terminal")
+end
+
+-- ==========================================================================
+-- UI shim (CUIScriptWnd bound to cczmp_terminal.xml).
+-- Guarded so the file still loads in unit tests where the engine classes are
+-- absent: only the pure-Lua controller + entry points are exercised there.
+-- ==========================================================================
+
+if CUIScriptWnd then
+
+class "CCZMPTerminalUI" (CUIScriptWnd)
+
+function CCZMPTerminalUI:__init(ctrl)
+	super()
+	self.ctrl = ctrl
+	self:SetWndRect(Frect():set(0, 0, 1024, 768))
+	self:SetAutoDelete(true)
+	self:InitControls()
+end
+
+function CCZMPTerminalUI:InitControls()
+    local xml = CScriptXmlInit()
+    xml:ParseFile("cczmp_terminal.xml")
+    self.bg = xml:InitStatic("cczmp_terminal", self)
+    self.title = xml:InitStatic("cczmp_terminal:title", self.bg)
+    self.status = xml:InitStatic("cczmp_terminal:status", self.bg)
+    self.message = xml:InitStatic("cczmp_terminal:message", self.bg)
+    self.list = xml:InitListBox("cczmp_terminal:content", self.bg)
+    self:Register(self.list, "content")
+    self.edit = xml:InitEditBox("cczmp_terminal:input_box", self.bg)
+    self:Register(self.edit, "input_box")
+    self.edit:SetText("")
+    local handlers = {btn_confirm=self.OnConfirm, btn_left=self.OnPrev,
+        btn_right=self.OnNext, btn_back=self.OnBack, btn_close=self.OnClose}
+    for _, k in ipairs({"btn_confirm","btn_left","btn_right","btn_back","btn_close"}) do
+        local b = xml:Init3tButton("cczmp_terminal:" .. k, self.bg)
+        self:Register(b,k)
+        if k=="btn_confirm" then self.confirm_button=b end
+        self:AddCallback(k,ui_events.BUTTON_CLICKED,handlers[k],self)
+    end
+    self:AddCallback("content",ui_events.LIST_ITEM_SELECT,self.OnListItemSelect,self)
+    self:InitCallBacks()
+    self:sync()
+end
+
+function CCZMPTerminalUI:InitCallBacks()
+end
+
+function CCZMPTerminalUI:refresh_input()
+    self.edit:SetText(self.ctrl.input or "")
+end
+
+function CCZMPTerminalUI:sync()
+    local title_key=self.ctrl.debug_mode and "cczmp_ui_debug_title" or "cczmp_ui_title"
+    if self.ctrl.page and self.ctrl.page:find("^items_") then
+        title_key=self.ctrl.debug_mode and "cczmp_items_debug" or "cczmp_items_menu"
+    end
+    self.title:TextControl():SetText(game.translate_string(title_key))
+    self:sync_list()
+    self:update_confirm_caption()
+    self.edit:Show((self.ctrl.page == "prompt" or self.ctrl.page == "ops_prompt" or self.ctrl.page == "civic_prompt" or items_prompt(self.ctrl.page)) and self.ctrl.last_mode ~= "close")
+    self.edit:Enable((self.ctrl.page == "prompt" or self.ctrl.page == "ops_prompt" or self.ctrl.page == "civic_prompt" or items_prompt(self.ctrl.page)) and self.ctrl.last_mode ~= "close")
+    self:refresh_input()
+    if type(self.edit.CaptureFocus)=="function"then self.edit:CaptureFocus(self.edit:IsShown() and self.edit:IsEnabled())end
+    self.status:TextControl():SetText(self:status_line())
+end
+
+function CCZMPTerminalUI:status_line()
+    if self.ctrl.page=="items_pin_prompt"then return game.translate_string("cczmp_locks_enter_pin")end
+    if self.ctrl.page=="items_message_prompt"then return game.translate_string("cczmp_comms_enter_message")end
+    if self.ctrl.page=="civic_prompt" then return game.translate_string("cczmp_ops_enter_text") end
+    if self.ctrl.page=="ops_prompt" then return game.translate_string((self.ctrl.ops_command=="ransom" or self.ctrl.ops_command=="bribe") and "cczmp_ops_enter_amount" or "cczmp_ops_enter_text") end
+    if self.ctrl.page == "prompt" then
+        return game.translate_string(self.ctrl.last_mode == "close"
+            and "cczmp_ui_confirm_close" or "cczmp_ui_input_amount")
+    end
+    return game.translate_string("cczmp_ui_select") .. "  "
+        .. tostring(self.ctrl.sel) .. "/" .. #self.ctrl.lines
+end
+
+function CCZMPTerminalUI:scroll_selection_visible()
+    -- Native SetSelectedIndex changes selection without scrolling the view.
+    if type(self.list.GetSelectedItem)~="function" or type(self.list.SetScrollPos)~="function" then return end
+    local selected=self.list:GetSelectedItem()
+    if not selected then return end
+    local top=selected:GetWndPos().y
+    local bottom=top+selected:GetHeight()
+    local pos=self.list:GetCurrentScrollPos()
+    local height=self.list:GetHeight()
+    local wanted=top<pos and top or (bottom>pos+height and bottom-height or pos)
+    if wanted~=pos then
+        self.list:SetScrollPos(math.max(self.list:GetMinScrollPos(),math.min(self.list:GetMaxScrollPos(),wanted)))
+    end
+end
+
+function CCZMPTerminalUI:sync_list()
+    self.rebuilding = true
+    self.list:Clear()
+    for _, l in ipairs(self.ctrl.lines) do
+        local t = game.translate_string(l.text)
+        if l.arg then
+            if l.arg2 then t = string.format(t,tostring(l.arg),tostring(l.arg2))
+            else t = string.format(t,tostring(l.arg)) end
+        end
+        self.list:AddTextItem(t)
+    end
+    self.list:SetSelectedIndex(self.ctrl.sel - 1)
+    self:scroll_selection_visible()
+    self.rebuilding = false
+end
+
+function CCZMPTerminalUI:OnListItemSelect()
+    if self.rebuilding or self.ctrl.page == "prompt" or self.ctrl.page == "ops_prompt" or self.ctrl.page == "civic_prompt" or items_prompt(self.ctrl.page) then return end
+    local index = self.list:GetSelectedIndex()
+    if index and index >= 0 and index < #self.ctrl.lines then
+        self.ctrl.sel = index + 1
+        self.status:TextControl():SetText(self:status_line())
+        self:update_confirm_caption()
+    end
+end
+
+function CCZMPTerminalUI:update_confirm_caption()
+    local key="cczmp_ui_confirm"
+    if self.ctrl.page=="org_detail" then
+        local selected=self.ctrl:selected()
+        local act=selected and selected.act or "noop"
+        key=(act:find("^spawn_member:") or act:find("^spawn_rank:")) and "cczmp_ui_spawn_member"
+            or (act:find("^goto:") and "cczmp_ui_back")
+            or (safe(fac(),"faction")==self.ctrl.org_id and "cczmp_ui_leave" or "cczmp_ui_join")
+    end
+    self.confirm_button:TextControl():SetText(game.translate_string(key))
+end
+
+function CCZMPTerminalUI:OnConfirm()
+    local c = self.ctrl
+    if c.page == "prompt" or c.page == "ops_prompt" or c.page == "civic_prompt" or items_prompt(c.page) then
+        c.input = self.edit:GetText() or ""
+    else
+        self:OnListItemSelect()
+    end
+    local selected=c:selected()
+    local act=selected and selected.act or "noop"
+    -- Organization info rows are details of the primary join/leave action.
+    if c.page=="org_detail" and act=="noop" then
+        act=safe(fac(),"faction")==c.org_id and "leave" or ("join:"..c.org_id)
+    end
+    if printe then printe("[CCZMP UI] action="..act.."; debug="..tostring(c.debug_mode).."; row="..c.sel) end
+    local r = c.page=="items_pin_prompt"and c:handle_action("items_pin_confirm")or c.page=="items_message_prompt" and c:handle_action("items_send") or c.page=="prompt" and c:confirm() or c:handle_action(act)
+    if r == "close" then terminal_close(); return end
+    local key = nil
+    local payout = type(r) == "string" and r:match("^closed_deposit:(.+)$")
+    local messages = {opened_deposit="cczmp_ui_msg_opened", took_credit="cczmp_ui_msg_credit",
+        repaid="cczmp_ui_msg_repaid", joined="cczmp_ui_joined", left="cczmp_ui_left",
+        spawned_member="cczmp_ui_spawned_member", noop="cczmp_ui_select_action"}
+    if payout then key = "cczmp_ui_msg_closed"
+    elseif messages[r] then key=messages[r]
+    elseif type(r) == "string" and r ~= "prompt" then key=r end
+    local successful = payout or r=="opened_deposit" or r=="took_credit" or r=="repaid"
+    if successful then c.page=c.return_to; c.input=""; c.sel=1 end
+    self.message:TextControl():SetText(key and game.translate_string(key) or "")
+    if payout then
+        self.message:TextControl():SetText(string.format(game.translate_string(key),payout))
+    end
+    if printe then printe("[CCZMP UI] confirm: " .. tostring(r or c.page)) end
+    if c.ops_amount and key then
+        self.message:TextControl():SetText(game.translate_string(key).." / "..tostring(c.ops_amount).." "..game.translate_string("cczmp_ui_currency"))
+        c.ops_amount=nil
+    end
+    c:refresh()
+    self:sync()
+end
+
+function CCZMPTerminalUI:OnPrev()
+    self:OnListItemSelect()
+    self.ctrl:move(-1)
+    self.list:SetSelectedIndex(self.ctrl.sel-1)
+    self:scroll_selection_visible()
+    self:update_confirm_caption()
+    self.status:TextControl():SetText(self:status_line())
+end
+function CCZMPTerminalUI:OnNext()
+    self:OnListItemSelect()
+    self.ctrl:move(1)
+    self.list:SetSelectedIndex(self.ctrl.sel-1)
+    self:scroll_selection_visible()
+    self:update_confirm_caption()
+    self.status:TextControl():SetText(self:status_line())
+end
+function CCZMPTerminalUI:OnBack()
+    local c=self.ctrl
+    if c.page=="org_detail" then c.page="faction"; c.sel=1
+    elseif c:back()=="close" then terminal_close(); return end
+    c:refresh()
+    self.message:TextControl():SetText("")
+    self:sync()
+end
+function CCZMPTerminalUI:Close()
+    terminal_close()
+end
+function CCZMPTerminalUI:OnClose()
+    terminal_close()
+end
+function CCZMPTerminalUI:OnKeyboard(dik, action)
+    if dik==DIK_keys.DIK_F6 then return true end
+    if action==ui_events.WINDOW_KEY_PRESSED then
+        if dik==DIK_keys.DIK_ESCAPE then self:OnBack(); return true end
+        if dik==DIK_keys.DIK_RETURN or dik==DIK_keys.DIK_NUMPADENTER then
+            self:OnConfirm(); return true
+        end
+        if self.ctrl.page~="prompt" and self.ctrl.page~="ops_prompt" and self.ctrl.page~="civic_prompt" and not items_prompt(self.ctrl.page) then
+            if dik==DIK_keys.DIK_UP then self:OnPrev(); return true end
+            if dik==DIK_keys.DIK_DOWN then self:OnNext(); return true end
+        end
+    end
+    -- Native edit control handles digits, numpad, deletion and pasted text.
+    return CUIScriptWnd.OnKeyboard(self,dik,action)
+end
+
+end -- if CUIScriptWnd
+

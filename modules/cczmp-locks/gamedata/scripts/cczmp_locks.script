@@ -1,0 +1,192 @@
+-- Fictional PIN cases. Original items, never copies, live in a hidden ALife box.
+-- Access grants are transient; loading a save always closes an armed case.
+local grants={}
+local restored={}
+local next_tick=0
+local function I()return cczmp_items end
+local function fail(k)return false,"cczmp_locks_"..k end
+local function selected(id)
+ local item=I().owned(id)
+ if not item or item:section()~="cczmp_code_case"then return nil end
+ local s=I().item_state(item);s.vault=s.vault or {revision=0,attempts=0}
+ return item,s.vault,s
+end
+local function cooldown(v,s)
+ if not v.cooldown then return 0 end
+ local age=cczmp_ops.elapsed("case_cooldown_"..s.uid)
+ local left=math.max(0,v.cooldown-(age or 0))
+ if left==0 then v.cooldown=nil;v.attempts=0 end
+ return left
+end
+local function grant(item,s)
+ grants[tostring(s.uid)]={name=item:name(),person=cczmp_ops.person(db.actor),revision=s.vault.revision}
+ cczmp_ops.clock_start("case_open_"..s.uid)
+end
+function access(id)
+ local item,v,s=selected(id);if not item then return false end
+ if not v.pin then return true end
+ if cooldown(v,s)>0 then return false end
+ local g=grants[tostring(s.uid)];local age=cczmp_ops.elapsed("case_open_"..s.uid)
+ return g and g.name==item:name()and g.person==cczmp_ops.person(db.actor)and g.revision==v.revision and age and age<120 or false
+end
+function info(id)
+ local item,v,s=selected(id);if not item then return nil end
+ return {uid=s.uid,armed=v.pin~=nil,open=access(id),cooldown=cooldown(v,s),attempts=v.attempts}
+end
+function configure(id,pin)
+ local item,v,s=selected(id);if not item then return fail("bad")end
+ if type(pin)~="string"or #pin<4 or #pin>8 or not pin:match("^%d+$")then return fail("pin_format")end
+ if not access(id)then return fail("locked")end
+ v.pin=pin;v.revision=v.revision+1;v.attempts=0;v.cooldown=nil
+ grants[tostring(s.uid)]=nil;I().record("case_configured",item:section(),{uid=s.uid})
+ return true,"cczmp_locks_configured"
+end
+function unlock(id,pin)
+ local item,v,s=selected(id);if not item then return fail("bad")end
+ if not v.pin then return fail("unarmed")end
+ if cooldown(v,s)>0 then return fail("cooldown")end
+ if pin~=v.pin then
+  v.attempts=v.attempts+1
+  if v.attempts>=3 then v.cooldown=300;cczmp_ops.clock_start("case_cooldown_"..s.uid);grants[tostring(s.uid)]=nil end
+  return fail("wrong_pin")
+ end
+ v.attempts=0;grant(item,s);return true,"cczmp_locks_opened"
+end
+function close(id)
+ local item,v,s=selected(id);if not item then return fail("bad")end
+ grants[tostring(s.uid)]=nil;return true,"cczmp_locks_closed"
+end
+function target(id)
+ local item,v,s=selected(id);if not item then return nil,"cczmp_locks_bad"end
+ if not v.pin then return nil,"cczmp_locks_unarmed"end
+ if cooldown(v,s)>0 then return nil,"cczmp_locks_cooldown"end
+ if access(id)then return nil,"cczmp_items_already_done"end
+ local t=I().token(item);t.revision=v.revision;return t
+end
+function check_job(t)
+ if not t then return fail("changed")end
+ local item,v,s=selected(t.id)
+ if not item or item:name()~=t.name or item:section()~=t.section or v.revision~=t.revision then return fail("changed")end
+ if not v.pin or access(t.id)then return fail("changed")end
+ if cooldown(v,s)>0 then return fail("cooldown")end
+ return true
+end
+function hack_result(t,success)
+ local ok,msg=check_job(t);if not ok then return ok,msg end
+ local item,v,s=selected(t.id)
+ if not success then
+  v.cooldown=30;cczmp_ops.clock_start("case_cooldown_"..s.uid);return fail("hack_failed")
+ end
+ v.attempts=0;grant(item,s);I().practice("technology",2)
+ I().record("case_opened",item:section(),{uid=s.uid,method="code_pick"})
+ return true,"cczmp_locks_opened"
+end
+local function box(item,v,create)
+ local r=v.container
+ if r then
+  local se=alife():object(r.id)
+  if not se or se:name()~=r.name or se:section_name()~="hidden_box"then return nil,"cczmp_locks_lost_box"end
+  if r.level~=level.name()then
+   local p=vector():set(db.actor:position());p.y=p.y+50
+   alife():teleport_object(r.id,db.actor:game_vertex_id(),db.actor:level_vertex_id(),p);r.level=level.name()
+  end
+  alife():set_switch_online(r.id,true);alife():set_switch_offline(r.id,false)
+  local obj=level.object_by_id(r.id)
+  if obj and obj:name()==r.name then return obj,nil,r end
+  return nil,"cczmp_cooler_loading"
+ end
+ if not create then return nil,nil,nil end
+ local p=vector():set(db.actor:position());p.y=p.y+50
+ local se=alife_create("hidden_box",p,db.actor:level_vertex_id(),db.actor:game_vertex_id())
+ if not se then return nil,"cczmp_ui_engine_unavailable"end
+ v.container={id=se.id,name=se:name(),level=level.name(),contents={}}
+ alife():set_switch_online(se.id,true);alife():set_switch_offline(se.id,false)
+ return nil,"cczmp_cooler_loading"
+end
+local function restore_condition(obj,t)
+ local key=t.id..":"..t.name
+ if obj and type(t.condition)=="number"and not restored[key]then
+  -- II_ATTCH does not round-trip a changed condition through native saves.
+  obj:set_condition(t.condition);restored[key]=true
+ end
+ return obj
+end
+local function original(b,t)
+ local obj=b and level.object_by_id(t.id)
+ if not obj or obj:name()~=t.name or obj:section()~=t.section or not obj:parent()or obj:parent():id()~=b:id()then return nil end
+ return restore_condition(obj,t)
+end
+local function update_weight(item,v)
+ local weight=I().number("item_cczmp_code_case","weight",1.2)
+ for _,t in ipairs(v.container and v.container.contents or {})do weight=weight+(t.weight or 0)end
+ item:set_weight(weight)
+end
+local function settle(item,v,b)
+ local r=v.container;local p=r and r.pending;if not p then return true end
+ local complete=p.kind=="store"and original(b,p.item)or p.kind=="take"and I().resolve(p.item)
+ if complete then
+  restore_condition(complete,p.item)
+  if p.kind=="store"then
+   local found=false;for _,e in ipairs(r.contents)do if e.id==p.item.id and e.name==p.item.name then found=true end end
+   if not found then r.contents[#r.contents+1]=p.item end
+  else
+   for i,e in ipairs(r.contents)do if e.id==p.item.id and e.name==p.item.name then table.remove(r.contents,i);break end end
+  end
+  r.pending=nil;update_weight(item,v);return true
+ end
+ -- An unexecuted transfer can be retried after its original parent is confirmed.
+ -- Missing/offline objects remain pending; their contents are never reconstructed.
+ if (cczmp_ops.elapsed("case_transfer_"..p.uid)or 0)>=30 then
+  local still_original=p.kind=="store"and I().resolve(p.item)or p.kind=="take"and original(b,p.item)
+  if still_original then r.pending=nil;return true end
+ end
+ return false
+end
+function contents(id)
+ local item,v=selected(id);if not item then return {},"cczmp_locks_bad"end
+ if not access(id)then return {},"cczmp_locks_locked"end
+ local b,msg,r=box(item,v,false);local out={}
+ if b and not settle(item,v,b)then msg="cczmp_locks_moving"end
+ if r then for _,t in ipairs(r.contents)do if original(b,t)then out[#out+1]=I().copy(t)end end end
+ return out,msg
+end
+function storable(item)
+ if not item or item:section()=="cczmp_code_case"or item:section()=="cczmp_cooler"then return false end
+ if IsWeapon(item)or IsOutfit(item)or IsHeadgear(item)or IsArtefact(item)then return false end
+ local ini=system_ini();return not (ini:line_exist(item:section(),"quest_item")and ini:r_bool(item:section(),"quest_item"))
+end
+function store(id,item_id)
+ local item,v=selected(id);local obj=I().owned(item_id)
+ if not item or not obj or obj:id()==item:id()or not storable(obj)then return fail("bad_item")end
+ if not access(id)then return fail("locked")end
+ local b,msg,r=box(item,v,true);if not b then return false,msg end
+ if not settle(item,v,b)then return fail("busy")end
+ local mass=0;for _,t in ipairs(r.contents)do mass=mass+(t.weight or 0)end
+ if #r.contents>=12 or mass+obj:weight()>10 then return fail("full")end
+ local t=I().token(obj);t.weight=obj:weight();t.condition=obj:condition()
+ r.pending={kind="store",item=t,uid=I().serial()};cczmp_ops.clock_start("case_transfer_"..r.pending.uid)
+ db.actor:transfer_item(obj,b)
+ return true,settle(item,v,b)and "cczmp_locks_stored"or "cczmp_locks_moving"
+end
+function take(id,item_id)
+ local item,v=selected(id);if not item then return fail("bad")end
+ if not access(id)then return fail("locked")end
+ local b,msg,r=box(item,v,false);if not b then return false,msg or "cczmp_locks_bad_item"end
+ if not settle(item,v,b)then return fail("busy")end
+ for i,t in ipairs(r.contents)do if t.id==tonumber(item_id)then
+  local obj=original(b,t);if not obj then return fail("bad_item")end
+  r.pending={kind="take",item=I().copy(t),uid=I().serial()};cczmp_ops.clock_start("case_transfer_"..r.pending.uid)
+  b:transfer_item(obj,db.actor)
+  return true,settle(item,v,b)and "cczmp_locks_taken"or "cczmp_locks_moving"
+ end end
+ return fail("bad_item")
+end
+function on_game_start()
+ RegisterScriptCallback("on_game_load",function()grants={};restored={};next_tick=0 end)
+ RegisterScriptCallback("actor_on_update",function()
+  if not db.actor or time_global()<next_tick then return end;next_tick=time_global()+2000
+  for _,item in ipairs(I().inventory())do if item:section()=="cczmp_code_case"then
+   local _,v=selected(item:id());if v.container then local b=box(item,v,false);if b then settle(item,v,b);for _,t in ipairs(v.container.contents)do original(b,t)end end end;update_weight(item,v)
+  end end
+ end)
+end

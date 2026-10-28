@@ -1,0 +1,175 @@
+;; CCZMP - Chernobyl Criminal Zone MultiPlayer
+;; Module: LAW
+;; File:   constitution.ltx -- Конституция НЧГ, 8 глав
+;;
+;; Pure reference data: quests, the PDA codex and the courthouse UI read these
+;; chapters. Nothing here is enforced by the script.
+;;     text_key  -- the body of the article
+;;     duties_key-- official duties, only in chapter VIII
+;;     offices_key -- offices of the chapter, only in chapter VIII
+
+[constitution]
+state_name = НЧГ
+state_name_key = cczmp_nchg_full_name
+motto = Независимость — наше спасение
+motto_key = cczmp_nchg_motto
+flag_key = cczmp_nchg_flag
+emblem_key = cczmp_nchg_emblem
+list = ch_1, ch_2, ch_3, ch_4, ch_5, ch_6, ch_7, ch_8
+
+[preamble]
+text_key = cczmp_nchg_preamble
+
+; ---------------- Глава I. Основы строя ----------------
+[ch_1]
+number = 1
+title_key = cczmp_nchg_ch_1
+list = ch_1_a1, ch_1_a2, ch_1_a3, ch_1_a4
+
+[ch_1_a1]
+text_key = cczmp_nchg_ch_1_a1
+
+[ch_1_a2]
+text_key = cczmp_nchg_ch_1_a2
+
+[ch_1_a3]
+text_key = cczmp_nchg_ch_1_a3
+
+[ch_1_a4]
+text_key = cczmp_nchg_ch_1_a4
+symbol_flag = 1
+symbol_emblem = 1
+
+; ---------------- Глава II. Граждане ----------------
+[ch_2]
+number = 2
+title_key = cczmp_nchg_ch_2
+list = ch_2_a1, ch_2_a2, ch_2_a3
+
+[ch_2_a1]
+text_key = cczmp_nchg_ch_2_a1
+
+; lists the rights and obligations, read by the citizenship UI
+[ch_2_a2]
+text_key = cczmp_nchg_ch_2_a2
+
+[ch_2_a3]
+text_key = cczmp_nchg_ch_2_a3
+
+; ---------------- Глава III. Президент и власть ----------------
+[ch_3]
+number = 3
+title_key = cczmp_nchg_ch_3
+list = ch_3_a1, ch_3_a2, ch_3_a3
+
+[ch_3_a1]
+text_key = cczmp_nchg_ch_3_a1
+
+[ch_3_a2]
+text_key = cczmp_nchg_ch_3_a2
+term_years = 5
+
+[ch_3_a3]
+text_key = cczmp_nchg_ch_3_a3
+
+; ---------------- Глава IV. Органы власти ----------------
+[ch_4]
+number = 4
+title_key = cczmp_nchg_ch_4
+list = ch_4_a1, ch_4_a2, ch_4_a3
+
+[ch_4_a1]
+text_key = cczmp_nchg_ch_4_a1
+
+[ch_4_a2]
+text_key = cczmp_nchg_ch_4_a2
+
+[ch_4_a3]
+text_key = cczmp_nchg_ch_4_a3
+
+; ---------------- Глава V. Экономика ----------------
+[ch_5]
+number = 5
+title_key = cczmp_nchg_ch_5
+list = ch_5_a1, ch_5_a2, ch_5_a3
+
+[ch_5_a1]
+text_key = cczmp_nchg_ch_5_a1
+
+; Глава V, статья 2 -- валюта НЧГ, Чернобыльский Рубль (ЧР)
+[ch_5_a2]
+text_key = cczmp_nchg_ch_5_a2
+currency = chernobyl_rouble
+
+[ch_5_a3]
+text_key = cczmp_nchg_ch_5_a3
+control_prices = 1
+
+; ---------------- Глава VI. Безопасность ----------------
+[ch_6]
+number = 6
+title_key = cczmp_nchg_ch_6
+list = ch_6_a1, ch_6_a2, ch_6_a3
+
+[ch_6_a1]
+text_key = cczmp_nchg_ch_6_a1
+
+[ch_6_a2]
+text_key = cczmp_nchg_ch_6_a2
+military_training_required = 1
+
+[ch_6_a3]
+text_key = cczmp_nchg_ch_6_a3
+
+; ---------------- Глава VII. Заключительные положения ----------------
+[ch_7]
+number = 7
+title_key = cczmp_nchg_ch_7
+list = ch_7_a1, ch_7_a2
+
+[ch_7_a1]
+text_key = cczmp_nchg_ch_7_a1
+
+[ch_7_a2]
+text_key = cczmp_nchg_ch_7_a2
+
+; ---------------- Глава VIII. Юриспруденция ----------------
+[ch_8]
+number = 8
+title_key = cczmp_nchg_ch_8
+list = ch_8_a1, ch_8_a2, ch_8_a3
+
+[ch_8_a1]
+text_key = cczmp_nchg_ch_8_a1
+
+; the six offices, each with its own duties
+[ch_8_a2]
+text_key = cczmp_nchg_ch_8_a2
+list = office_prosecutor, office_investigator, office_judge, office_defender, office_counsel, office_notary
+
+[office_prosecutor]
+name_key = cczmp_office_prosecutor
+duties_key = cczmp_office_prosecutor_duties
+
+[office_investigator]
+name_key = cczmp_office_investigator
+duties_key = cczmp_office_investigator_duties
+
+[office_judge]
+name_key = cczmp_office_judge
+duties_key = cczmp_office_judge_duties
+
+[office_defender]
+name_key = cczmp_office_defender
+duties_key = cczmp_office_defender_duties
+
+[office_counsel]
+name_key = cczmp_office_counsel
+duties_key = cczmp_office_counsel_duties
+
+[office_notary]
+name_key = cczmp_office_notary
+duties_key = cczmp_office_notary_duties
+
+[ch_8_a3]
+text_key = cczmp_nchg_ch_8_a3

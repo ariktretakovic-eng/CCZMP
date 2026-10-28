@@ -1,0 +1,1915 @@
+; CCZMP devices/engineering. Costs and game-time operations from items_v2.
+[catalog]
+items = device_pda_1, device_pda_2, device_pda_3, cczmp_kpk_bulletin, cczmp_kpk_hacker, cczmp_laptop_basic, cczmp_laptop_multi, cczmp_laptop_hacker, cczmp_pc_desktop, cczmp_phone_basic, cczmp_phone_secure, cczmp_phone_hacker, cczmp_tablet_basic, cczmp_tablet_hacker, cczmp_sim_module, cczmp_usb_os, cczmp_os_ghost, cczmp_os_linux, cczmp_battery_device, cczmp_bank_card, cczmp_blank_card, cczmp_cloned_card, cczmp_precision_screwdrivers, cczmp_programmer, cczmp_jtag, cczmp_card_reader, cczmp_logic_analyzer, cczmp_sdr, cczmp_jammer, cczmp_usb_injector, cczmp_soldering_iron, cczmp_solder, cczmp_flux, cczmp_multimeter, cczmp_oscilloscope, cczmp_soldering_station, cczmp_welder, cczmp_electrodes, cczmp_welding_mask, cczmp_hacksaw, cczmp_file, cczmp_drill, cczmp_grinder, cczmp_toolset, cczmp_copper_wire, cczmp_blank_board, cczmp_components, cczmp_chips, cczmp_cell, cczmp_steel_sheet, cczmp_electrical_tape, cczmp_power_module, cczmp_blueprint, cczmp_repair_armor, cczmp_repair_weapon, cczmp_repair_device, cczmp_repair_mechanical, cczmp_jammer_makeshift, cczmp_shank, cczmp_megaphone, cczmp_radio, cczmp_dashcam, cczmp_media_kit, cczmp_license_d, cczmp_license_c, cczmp_license_b, cczmp_license_a, cczmp_sk_certificate, cczmp_prescription, cczmp_med_bandage, cczmp_med_tourniquet, cczmp_med_medkit_small, cczmp_med_medkit, cczmp_med_antibiotic, cczmp_med_antipyretic, cczmp_med_painkiller, cczmp_med_strong_painkiller, cczmp_med_antirad, cczmp_med_iodine, cczmp_med_antidote, cczmp_med_adrenaline, cczmp_med_serum, cczmp_med_immunomodulator, cczmp_med_psiblocker, cczmp_med_rehydration, cczmp_med_burn_gel, cczmp_ammo_9x18_fmj, cczmp_ammo_9x18_ap, cczmp_ammo_9x18_hp, cczmp_ammo_9x18_rubber, cczmp_ammo_9x18_blank, cczmp_ammo_9x19_fmj, cczmp_ammo_9x19_ap, cczmp_ammo_9x19_hp, cczmp_ammo_9x19_rubber, cczmp_ammo_9x19_blank, cczmp_ammo_545_fmj, cczmp_ammo_545_ap, cczmp_ammo_545_hp, cczmp_ammo_545_rubber, cczmp_ammo_545_blank, cczmp_ammo_76239_fmj, cczmp_ammo_76239_ap, cczmp_ammo_76239_hp, cczmp_ammo_76239_rubber, cczmp_ammo_76239_blank, cczmp_ammo_556_fmj, cczmp_ammo_556_ap, cczmp_ammo_556_hp, cczmp_ammo_556_rubber, cczmp_ammo_556_blank, cczmp_ammo_76254_fmj, cczmp_ammo_76254_ap, cczmp_ammo_76254_hp, cczmp_ammo_76254_rubber, cczmp_ammo_76254_blank, cczmp_ammo_12shot_fmj, cczmp_ammo_12shot_ap, cczmp_ammo_12shot_hp, cczmp_ammo_12shot_rubber, cczmp_ammo_12shot_blank, cczmp_ammo_12buck_fmj, cczmp_ammo_12buck_ap, cczmp_ammo_12buck_hp, cczmp_ammo_12buck_rubber, cczmp_ammo_12buck_blank, cczmp_ammo_338_fmj, cczmp_ammo_338_ap, cczmp_ammo_338_hp, cczmp_ammo_338_rubber, cczmp_ammo_338_blank, cczmp_ammo_127_fmj, cczmp_ammo_vog_fmj, cczmp_ammo_vog_state_fmj, cczmp_ammo_4630_fmj, cczmp_ammo_4630_ap, cczmp_ammo_4630_hp, cczmp_ammo_4630_rubber, cczmp_ammo_4630_blank, cczmp_ammo_rpg_fmj, wpn_cczmp_pm, wpn_cczmp_usp, wpn_cczmp_mp7, wpn_cczmp_teg9, wpn_cczmp_msgv1, wpn_cczmp_m16, wpn_cczmp_ak74, wpn_cczmp_akm, wpn_cczmp_hk416, wpn_cczmp_svd, wpn_cczmp_sv98, wpn_cczmp_saiga, wpn_cczmp_vepr, wpn_cczmp_pkm, wpn_cczmp_rpg, wpn_cczmp_knife, cczmp_armor_light, cczmp_armor_patrol, cczmp_armor_plate, cczmp_armor_omon, cczmp_armor_heavy, cczmp_armor_sk, cczmp_armor_hidden, cczmp_helmet_construction, cczmp_helmet_rescue, cczmp_helmet_tactical, cczmp_helmet_visor, cczmp_helmet_headset, cczmp_helmet_gp5, cczmp_helmet_pmk, cczmp_clothes_city, cczmp_clothes_field, cczmp_clothes_judge, cczmp_clothes_scientist, cczmp_clothes_hermo, cczmp_filter, cczmp_taser, cczmp_spray, cczmp_shield, cczmp_cooler, cczmp_drone, cczmp_medkit_mchs, cczmp_defibrillator, cczmp_road_sign, cczmp_code_case, cczmp_code_pick
+hacks = pda_1, pda_2, flash_phone, os_laptop, ghost, gov_os, clone_card, signals, pentest, inject, code_pick
+recipes = code_case, code_pick, road_sign, battery, power, armor, jammer, shank, electrical, mechanical, weapon, usb
+
+[item_device_pda_1]
+category = pda
+price = 8000
+grade = 1
+
+[item_device_pda_2]
+category = pda
+price = 35000
+grade = 2
+
+[item_device_pda_3]
+category = pda
+price = 90000
+grade = 3
+
+[item_cczmp_kpk_bulletin]
+category = kpk
+price = 2000
+
+[item_cczmp_kpk_hacker]
+category = pda
+price = 55000
+grade = 2
+
+[item_cczmp_laptop_basic]
+category = laptop
+price = 60000
+multiboot = false
+
+[item_cczmp_laptop_multi]
+category = laptop
+price = 150000
+multiboot = true
+
+[item_cczmp_laptop_hacker]
+category = laptop
+price = 190000
+multiboot = true
+os = linux
+
+[item_cczmp_pc_desktop]
+category = pc
+price = 120000
+stationary = true
+multiboot = true
+
+[item_cczmp_phone_basic]
+category = phone
+price = 15000
+
+[item_cczmp_phone_secure]
+category = phone
+price = 70000
+secure = true
+
+[item_cczmp_phone_hacker]
+category = phone
+price = 95000
+secure = true
+os = ghost
+
+[item_cczmp_tablet_basic]
+category = tablet
+price = 35000
+
+[item_cczmp_tablet_hacker]
+category = pda
+price = 120000
+grade = 3
+os = linux
+
+[item_cczmp_sim_module]
+category = supply
+price = 3000
+
+[item_cczmp_usb_os]
+category = supply
+price = 5000
+
+[item_cczmp_os_ghost]
+category = supply
+price = 20000
+
+[item_cczmp_os_linux]
+category = supply
+price = 5000
+
+[item_cczmp_battery_device]
+category = supply
+price = 1500
+
+[item_cczmp_bank_card]
+category = supply
+price = 3000
+
+[item_cczmp_blank_card]
+category = supply
+price = 1000
+
+[item_cczmp_cloned_card]
+category = supply
+price = 0
+sold = false
+
+[item_cczmp_precision_screwdrivers]
+category = tool
+price = 800
+
+[item_cczmp_programmer]
+category = tool
+price = 25000
+
+[item_cczmp_jtag]
+category = tool
+price = 40000
+
+[item_cczmp_card_reader]
+category = tool
+price = 12000
+
+[item_cczmp_logic_analyzer]
+category = tool
+price = 60000
+
+[item_cczmp_sdr]
+category = tool
+price = 35000
+
+[item_cczmp_jammer]
+category = tool
+price = 70000
+
+[item_cczmp_usb_injector]
+category = tool
+price = 15000
+
+[item_cczmp_soldering_iron]
+category = tool
+price = 1500
+
+[item_cczmp_solder]
+category = material
+price = 300
+
+[item_cczmp_flux]
+category = material
+price = 200
+
+[item_cczmp_multimeter]
+category = tool
+price = 2500
+
+[item_cczmp_oscilloscope]
+category = tool
+price = 40000
+
+[item_cczmp_soldering_station]
+category = tool
+price = 18000
+
+[item_cczmp_welder]
+category = tool
+price = 25000
+
+[item_cczmp_electrodes]
+category = material
+price = 400
+
+[item_cczmp_welding_mask]
+category = tool
+price = 2000
+
+[item_cczmp_hacksaw]
+category = tool
+price = 1200
+
+[item_cczmp_file]
+category = tool
+price = 600
+
+[item_cczmp_drill]
+category = tool
+price = 5000
+
+[item_cczmp_grinder]
+category = tool
+price = 8000
+
+[item_cczmp_toolset]
+category = tool
+price = 3000
+
+[item_cczmp_copper_wire]
+category = material
+price = 50
+
+[item_cczmp_blank_board]
+category = material
+price = 400
+
+[item_cczmp_components]
+category = material
+price = 800
+
+[item_cczmp_chips]
+category = material
+price = 3000
+
+[item_cczmp_cell]
+category = material
+price = 1500
+
+[item_cczmp_steel_sheet]
+category = material
+price = 2000
+
+[item_cczmp_electrical_tape]
+category = material
+price = 150
+
+[item_cczmp_power_module]
+category = equipment
+price = 6500
+
+[item_cczmp_blueprint]
+category = equipment
+price = 2500
+
+[item_cczmp_repair_armor]
+category = equipment
+price = 8000
+repair_type = armor
+
+[item_cczmp_repair_weapon]
+category = equipment
+price = 10000
+repair_type = weapon
+
+[item_cczmp_repair_device]
+category = equipment
+price = 4500
+repair_type = device
+
+[item_cczmp_repair_mechanical]
+category = equipment
+price = 6000
+repair_type = mechanical
+
+[item_cczmp_jammer_makeshift]
+category = equipment
+price = 15000
+
+[item_cczmp_shank]
+category = weapon
+price = 1000
+gear_parent = wpn_knife
+contraband = true
+sold = false
+
+[item_cczmp_megaphone]
+category = equipment
+price = 1500
+
+[item_cczmp_radio]
+category = equipment
+price = 8000
+
+[item_cczmp_dashcam]
+category = equipment
+price = 12000
+
+[item_cczmp_media_kit]
+category = equipment
+price = 12000
+
+[item_cczmp_license_d]
+category = document
+price = 5000
+sold = false
+
+[item_cczmp_license_c]
+category = document
+price = 15000
+sold = false
+
+[item_cczmp_license_b]
+category = document
+price = 50000
+sold = false
+
+[item_cczmp_license_a]
+category = document
+price = 150000
+sold = false
+
+[item_cczmp_sk_certificate]
+category = document
+price = 0
+sold = false
+
+[item_cczmp_prescription]
+category = document
+price = 0
+sold = false
+
+[item_cczmp_med_bandage]
+category = medicine
+price = 300
+native_parent = booster
+native_visual = dynamics\devices\dev_bandage\dev_bandage.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_tourniquet]
+category = medicine
+price = 800
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_medkit_small]
+category = medicine
+price = 2500
+native_parent = booster
+native_visual = dynamics\devices\dev_aptechka\dev_aptechka_low.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_medkit]
+category = medicine
+price = 5000
+native_parent = booster
+native_visual = dynamics\devices\dev_aptechka\dev_aptechka_low.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_antibiotic]
+category = medicine
+price = 4000
+native_parent = booster_multi
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = ordinary
+doses = 5
+sold = false
+
+[item_cczmp_med_antipyretic]
+category = medicine
+price = 300
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_painkiller]
+category = medicine
+price = 1200
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_strong_painkiller]
+category = medicine
+price = 3500
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = narcotic
+doses = 1
+sold = false
+
+[item_cczmp_med_antirad]
+category = medicine
+price = 6000
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_iodine]
+category = medicine
+price = 1500
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_antidote]
+category = medicine
+price = 9000
+native_parent = booster_multi
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = restricted
+doses = 2
+sold = false
+
+[item_cczmp_med_adrenaline]
+category = medicine
+price = 5000
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = restricted
+doses = 1
+sold = false
+
+[item_cczmp_med_serum]
+category = medicine
+price = 25000
+native_parent = booster_multi
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = infectologist
+doses = 3
+sold = false
+
+[item_cczmp_med_immunomodulator]
+category = medicine
+price = 8000
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = ordinary
+doses = 1
+sold = false
+
+[item_cczmp_med_psiblocker]
+category = medicine
+price = 15000
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = restricted
+doses = 1
+sold = false
+
+[item_cczmp_med_rehydration]
+category = medicine
+price = 1500
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[item_cczmp_med_burn_gel]
+category = medicine
+price = 2500
+native_parent = booster
+native_visual = dynamics\equipments\medical\rebirth.ogf
+rx = none
+doses = 1
+sold = true
+
+[hack_pda_1]
+seconds = 7200
+failure = 10
+detection = 5
+tools = cczmp_programmer
+skill = technology
+skill_level = 2
+energy = 10
+
+[hack_pda_2]
+seconds = 14400
+failure = 25
+detection = 15
+tools = cczmp_jtag
+skill = technology
+skill_level = 3
+energy = 20
+
+[hack_flash_phone]
+seconds = 3600
+failure = 5
+detection = 0
+tools = cczmp_programmer
+categories = phone
+skill = technology
+skill_level = 2
+
+[hack_os_laptop]
+seconds = 1800
+failure = 0
+detection = 0
+tools = cczmp_usb_os
+materials = cczmp_os_linux:1
+categories = laptop,pc
+
+[hack_ghost]
+seconds = 3600
+failure = 10
+detection = 0
+tools = cczmp_usb_os
+materials = cczmp_os_ghost:1
+categories = phone
+
+[hack_gov_os]
+seconds = 1800
+failure = 0
+detection = 0
+tools = cczmp_usb_os
+categories = laptop,pc
+
+[hack_clone_card]
+seconds = 1200
+failure = 30
+detection = 25
+tools = cczmp_card_reader
+materials = cczmp_blank_card:1
+skill = technology
+skill_level = 1
+
+[hack_signals]
+seconds = 21600
+failure = 40
+detection = 20
+tools = cczmp_sdr
+skill = radio
+skill_level = 2
+energy = 30
+
+[hack_pentest]
+seconds = 3600
+failure = 5
+detection = 5
+tools = cczmp_logic_analyzer,cczmp_jtag
+categories = phone,laptop,pc,pda,tablet
+skill = technology
+skill_level = 3
+
+[hack_inject]
+seconds = 1800
+failure = 15
+detection = 10
+tools = cczmp_usb_injector
+categories = laptop,pc
+criminal_only = true
+
+[recipe_battery]
+skill = 1
+tools = cczmp_toolset
+materials = cczmp_cell:2,cczmp_copper_wire:1
+result = cczmp_battery_device
+
+[recipe_power]
+skill = 3
+tools = cczmp_soldering_station,cczmp_multimeter,cczmp_blueprint
+materials = cczmp_blank_board:1,cczmp_cell:1,cczmp_copper_wire:1,cczmp_solder:1,cczmp_flux:1
+result = cczmp_power_module
+
+[recipe_armor]
+skill = 2
+tools = cczmp_welder,cczmp_welding_mask
+materials = cczmp_steel_sheet:1,cczmp_electrodes:1
+result = cczmp_repair_armor
+
+[recipe_jammer]
+skill = 3
+tools = cczmp_soldering_station,cczmp_blueprint
+materials = cczmp_blank_board:1,cczmp_chips:1,cczmp_cell:1,cczmp_solder:1,cczmp_flux:1
+result = cczmp_jammer_makeshift
+
+[recipe_shank]
+skill = 1
+tools = cczmp_file
+materials = cczmp_steel_sheet:1
+result = cczmp_shank
+
+[recipe_electrical]
+skill = 1
+tools = cczmp_soldering_iron,cczmp_multimeter
+materials = cczmp_blank_board:1,cczmp_copper_wire:1,cczmp_electrical_tape:1,cczmp_solder:1,cczmp_flux:1
+result = cczmp_repair_device
+
+[recipe_mechanical]
+skill = 1
+tools = cczmp_toolset,cczmp_hacksaw
+materials = cczmp_steel_sheet:1,cczmp_electrical_tape:1
+result = cczmp_repair_mechanical
+
+[recipe_weapon]
+skill = 2
+tools = cczmp_toolset,cczmp_file
+materials = cczmp_steel_sheet:1,cczmp_components:1
+result = cczmp_repair_weapon
+
+[recipe_usb]
+skill = 3
+tools = cczmp_soldering_station,cczmp_blueprint
+materials = cczmp_blank_board:1,cczmp_chips:1,cczmp_solder:1,cczmp_flux:1
+result = cczmp_usb_os
+
+[medical]
+; Additional population balance, not physical epidemiological measurements.
+npc_uri_percent = 3
+npc_spores_percent = 1
+npc_infectious_seconds = 259200
+medicines = cczmp_med_bandage, cczmp_med_tourniquet, cczmp_med_medkit_small, cczmp_med_medkit, cczmp_med_antibiotic, cczmp_med_antipyretic, cczmp_med_painkiller, cczmp_med_strong_painkiller, cczmp_med_antirad, cczmp_med_iodine, cczmp_med_antidote, cczmp_med_adrenaline, cczmp_med_serum, cczmp_med_immunomodulator, cczmp_med_psiblocker, cczmp_med_rehydration, cczmp_med_burn_gel
+diseases = uri, pneumonia, food_poison, rad1, rad2, rad3, chemical, bleeding, sepsis, spores, mutagen, psi, gangrene
+tourniquet_limit = 180
+infection_uri_percent = 10
+infection_spores_percent = 25
+dirty_wound_percent = 20
+pneumonia_percent = 10
+mutant_spores_percent = 10
+mutant_mutagen_percent = 2
+raw_food_percent = 30
+contact_cooldown = 3600
+dirty_wound_delay = 21600
+
+[medicine_cczmp_med_bandage]
+price = 300
+bleed = 30
+
+[medicine_cczmp_med_tourniquet]
+price = 800
+bleed = 180
+
+[medicine_cczmp_med_medkit_small]
+price = 2500
+health = 0.2
+
+[medicine_cczmp_med_medkit]
+price = 5000
+health = 0.35
+
+[medicine_cczmp_med_antibiotic]
+price = 4000
+rx = ordinary
+course = 5
+treat = pneumonia,sepsis
+
+[medicine_cczmp_med_antipyretic]
+price = 300
+buff = fever
+seconds = 14400
+temperature = -2
+
+[medicine_cczmp_med_painkiller]
+price = 1200
+buff = pain
+seconds = 1800
+
+[medicine_cczmp_med_strong_painkiller]
+price = 3500
+rx = narcotic
+buff = pain
+seconds = 1800
+addiction = 0.1
+
+[medicine_cczmp_med_antirad]
+price = 6000
+radiation = 1
+treat = rad1
+
+[medicine_cczmp_med_iodine]
+price = 1500
+buff = iodine
+seconds = 86400
+
+[medicine_cczmp_med_antidote]
+price = 9000
+rx = restricted
+treat = food_poison
+doses = 2
+
+[medicine_cczmp_med_adrenaline]
+price = 5000
+rx = restricted
+power = 0.35
+health = 0.05
+
+[medicine_cczmp_med_serum]
+price = 25000
+rx = infectologist
+course = 3
+treat = spores
+
+[medicine_cczmp_med_immunomodulator]
+price = 8000
+rx = ordinary
+buff = immunity
+seconds = 604800
+
+[medicine_cczmp_med_psiblocker]
+price = 15000
+rx = restricted
+buff = psi
+seconds = 3600
+treat = psi
+
+[medicine_cczmp_med_rehydration]
+price = 1500
+treat = food_poison
+power = 0.1
+
+[medicine_cczmp_med_burn_gel]
+price = 2500
+treat = chemical
+health = 0.05
+
+[disease_uri]
+progress = 86400
+loss = 0.01
+temperature = 38
+infectious = true
+
+[disease_pneumonia]
+progress = 86400
+loss = 0.04
+temperature = 39
+
+[disease_food_poison]
+progress = 86400
+loss = 0.025
+temperature = 38
+
+[disease_rad1]
+progress = 259200
+loss = 0.02
+
+[disease_rad2]
+progress = 172800
+loss = 0.05
+
+[disease_rad3]
+progress = 86400
+loss = 0.1
+
+[disease_chemical]
+progress = 172800
+loss = 0.015
+
+[disease_bleeding]
+progress = 259200
+loss = 0
+
+[disease_sepsis]
+progress = 86400
+loss = 0.08
+temperature = 39
+
+[disease_spores]
+progress = 172800
+loss = 0.04
+temperature = 39
+infectious = true
+
+[disease_mutagen]
+progress = 259200
+loss = 0.04
+
+[disease_psi]
+progress = 86400
+loss = 0.025
+temperature = 38
+
+[item_cczmp_ammo_9x18_fmj]
+category = ammo
+price = 1200
+sold = false
+license = 
+access = 
+caliber = 9x18
+ammo_type = fmj
+box_size = 20
+gear_parent = ammo_9x18_fmj
+
+
+[item_cczmp_ammo_9x18_ap]
+category = ammo
+price = 1920
+sold = false
+license = 
+access = state
+caliber = 9x18
+ammo_type = ap
+box_size = 20
+gear_parent = ammo_9x18_fmj
+
+
+[item_cczmp_ammo_9x18_hp]
+category = ammo
+price = 1680
+sold = false
+license = 
+access = criminal,contract
+caliber = 9x18
+ammo_type = hp
+box_size = 20
+gear_parent = ammo_9x18_fmj
+
+
+[item_cczmp_ammo_9x18_rubber]
+category = ammo
+price = 1200
+sold = false
+license = 
+access = mvd,omon,fsin,minjust
+caliber = 9x18
+ammo_type = rubber
+box_size = 20
+gear_parent = ammo_9x18_fmj
+
+
+[item_cczmp_ammo_9x18_blank]
+category = ammo
+price = 300
+sold = false
+license = 
+access = 
+caliber = 9x18
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_9x18_fmj
+
+
+[item_cczmp_ammo_9x19_fmj]
+category = ammo
+price = 1800
+sold = false
+license = 
+access = 
+caliber = 9x19
+ammo_type = fmj
+box_size = 30
+gear_parent = ammo_9x19_fmj
+
+
+[item_cczmp_ammo_9x19_ap]
+category = ammo
+price = 2880
+sold = false
+license = 
+access = state
+caliber = 9x19
+ammo_type = ap
+box_size = 30
+gear_parent = ammo_9x19_fmj
+
+
+[item_cczmp_ammo_9x19_hp]
+category = ammo
+price = 2520
+sold = false
+license = 
+access = criminal,contract
+caliber = 9x19
+ammo_type = hp
+box_size = 30
+gear_parent = ammo_9x19_fmj
+
+
+[item_cczmp_ammo_9x19_rubber]
+category = ammo
+price = 1800
+sold = false
+license = 
+access = mvd,omon,fsin,minjust
+caliber = 9x19
+ammo_type = rubber
+box_size = 30
+gear_parent = ammo_9x19_fmj
+
+
+[item_cczmp_ammo_9x19_blank]
+category = ammo
+price = 300
+sold = false
+license = 
+access = 
+caliber = 9x19
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_9x19_fmj
+
+
+[item_cczmp_ammo_545_fmj]
+category = ammo
+price = 2400
+sold = false
+license = 
+access = 
+caliber = 545
+ammo_type = fmj
+box_size = 30
+gear_parent = ammo_5.45x39_fmj
+
+
+[item_cczmp_ammo_545_ap]
+category = ammo
+price = 3840
+sold = false
+license = 
+access = state
+caliber = 545
+ammo_type = ap
+box_size = 30
+gear_parent = ammo_5.45x39_fmj
+
+
+[item_cczmp_ammo_545_hp]
+category = ammo
+price = 3360
+sold = false
+license = 
+access = criminal,contract
+caliber = 545
+ammo_type = hp
+box_size = 30
+gear_parent = ammo_5.45x39_fmj
+
+
+[item_cczmp_ammo_545_rubber]
+category = ammo
+price = 2400
+sold = false
+license = 
+access = mvd,omon,fsin,minjust
+caliber = 545
+ammo_type = rubber
+box_size = 30
+gear_parent = ammo_5.45x39_fmj
+
+
+[item_cczmp_ammo_545_blank]
+category = ammo
+price = 300
+sold = false
+license = 
+access = 
+caliber = 545
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_5.45x39_fmj
+
+
+[item_cczmp_ammo_76239_fmj]
+category = ammo
+price = 2000
+sold = false
+license = 
+access = 
+caliber = 76239
+ammo_type = fmj
+box_size = 30
+gear_parent = ammo_7.62x39_fmj
+
+
+[item_cczmp_ammo_76239_ap]
+category = ammo
+price = 3200
+sold = false
+license = 
+access = state
+caliber = 76239
+ammo_type = ap
+box_size = 30
+gear_parent = ammo_7.62x39_fmj
+
+
+[item_cczmp_ammo_76239_hp]
+category = ammo
+price = 2800
+sold = false
+license = 
+access = criminal,contract
+caliber = 76239
+ammo_type = hp
+box_size = 30
+gear_parent = ammo_7.62x39_fmj
+
+
+[item_cczmp_ammo_76239_rubber]
+category = ammo
+price = 2000
+sold = false
+license = 
+access = mvd,omon,fsin,minjust
+caliber = 76239
+ammo_type = rubber
+box_size = 30
+gear_parent = ammo_7.62x39_fmj
+
+
+[item_cczmp_ammo_76239_blank]
+category = ammo
+price = 300
+sold = false
+license = 
+access = 
+caliber = 76239
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_7.62x39_fmj
+
+
+[item_cczmp_ammo_556_fmj]
+category = ammo
+price = 2800
+sold = false
+license = C
+access = 
+caliber = 556
+ammo_type = fmj
+box_size = 30
+gear_parent = ammo_5.56x45_fmj
+
+
+[item_cczmp_ammo_556_ap]
+category = ammo
+price = 4480
+sold = false
+license = C
+access = state
+caliber = 556
+ammo_type = ap
+box_size = 30
+gear_parent = ammo_5.56x45_fmj
+
+
+[item_cczmp_ammo_556_hp]
+category = ammo
+price = 3920
+sold = false
+license = C
+access = criminal,contract
+caliber = 556
+ammo_type = hp
+box_size = 30
+gear_parent = ammo_5.56x45_fmj
+
+
+[item_cczmp_ammo_556_rubber]
+category = ammo
+price = 2800
+sold = false
+license = C
+access = mvd,omon,fsin,minjust
+caliber = 556
+ammo_type = rubber
+box_size = 30
+gear_parent = ammo_5.56x45_fmj
+
+
+[item_cczmp_ammo_556_blank]
+category = ammo
+price = 300
+sold = false
+license = C
+access = 
+caliber = 556
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_5.56x45_fmj
+
+
+[item_cczmp_ammo_76254_fmj]
+category = ammo
+price = 3200
+sold = false
+license = B
+access = 
+caliber = 76254
+ammo_type = fmj
+box_size = 20
+gear_parent = ammo_7.62x54_7h1
+
+
+[item_cczmp_ammo_76254_ap]
+category = ammo
+price = 5120
+sold = false
+license = B
+access = state
+caliber = 76254
+ammo_type = ap
+box_size = 20
+gear_parent = ammo_7.62x54_7h1
+
+
+[item_cczmp_ammo_76254_hp]
+category = ammo
+price = 4480
+sold = false
+license = B
+access = criminal,contract
+caliber = 76254
+ammo_type = hp
+box_size = 20
+gear_parent = ammo_7.62x54_7h1
+
+
+[item_cczmp_ammo_76254_rubber]
+category = ammo
+price = 3200
+sold = false
+license = B
+access = mvd,omon,fsin,minjust
+caliber = 76254
+ammo_type = rubber
+box_size = 20
+gear_parent = ammo_7.62x54_7h1
+
+
+[item_cczmp_ammo_76254_blank]
+category = ammo
+price = 300
+sold = false
+license = B
+access = 
+caliber = 76254
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_7.62x54_7h1
+
+
+[item_cczmp_ammo_12shot_fmj]
+category = ammo
+price = 900
+sold = false
+license = B
+access = 
+caliber = 12shot
+ammo_type = fmj
+box_size = 10
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12shot_ap]
+category = ammo
+price = 1440
+sold = false
+license = B
+access = state
+caliber = 12shot
+ammo_type = ap
+box_size = 10
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12shot_hp]
+category = ammo
+price = 1260
+sold = false
+license = B
+access = criminal,contract
+caliber = 12shot
+ammo_type = hp
+box_size = 10
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12shot_rubber]
+category = ammo
+price = 900
+sold = false
+license = B
+access = mvd,omon,fsin,minjust
+caliber = 12shot
+ammo_type = rubber
+box_size = 10
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12shot_blank]
+category = ammo
+price = 300
+sold = false
+license = B
+access = 
+caliber = 12shot
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12buck_fmj]
+category = ammo
+price = 1500
+sold = false
+license = B
+access = 
+caliber = 12buck
+ammo_type = fmj
+box_size = 5
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12buck_ap]
+category = ammo
+price = 2400
+sold = false
+license = B
+access = state
+caliber = 12buck
+ammo_type = ap
+box_size = 5
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12buck_hp]
+category = ammo
+price = 2100
+sold = false
+license = B
+access = criminal,contract
+caliber = 12buck
+ammo_type = hp
+box_size = 5
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12buck_rubber]
+category = ammo
+price = 1500
+sold = false
+license = B
+access = mvd,omon,fsin,minjust
+caliber = 12buck
+ammo_type = rubber
+box_size = 5
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_12buck_blank]
+category = ammo
+price = 300
+sold = false
+license = B
+access = 
+caliber = 12buck
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_12x70_buck
+
+
+[item_cczmp_ammo_338_fmj]
+category = ammo
+price = 6000
+sold = false
+license = A
+access = 
+caliber = 338
+ammo_type = fmj
+box_size = 10
+gear_parent = ammo_7.62x54_ap
+
+
+[item_cczmp_ammo_338_ap]
+category = ammo
+price = 9600
+sold = false
+license = A
+access = state
+caliber = 338
+ammo_type = ap
+box_size = 10
+gear_parent = ammo_7.62x54_ap
+
+
+[item_cczmp_ammo_338_hp]
+category = ammo
+price = 8400
+sold = false
+license = A
+access = criminal,contract
+caliber = 338
+ammo_type = hp
+box_size = 10
+gear_parent = ammo_7.62x54_ap
+
+
+[item_cczmp_ammo_338_rubber]
+category = ammo
+price = 6000
+sold = false
+license = A
+access = mvd,omon,fsin,minjust
+caliber = 338
+ammo_type = rubber
+box_size = 10
+gear_parent = ammo_7.62x54_ap
+
+
+[item_cczmp_ammo_338_blank]
+category = ammo
+price = 300
+sold = false
+license = A
+access = 
+caliber = 338
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_7.62x54_ap
+
+
+[item_cczmp_ammo_127_fmj]
+category = ammo
+price = 9000
+sold = false
+license = A
+access = state
+caliber = 127
+ammo_type = fmj
+box_size = 10
+gear_parent = ammo_50_bmg
+
+
+[item_cczmp_ammo_vog_fmj]
+category = ammo
+price = 4500
+sold = false
+license = A
+access = 
+caliber = vog
+ammo_type = fmj
+box_size = 5
+gear_parent = ammo_vog-25
+
+
+[item_cczmp_ammo_vog_state_fmj]
+category = ammo
+price = 7000
+sold = false
+license = A
+access = state
+caliber = vog_state
+ammo_type = fmj
+box_size = 3
+gear_parent = ammo_vog-25
+
+
+[item_cczmp_ammo_4630_fmj]
+category = ammo
+price = 3000
+sold = false
+license = C
+access = 
+caliber = 4630
+ammo_type = fmj
+box_size = 30
+gear_parent = ammo_4.6x30_fmj
+
+
+[item_cczmp_ammo_4630_ap]
+category = ammo
+price = 4800
+sold = false
+license = C
+access = state
+caliber = 4630
+ammo_type = ap
+box_size = 30
+gear_parent = ammo_4.6x30_fmj
+
+
+[item_cczmp_ammo_4630_hp]
+category = ammo
+price = 4200
+sold = false
+license = C
+access = criminal,contract
+caliber = 4630
+ammo_type = hp
+box_size = 30
+gear_parent = ammo_4.6x30_fmj
+
+
+[item_cczmp_ammo_4630_rubber]
+category = ammo
+price = 3000
+sold = false
+license = C
+access = mvd,omon,fsin,minjust
+caliber = 4630
+ammo_type = rubber
+box_size = 30
+gear_parent = ammo_4.6x30_fmj
+
+
+[item_cczmp_ammo_4630_blank]
+category = ammo
+price = 300
+sold = false
+license = C
+access = 
+caliber = 4630
+ammo_type = blank
+box_size = 20
+gear_parent = ammo_4.6x30_fmj
+
+
+[item_cczmp_ammo_rpg_fmj]
+category = ammo
+price = 9000
+sold = false
+license = A
+access = 
+caliber = rpg
+ammo_type = fmj
+box_size = 1
+gear_parent = ammo_og-7b
+
+
+[item_wpn_cczmp_pm]
+category = weapon
+price = 18000
+sold = false
+license = D
+caliber = 9x18
+gear_parent = wpn_pm
+
+
+[item_wpn_cczmp_usp]
+category = weapon
+price = 45000
+sold = false
+license = D
+caliber = 9x19
+gear_parent = wpn_usp_match
+
+
+[item_wpn_cczmp_mp7]
+category = weapon
+price = 85000
+sold = false
+license = C
+caliber = 4630
+gear_parent = wpn_mp7
+
+
+[item_wpn_cczmp_teg9]
+category = weapon
+price = 110000
+sold = false
+license = C
+caliber = 9x19
+gear_parent = wpn_mp7
+
+
+[item_wpn_cczmp_msgv1]
+category = weapon
+price = 70000
+sold = false
+license = C
+caliber = 556
+gear_parent = wpn_m16
+
+
+[item_wpn_cczmp_m16]
+category = weapon
+price = 60000
+sold = false
+license = B
+caliber = 556
+gear_parent = wpn_m16
+
+
+[item_wpn_cczmp_ak74]
+category = weapon
+price = 40000
+sold = false
+license = B
+caliber = 545
+gear_parent = wpn_ak74
+
+
+[item_wpn_cczmp_akm]
+category = weapon
+price = 25000
+sold = false
+license = B
+caliber = 76239
+gear_parent = wpn_akm
+
+
+[item_wpn_cczmp_hk416]
+category = weapon
+price = 180000
+sold = false
+license = B
+caliber = 556
+gear_parent = wpn_hk416
+
+
+[item_wpn_cczmp_svd]
+category = weapon
+price = 95000
+sold = false
+license = B
+caliber = 76254
+gear_parent = wpn_svd
+
+
+[item_wpn_cczmp_sv98]
+category = weapon
+price = 350000
+sold = false
+license = A
+caliber = 338
+gear_parent = wpn_sv98
+
+
+[item_wpn_cczmp_saiga]
+category = weapon
+price = 35000
+sold = false
+license = B
+caliber = 12shot
+gear_parent = wpn_saiga12s
+
+
+[item_wpn_cczmp_vepr]
+category = weapon
+price = 60000
+sold = false
+license = B
+caliber = 12shot
+gear_parent = wpn_vepr
+
+
+[item_wpn_cczmp_pkm]
+category = weapon
+price = 220000
+sold = false
+license = A
+caliber = 76254
+gear_parent = wpn_pkm
+
+
+[item_wpn_cczmp_rpg]
+category = weapon
+price = 150000
+sold = false
+license = A
+caliber = rpg
+gear_parent = wpn_rpg7
+
+
+[item_wpn_cczmp_knife]
+category = weapon
+price = 800
+sold = false
+license = 
+caliber = 
+gear_parent = wpn_knife
+
+
+[item_cczmp_armor_light]
+category = armor
+price = 8000
+sold = false
+armor_class = 1
+protection = 0.4
+access = 
+gear_parent = light_loner_outfit
+
+
+[item_cczmp_armor_patrol]
+category = armor
+price = 25000
+sold = false
+armor_class = 2
+protection = 0.6
+access = mvd
+gear_parent = army_outfit
+
+
+[item_cczmp_armor_plate]
+category = armor
+price = 90000
+sold = false
+armor_class = 3
+protection = 0.75
+access = alfa,vympel
+gear_parent = specops_outfit
+
+
+[item_cczmp_armor_omon]
+category = armor
+price = 150000
+sold = false
+armor_class = 4
+protection = 0.85
+access = omon
+gear_parent = military_outfit
+
+
+[item_cczmp_armor_heavy]
+category = armor
+price = 320000
+sold = false
+armor_class = 5
+protection = 0.95
+access = mo,bbn
+gear_parent = army_nosorog_outfit
+
+
+[item_cczmp_armor_sk]
+category = armor
+price = 20000
+sold = false
+armor_class = 2
+protection = 0.5
+access = sk
+gear_parent = light_voen_outfit
+
+
+[item_cczmp_armor_hidden]
+category = armor
+price = 35000
+sold = false
+armor_class = 2
+protection = 0.45
+access = criminal,business
+gear_parent = novice_outfit
+
+
+[item_cczmp_helmet_construction]
+category = helmet
+price = 2000
+sold = false
+armor_class = 1
+protection = 0.3
+access = zonastroy,chernenergo
+filter_type = 
+gear_parent = helm_hardhat
+
+
+[item_cczmp_helmet_rescue]
+category = helmet
+price = 9000
+sold = false
+armor_class = 2
+protection = 0.5
+access = mchs
+filter_type = 
+gear_parent = helm_hardhat
+
+
+[item_cczmp_helmet_tactical]
+category = helmet
+price = 45000
+sold = false
+armor_class = 3
+protection = 0.7
+access = omon,alfa
+filter_type = 
+gear_parent = helm_ach7
+
+
+[item_cczmp_helmet_visor]
+category = helmet
+price = 120000
+sold = false
+armor_class = 4
+protection = 0.85
+access = omon,alfa
+filter_type = 
+gear_parent = helm_battle
+
+
+[item_cczmp_helmet_headset]
+category = helmet
+price = 60000
+sold = false
+armor_class = 3
+protection = 0.7
+access = alfa,vympel
+filter_type = 
+gear_parent = helm_ach7ex
+
+
+[item_cczmp_helmet_gp5]
+category = helmet
+price = 25000
+sold = false
+armor_class = 0
+protection = 0
+access = 
+filter_type = chemical
+gear_parent = helm_respirator_gp5
+
+
+[item_cczmp_helmet_pmk]
+category = helmet
+price = 60000
+sold = false
+armor_class = 0
+protection = 0
+access = 
+filter_type = spores
+gear_parent = helm_respirator
+
+
+[item_cczmp_clothes_city]
+category = armor
+price = 2000
+sold = false
+armor_class = 0
+protection = 0
+access = 
+radiation_protection = 0
+gear_parent = novice_outfit
+
+
+[item_cczmp_clothes_field]
+category = armor
+price = 4000
+sold = false
+armor_class = 0
+protection = 0
+access = criminal
+radiation_protection = 0
+gear_parent = bandit_novice_outfit
+
+
+[item_cczmp_clothes_judge]
+category = armor
+price = 15000
+sold = false
+armor_class = 0
+protection = 0
+access = sud,minjust
+radiation_protection = 0
+gear_parent = trenchcoat_outfit
+
+
+[item_cczmp_clothes_scientist]
+category = armor
+price = 12000
+sold = false
+armor_class = 0
+protection = 0
+access = scientists,mintechnology
+radiation_protection = 0
+gear_parent = ecolog_outfit_white
+
+
+[item_cczmp_clothes_hermo]
+category = armor
+price = 150000
+sold = false
+armor_class = 0
+protection = 0
+access = ob_cheg,scientists
+radiation_protection = 0.7
+gear_parent = ecolog_outfit_green
+
+
+[item_cczmp_filter]
+category = equipment
+price = 3000
+sold = false
+license = 
+access = 
+
+
+[item_cczmp_taser]
+category = equipment
+price = 12000
+sold = false
+license = D
+access = mvd,fsin
+
+
+[item_cczmp_spray]
+category = equipment
+price = 1500
+sold = false
+license = 
+access = 
+
+
+[item_cczmp_shield]
+category = equipment
+price = 25000
+sold = false
+license = 
+access = omon,fsin
+
+
+[item_cczmp_cooler]
+category = equipment
+price = 70000
+sold = false
+license = 
+access = 
+
+
+[item_cczmp_drone]
+category = equipment
+price = 80000
+sold = false
+license = 
+access = 
+
+
+[item_cczmp_medkit_mchs]
+category = kit
+price = 35000
+sold = false
+access = mchs,scientists,alfa
+
+[item_aliases]
+wpn_cczmp_mp7_acog = wpn_cczmp_mp7
+wpn_cczmp_mp7_eot = wpn_cczmp_mp7
+wpn_cczmp_mp7_ac10632 = wpn_cczmp_mp7
+wpn_cczmp_mp7_c-more = wpn_cczmp_mp7
+wpn_cczmp_teg9_acog = wpn_cczmp_teg9
+wpn_cczmp_teg9_eot = wpn_cczmp_teg9
+wpn_cczmp_teg9_ac10632 = wpn_cczmp_teg9
+wpn_cczmp_teg9_c-more = wpn_cczmp_teg9
+wpn_cczmp_msgv1_ac10632 = wpn_cczmp_msgv1
+wpn_cczmp_msgv1_acog = wpn_cczmp_msgv1
+wpn_cczmp_msgv1_eot = wpn_cczmp_msgv1
+wpn_cczmp_m16_ac10632 = wpn_cczmp_m16
+wpn_cczmp_m16_acog = wpn_cczmp_m16
+wpn_cczmp_m16_eot = wpn_cczmp_m16
+wpn_cczmp_ak74_1p29 = wpn_cczmp_ak74
+wpn_cczmp_ak74_kobra = wpn_cczmp_ak74
+wpn_cczmp_ak74_ps01 = wpn_cczmp_ak74
+wpn_cczmp_akm_1p29 = wpn_cczmp_akm
+wpn_cczmp_akm_kobra = wpn_cczmp_akm
+wpn_cczmp_akm_ps01 = wpn_cczmp_akm
+wpn_cczmp_hk416_ac10632 = wpn_cczmp_hk416
+wpn_cczmp_hk416_acog = wpn_cczmp_hk416
+wpn_cczmp_hk416_eot = wpn_cczmp_hk416
+wpn_cczmp_svd_1p29 = wpn_cczmp_svd
+wpn_cczmp_svd_kobra = wpn_cczmp_svd
+wpn_cczmp_svd_ps01 = wpn_cczmp_svd
+wpn_cczmp_saiga_1p29 = wpn_cczmp_saiga
+wpn_cczmp_saiga_kobra = wpn_cczmp_saiga
+wpn_cczmp_saiga_ps01 = wpn_cczmp_saiga
+wpn_cczmp_vepr_1p29 = wpn_cczmp_vepr
+wpn_cczmp_vepr_kobra = wpn_cczmp_vepr
+wpn_cczmp_vepr_ps01 = wpn_cczmp_vepr
+
+[item_cczmp_defibrillator]
+category = medical_device
+price = 45000
+access = minzdrav,mchs
+
+[disease_gangrene]
+progress = 86400
+loss = 0.08
+temperature = 38.5
+
+[item_cczmp_road_sign]
+category = equipment
+price = 5000
+access = mvd,sk
+
+[item_cczmp_road_sign_placed]
+category = structure
+price = 0
+stationary = true
+fixed_bone = bone01
+spawn_height = 1.02
+mass = 4
+
+[recipe_road_sign]
+result = cczmp_road_sign
+skill = 1
+seconds = 1800
+tools = cczmp_drill,cczmp_grinder,cczmp_toolset
+materials = cczmp_steel_sheet:1,cczmp_electrodes:1
+xp = 5
+
+[item_cczmp_code_case]
+category = container
+price = 12000
+weight = 1.2
+
+[item_cczmp_code_pick]
+category = tool
+price = 35000
+
+[hack_code_pick]
+seconds = 120
+energy = 15
+skill = technology
+skill_level = 1
+failure = 20
+detection = 10
+tools =
+materials =
+
+[recipe_code_case]
+result = cczmp_code_case
+skill = 1
+seconds = 1800
+tools = cczmp_drill,cczmp_file,cczmp_toolset
+materials = cczmp_steel_sheet:1,cczmp_components:1,cczmp_copper_wire:1
+xp = 4
+
+[recipe_code_pick]
+result = cczmp_code_pick
+skill = 2
+seconds = 2400
+tools = cczmp_soldering_station,cczmp_multimeter,cczmp_programmer
+materials = cczmp_blank_board:1,cczmp_chips:2,cczmp_components:3,cczmp_copper_wire:2,cczmp_solder:1,cczmp_flux:1
+xp = 6

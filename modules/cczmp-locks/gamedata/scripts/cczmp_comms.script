@@ -1,0 +1,172 @@
+-- Local game communications: physical phones, bounded inboxes and prepaid plans.
+-- Messages never leave the game; only primitive records are persisted.
+local function I()return cczmp_items end
+local function fail(k)return false,"cczmp_comms_"..k end
+local function state()
+ local w=I().world();w.comms=w.comms or {directory={}};return w.comms
+end
+local plans={basic={price=300,seconds=604800,calls=20,messages=100},pro={price=900,seconds=604800,calls=100,messages=500}}
+local function phone(item)
+ return item and I().definition(item:section())=="phone" and I().item_state(item)
+end
+local function address(item,owner)
+ local s=phone(item)
+ if not s or not s.sim then return nil end
+ local key=cczmp_ops.person(owner)
+ if not key then return nil end
+ state().directory[s.sim]={owner=key,item=I().token(item),number=s.sim}
+ return s.sim
+end
+local function endpoint(number)
+ local r=state().directory[number]
+ if not r then return nil end
+ local owner=cczmp_ops.resolve(r.owner,false)
+ if not owner then return nil end
+ local item=owner:object_id(r.item.id)
+ local s=item and item:name()==r.item.name and phone(item)
+ if not s or s.sim~=number or not item:parent() or item:parent():id()~=owner:id() then return nil end
+ return owner,item,s
+end
+function install_sim(id)
+ local item=I().owned(id);local s=phone(item)
+ if not s or s.sim then return fail("bad_phone")end
+ local sim=db.actor:object("cczmp_sim_module")
+ if not sim then return false,"cczmp_items_need_materials"end
+ local ok,msg=I().consume({I().token(sim)});if not ok then return ok,msg end
+ s.sim="+7000"..tostring(s.uid);address(item,db.actor)
+ return true,"cczmp_items_sim_done"
+end
+function definition(id)return I().copy(plans[id])end
+function subscribe(id,plan)
+ local item=I().owned(id);local s=phone(item);local def=plans[plan]
+ if not s or not s.sim or not def then return fail("need_sim")end
+ local ok,msg=I().usable(item,0);if not ok then return ok,msg end
+ if cczmp_hacking.jammed() then return false,"cczmp_items_jammed"end
+ if db.actor:money()<def.price then return false,"cczmp_items_no_money"end
+ local uid=I().serial();s.plan={uid=uid,id=plan,calls=0,messages=0}
+ cczmp_ops.clock_start("comms_plan_"..uid);db.actor:give_money(-def.price)
+ address(item,db.actor);I().record("subscription",item:section(),{price=def.price})
+ return true,"cczmp_comms_subscribed"
+end
+function plan_info(item)
+ local s=phone(item);local p=s and s.plan;local d=p and plans[p.id]
+ if not d then return {remaining=0,calls=0,messages=0}end
+ local remaining=math.max(0,d.seconds-(cczmp_ops.elapsed("comms_plan_"..p.uid)or d.seconds))
+ return {id=p.id,remaining=remaining,calls=math.max(0,d.calls-p.calls),messages=math.max(0,d.messages-p.messages)}
+end
+function contacts(radius)
+ local out={}
+ for _,n in ipairs(cczmp_ops.nearby(radius or 100))do
+  local owner=cczmp_ops.resolve(n.key,false)
+  if owner then owner:inventory_for_each(function(item)
+   local s=phone(item)
+   if s and s.sim then
+    local number=address(item,owner)
+    out[#out+1]={name=n.name,key=n.key,number=number,distance=n.distance,encrypted=s.os=="ghost" or s.os=="government"}
+   end
+  end)end
+ end
+ table.sort(out,function(a,b)return a.number<b.number end);return out
+end
+local function deliver(id,number,kind,text)
+ local item=I().owned(id);local s=phone(item)
+ if not s or not s.sim then return fail("need_sim")end
+ local ok,msg=I().usable(item,kind=="call" and 2 or 1);if not ok then return ok,msg end
+ local info=plan_info(item)
+ if info.remaining<=0 then return fail("expired")end
+ if info[kind=="call" and "calls" or "messages"]<=0 then return fail("quota")end
+ if type(text)~="string" or #text>140 or text:find("[%z\1-\8\11\12\14-\31]") then return fail("bad_message")end
+ if kind=="message" and not text:find("%S")then return fail("bad_message")end
+ contacts(150)
+ local owner,receiver,rs=endpoint(number)
+ if not owner or owner:id()==db.actor:id()then return fail("unavailable")end
+ if owner:position():distance_to_sqr(db.actor:position())>150^2 then return fail("unavailable")end
+ if cczmp_hacking.jammed() or cczmp_hacking.jammed(owner:position())then return false,"cczmp_items_jammed"end
+ if not I().usable(receiver,1)then return fail("unavailable")end
+ local uid=I().serial();local source=address(item,db.actor)
+ local record={uid=uid,kind=kind,from=source,from_name=s.os=="ghost"and game.translate_string("cczmp_comms_anonymous")or db.actor:character_name(),to=number,to_name=owner:character_name(),text=text,
+  encrypted=s.os=="ghost" or rs.os=="ghost" or s.os=="government" or rs.os=="government"}
+ rs.inbox=rs.inbox or {};rs.inbox[#rs.inbox+1]=I().copy(record)
+ if #rs.inbox>25 then table.remove(rs.inbox,1)end
+ s.outbox=s.outbox or {};s.outbox[#s.outbox+1]=I().copy(record)
+ if #s.outbox>25 then table.remove(s.outbox,1)end
+ cczmp_ops.clock_start("comms_message_"..uid)
+ local field=kind=="call" and "calls" or "messages";s.plan[field]=s.plan[field]+1
+ s.charge=s.charge-(kind=="call" and 2 or 1);rs.charge=math.max(0,rs.charge-1)
+ I().record(kind,number,{name=owner:character_name(),encrypted=record.encrypted})
+ return true,"cczmp_comms_delivered"
+end
+function send(id,number,text)return deliver(id,number,"message",text)end
+function call(id,number)return deliver(id,number,"call","")end
+function inbox(id)
+ local item=I().owned(id);local s=phone(item)
+ return I().copy(s and s.inbox or {})
+end
+function outbox(id)
+ local item=I().owned(id);local s=phone(item)
+ return I().copy(s and s.outbox or {})
+end
+function scan(radius)
+ local out={}
+ for _,r in ipairs(contacts(radius or 150))do
+  out[#out+1]={key=not r.encrypted and r.key or nil,name=r.encrypted and game.translate_string("cczmp_comms_anonymous")or r.name,number=r.number,distance=r.distance,encrypted=r.encrypted}
+ end
+ return out
+end
+function intercept(number)
+ if cczmp_factions.faction()~="schs" then return fail("no_permission")end
+ local ok,msg=cczmp_ops.can("dossier");if not ok then return ok,msg end
+ local sdr=db.actor:object("cczmp_sdr")
+ if not sdr or I().skill("radio")<2 then return false,"cczmp_items_need_tools"end
+ ok,msg=I().usable(sdr,5);if not ok then return ok,msg end
+ contacts(150);local owner,item,s=endpoint(number)
+ if not owner or owner:position():distance_to_sqr(db.actor:position())>150^2 then return fail("unavailable")end
+ if cczmp_hacking.jammed() or cczmp_hacking.jammed(owner:position())then return false,"cczmp_items_jammed"end
+ if s.os=="ghost" or s.os=="government" then return fail("encrypted")end
+ local out={}
+ for _,r in ipairs(s.inbox or {})do if not r.encrypted then out[#out+1]=I().copy(r)end end
+ I().item_state(sdr).charge=I().item_state(sdr).charge-5
+ I().world().interception=out;I().record("interception",number,{name=owner:character_name(),count=#out})
+ return true,"cczmp_comms_intercepted",out
+end
+function register_phone(item,owner,debug_mode)
+ if not debug_mode or not DEV_DEBUG then return fail("no_permission")end
+ if not owner or not owner:alive() or not item or not item:parent()or item:parent():id()~=owner:id()then return fail("bad_phone")end
+ local s=phone(item);if not s then return fail("bad_phone")end
+ s.sim=s.sim or ("+7000"..tostring(s.uid));address(item,owner)
+ return true
+end
+local next_scan=0
+local function populate(npc)
+ if not npc or not IsStalker(npc)or not npc:alive()or npc:id()==db.actor:id()then return end
+ local section=npc:section()
+ if not section:match("^sim_")or section:match("^sim_cczmp_")then return end
+ local se=alife():object(npc:id());local d=se and alife_storage_manager.get_se_obj_state(se,true)
+ if not d then return end
+ if d.cczmp_phone_checked~=npc:name()then
+  d.cczmp_phone_checked=npc:name()
+  if math.random(1,100)<=8 then
+   local created=alife_create("cczmp_phone_basic",npc:position(),npc:level_vertex_id(),npc:game_vertex_id(),npc:id())
+   if created then d.cczmp_phone_pending={id=created.id,name=created:name()}end
+  end
+ end
+ local p=d.cczmp_phone_pending
+ if p then
+  local item=npc:object_id(p.id)
+  if item and item:name()==p.name then
+   local s=phone(item)
+   if s then s.sim="+7000"..tostring(s.uid);address(item,npc);d.cczmp_phone_pending=nil end
+  elseif not alife():object(p.id)then d.cczmp_phone_pending=nil end
+ end
+end
+function on_game_start()
+ RegisterScriptCallback("actor_on_update",function()
+  if not db.actor or time_global()<next_scan then return end
+  next_scan=time_global()+10000
+  for _,entry in pairs(db.storage or {})do
+   local n=entry.object
+   if n and n:position():distance_to_sqr(db.actor:position())<=100^2 then populate(n)end
+  end
+ end)
+ RegisterScriptCallback("on_game_load",function()next_scan=0 end)
+end

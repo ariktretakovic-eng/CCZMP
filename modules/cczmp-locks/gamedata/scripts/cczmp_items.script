@@ -1,0 +1,272 @@
+-- Shared persistent inventory adapter. No runtime userdata is saved.
+local config=nil
+local queued=nil
+local releasing={}
+local function cfg() if not config then config=ini_file("cczmp\\items.ltx") end return config end
+function canonical(section)
+    local f=cfg()
+    if f:section_exist("item_aliases") and f:line_exist("item_aliases",section) then return f:r_string("item_aliases",section) end
+    return section
+end
+function value(s,k,d)
+    local f=cfg()
+    if s:sub(1,5)=="item_" then s="item_"..canonical(s:sub(6)) end
+    if not f:section_exist(s) or not f:line_exist(s,k) then return d end
+    return f:r_string(s,k)
+end
+function number(s,k,d) return tonumber(value(s,k,tostring(d))) or d end
+function list(text)
+    local out={};for s in (text or ""):gmatch("[^,%s]+") do out[#out+1]=s end;return out
+end
+function copy(t)
+    if type(t)~="table" then return t end
+    local out={};for k,v in pairs(t) do out[k]=copy(v) end;return out
+end
+function world()
+    local w=alife_storage_manager.get_state()
+    w.cczmp_items=w.cczmp_items or {version=1,serial=0,journal={},skills={},stations={}}
+    return w.cczmp_items
+end
+function serial() local w=world();w.serial=w.serial+1;return w.serial end
+function record(kind,text,extra)
+    local j=world().journal;j[#j+1]={id=serial(),kind=kind,text=text,extra=copy(extra)}
+    if #j>100 then table.remove(j,1) end
+end
+function label(k) return game.translate_string("cczmp_items_"..k) end
+function definition(section) return value("item_"..tostring(section),"category",nil) end
+function name(section) return game.translate_string("cczmp_item_"..canonical(section)) end
+function inventory()
+    local out={};if not db.actor then return out end
+    db.actor:inventory_for_each(function(item)
+        if item and releasing[item:id()]~=item:name() then out[#out+1]=item end
+    end)
+    table.sort(out,function(a,b)return a:id()<b:id() end);return out
+end
+function owned(id,expected)
+    local numeric=tonumber(id)
+    if not numeric or numeric~=math.floor(numeric) or numeric<0 or numeric>=65535 then return nil end
+    local item=db.actor and db.actor:object_id(numeric)
+    if item and releasing[numeric]==item:name() then return nil end
+    if not item or expected and item:name()~=expected then return nil end
+    local parent=item:parent();if not parent or parent:id()~=db.actor:id() then return nil end
+    return item
+end
+function token(item) return {id=item:id(),name=item:name(),section=item:section()} end
+function resolve(t) return t and owned(t.id,t.name) end
+function device(id,expected)
+    local item=owned(id,expected);if item then return item end
+    local station=world().stations[tostring(id)]
+    if not station or station.level~=level.name() or expected and station.name~=expected then return nil end
+    local n=level.object_by_id(station.id)
+    if n and n:name()==station.name and n:section()==station.section
+        and n:position():distance_to_sqr(db.actor:position())<=16 then return n end
+end
+function resolve_device(t) return t and device(t.id,t.name) end
+function item_state(item)
+    if not item or not definition(item:section()) then return nil end
+    local se=alife():object(item:id());if not se then return nil end
+    local data=alife_storage_manager.get_se_obj_state(se,true)
+    if not data.cczmp_device or data.cczmp_device.name~=item:name() then
+        data.cczmp_device={name=item:name(),section=item:section(),uid=serial(),
+            charge=value("item_"..item:section(),"stationary","false")=="true" and 0 or 100,os=value("item_"..item:section(),"os","civil"),
+            grade=number("item_"..item:section(),"grade",0)}
+    end
+    local s=data.cczmp_device
+    -- Older saves remember only the active OS. Preserve it during migration.
+    s.installed_oses=s.installed_oses or {civil=true}
+    s.installed_oses[s.os]=true
+    return s
+end
+function switch_os(id,os)
+    local item=device(id);local s=item and item_state(item)
+    if not s or not s.installed_oses[os] then return false,"cczmp_comms_os_missing" end
+    if value("item_"..item:section(),"multiboot","false")~="true"
+        and not (definition(item:section())=="phone" and value("item_"..item:section(),"secure","false")=="true") then
+        return false,"cczmp_items_fixed_os"
+    end
+    if os=="government" and not cczmp_factions.is_state(cczmp_factions.faction()) then return false,"cczmp_items_no_permission" end
+    if s.os==os then return false,"cczmp_comms_os_active" end
+    local ok,msg=usable(item,1);if not ok then return ok,msg end
+    s.os=os;s.charge=s.charge-1;record("os_switch",item:section(),{os=os})
+    return true,"cczmp_comms_os_switched"
+end
+function usable(item,energy)
+    local s=item_state(item);if not s then return false,"cczmp_items_bad_item" end
+    if s.lock then
+        local elapsed=cczmp_ops.elapsed("device_lock_"..s.uid)
+        if not elapsed or elapsed<86400 then return false,"cczmp_items_locked" end
+        s.lock=nil
+    end
+    if s.charge<(energy or 0) then return false,"cczmp_items_no_power" end
+    return true
+end
+function spawn(section,debug)
+    if not db.actor or not definition(section) or not system_ini():section_exist(section) then return false,"cczmp_items_bad_item" end
+    if debug and not DEV_DEBUG then return false,"cczmp_items_no_permission" end
+    local stationary=value("item_"..section,"stationary","false")=="true"
+    local pos=db.actor:position()
+    local parent=stationary and 65535 or db.actor:id()
+    local vertex=db.actor:level_vertex_id()
+    if stationary then
+        -- Avoid spawning collision geometry inside the actor's capsule.
+        local dir=db.actor:direction();local origin=db.actor:position();local found=false
+        local heading=math.atan2(dir.x,dir.z)
+        for _,angle in ipairs({0,math.pi/2,-math.pi/2,math.pi,math.pi/4,-math.pi/4}) do
+            local p=vector():set(origin.x+math.sin(heading+angle)*1.8,origin.y,origin.z+math.cos(heading+angle)*1.8)
+            local candidate=level.vertex_id(p)
+            if candidate and candidate>=0 and candidate~=4294967295 then
+                local floor=level.vertex_position(candidate);local distance=floor:distance_to_sqr(origin)
+                if distance>=1 and distance<=9 and math.abs(floor.y-origin.y)<1 then
+                    vertex=candidate;pos=floor;found=true;break
+                end
+            end
+        end
+        if not found then return false,"cczmp_items_bad_placement" end
+        pos.y=pos.y+number("item_"..section,"spawn_height",0.2)
+    end
+    local se=alife_create(section,pos,vertex,db.actor:game_vertex_id(),parent)
+    if not se then return false,"cczmp_ui_engine_unavailable" end
+    if stationary then
+        -- Server physics properties, unlike an item LTX key, are read by O_PHYSIC.
+        local props=utils_stpk.get_physic_data(se)
+        props.fixed_bones=value("item_"..section,"fixed_bone","bone01");props.mass=number("item_"..section,"mass",12)
+        utils_stpk.set_physic_data(props,se)
+        local p=db.actor:position()
+        world().stations[tostring(se.id)]={id=se.id,name=se:name(),section=section,level=level.name(),x=p.x,y=p.y,z=p.z}
+    end
+    return true,"cczmp_items_spawned",se.id
+end
+-- Quantities refer to separate real inventory instances, never an assumed stack count.
+function select_materials(spec)
+    local counts={};for s,n in (spec or ""):gmatch("([%w_]+):(%d+)") do counts[s]=(counts[s] or 0)+tonumber(n) end
+    local selected={}
+    for _,item in ipairs(inventory()) do
+        local s=item:section()
+        if counts[s] and counts[s]>0 then selected[#selected+1]=token(item);counts[s]=counts[s]-1 end
+    end
+    for _,n in pairs(counts) do if n>0 then return nil,"cczmp_items_need_materials" end end
+    return selected
+end
+function check_tokens(tokens)
+    for _,t in ipairs(tokens or {}) do if not resolve(t) then return false,"cczmp_items_lost_equipment" end end
+    return true
+end
+function consume(tokens)
+    local ok,err=check_tokens(tokens);if not ok then return ok,err end
+    local objects={}
+    for _,t in ipairs(tokens or {}) do
+        local item=resolve(t)
+        if not alife():object(item:id()) then return false,"cczmp_items_lost_equipment" end
+        objects[#objects+1]=item
+    end
+    -- X-Ray removes client inventory objects on the following update.
+    -- Mark them now so a second action cannot spend the same ingredient twice.
+    for _,item in ipairs(objects)do releasing[item:id()]=item:name()end
+    for _,item in ipairs(objects)do alife_release(item)end
+    return true
+end
+function toolset(sections)
+    local out={}
+    for _,s in ipairs(list(sections)) do
+        local item=db.actor:object(s)
+        if not item then return nil,"cczmp_items_need_tools" end
+        out[#out+1]=token(item)
+    end
+    return out
+end
+function skill(name)
+    local w=world();w.skills[name]=w.skills[name] or {level=0,xp=0}
+    local s=w.skills[name];local f=cczmp_factions.faction();local rank=cczmp_factions.rank()+1
+    local org=0
+    if name=="engineer" and (f=="zonastroy" or f=="chernenergo") then org=math.min(3,rank) end
+    if name=="technology" and (f=="mintechnology" or f=="minteh") then org=math.min(3,rank) end
+    if name=="radio" and f=="comnet" then org=math.min(3,rank) end
+    return math.max(s.level,org),s.xp
+end
+function practice(name,points)
+    local w=world();w.skills[name]=w.skills[name] or {level=0,xp=0}
+    local s=w.skills[name];s.xp=math.min(100000,(s.xp or 0)+(points or 1))
+    local thresholds={10,50,150}
+    while s.level<3 and s.xp>=thresholds[s.level+1] do s.level=s.level+1 end
+end
+function nearest_trader()
+    local best,dist=nil,16
+    for _,e in pairs(db.storage or {}) do
+        local n=e.object
+        if n and IsStalker(n) and n:alive() and n:id()~=db.actor:id()
+            and trade_manager.get_trade_profile(n:id(),"cfg_ltx") and n:relation(db.actor)~=game_object.enemy then
+            local d=n:position():distance_to_sqr(db.actor:position())
+            if d<=dist then best=n;dist=d end
+        end
+    end
+    return best
+end
+function purchase_station()
+    local n=nearest_trader();if not n then return false,"cczmp_items_need_trader" end
+    local price=number("item_cczmp_pc_desktop","price",120000)
+    if db.actor:money()<price then return false,"cczmp_items_no_money" end
+    local ok,msg,id=spawn("cczmp_pc_desktop",false);if not ok then return ok,msg end
+    db.actor:give_money(-price)
+    record("purchase","cczmp_pc_desktop",{price=price,merchant=n:name(),id=id})
+    return true,"cczmp_items_spawned"
+end
+function train(name)
+    if name~="engineer" and name~="technology" and name~="radio" then return false,"cczmp_items_bad_item" end
+    local n=nil;local distance=16
+    for _,entry in pairs(db.storage or {}) do
+        local teacher=entry.object
+        if teacher and IsStalker(teacher) and teacher:alive() and teacher:id()~=db.actor:id()
+            and teacher:relation(db.actor)~=game_object.enemy then
+            local profile=(trade_manager.get_trade_profile(teacher:id(),"cfg_ltx") or ""):lower()
+            local instructor=cczmp_factions.faction_of_object(teacher)=="mineducation" and cczmp_factions.object_rank(teacher)>=1
+            if instructor or profile:find("mechanic",1,true) or profile:find("owl",1,true) or profile:find("ecolog",1,true) then
+                local d=teacher:position():distance_to_sqr(db.actor:position());if d<=distance then n=teacher;distance=d end
+            end
+        end
+    end
+    if not n then return false,"cczmp_items_need_teacher" end
+    local w=world();w.skills[name]=w.skills[name] or {level=0,xp=0};local s=w.skills[name]
+    local grade=skill(name)
+    if grade>=3 then return false,"cczmp_items_max_skill" end
+    local price=({5000,15000,40000})[grade+1]
+    if db.actor:money()<price then return false,"cczmp_items_no_money" end
+    db.actor:give_money(-price);s.level=grade+1
+    record("course",name,{level=s.level,price=price})
+    return true,"cczmp_items_trained"
+end
+function electronic(item)
+ if not item then return false end
+ local cat=definition(item:section())
+ return cat=="pda" or cat=="phone" or cat=="kpk" or cat=="laptop" or cat=="pc" or cat=="tablet"
+  or item:section()=="cczmp_taser" or item:section()=="cczmp_radio" or item:section()=="cczmp_megaphone"
+  or item:section()=="cczmp_drone" or item:section()=="cczmp_jammer" or item:section()=="cczmp_jammer_makeshift"
+  or item:section()=="cczmp_sdr" or item:section()=="cczmp_defibrillator"or item:section()=="cczmp_code_pick"
+end
+function recharge(id)
+    local item=device(id);local s=item and item_state(item)
+    if not s or not electronic(item) or s.charge>=100 then return false,"cczmp_items_bad_item" end
+    local battery=db.actor:object(value("item_"..item:section(),"stationary","false")=="true" and "cczmp_power_module" or "cczmp_battery_device")
+    if not battery then return false,"cczmp_items_need_materials" end
+    local ok,err=consume({token(battery)});if not ok then return ok,err end
+    s.charge=100;return true,"cczmp_items_recharged"
+end
+function menu_open(item)
+    if item and owned(item:id(),item:name()) then return label("open") end
+end
+function open_item(item)
+    if not item or not owned(item:id(),item:name()) then return false end
+    queued={item=token(item),at=time_global()+200};hide_hud_inventory();return true
+end
+local function update()
+    if queued and time_global()>=queued.at then
+        local q=queued;queued=nil
+        if resolve(q.item) then
+            cczmp_ui.get_ctrl().items_selected=q.item.id
+            cczmp_ui.terminal_open("items_device",false)
+        end
+    end
+end
+function on_game_start()
+    RegisterScriptCallback("actor_on_update",update)
+    RegisterScriptCallback("on_game_load",function() queued=nil;releasing={} end)
+end

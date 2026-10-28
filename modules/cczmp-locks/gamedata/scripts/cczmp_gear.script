@@ -1,0 +1,217 @@
+-- Native balance variants, item identity, finite stocks and equipment effects.
+local next_scan=0
+local stun_applied={}
+local function I()return cczmp_items end
+local function fail(s)return false,"cczmp_gear_"..s end
+local function state()
+ local w=I().world();w.gear=w.gear or {stock={},stuns={},recordings={}};return w.gear
+end
+function section(sec)
+ sec=I().canonical(sec)
+ if I().definition(sec)then return sec end
+ for _,s in ipairs(I().list(I().value("catalog","items","")))do
+  if I().definition(s)=="weapon" and sec:sub(1,#s+1)==s.."_"then return s end
+ end
+end
+local function value(sec,k,d)return I().value("item_"..(section(sec) or sec),k,d)end
+function access(sec)
+ local rule=value(sec,"access","");if rule==""then return true end
+ local f=cczmp_factions.faction();local typ=cczmp_factions.get_type(f)
+ for _,a in ipairs(I().list(rule))do if a==f or a==typ then return true end end
+ return false
+end
+function license(sec)return value(sec,"license","")end
+function purchasable(sec)
+ return I().definition(sec) and (value(sec,"gear_parent",nil)~=nil or sec=="cczmp_filter" or sec=="cczmp_taser" or sec=="cczmp_spray" or sec=="cczmp_shield" or sec=="cczmp_cooler" or sec=="cczmp_drone" or sec=="cczmp_medkit_mchs" or sec=="cczmp_defibrillator"or sec=="cczmp_road_sign"or sec=="cczmp_code_case"or sec=="cczmp_code_pick") and sec~="cczmp_shank"
+end
+function buy(sec)
+ if not purchasable(sec)then return fail("bad_item")end
+ if not access(sec)then return fail("organization")end
+ local grade=license(sec);if grade~="" and not cczmp_licenses.has(grade)then return fail("license")end
+ local trader=I().nearest_trader();if not trader then return false,"cczmp_items_need_trader"end
+ local price=I().number("item_"..sec,"price",0);if db.actor:money()<price then return false,"cczmp_items_no_money"end
+ local key=trader:name()..":"..sec;local stock=state().stock[key];local limit=I().definition(sec)=="ammo" and 6 or 2
+ if stock and (cczmp_ops.elapsed("gear_stock_"..stock.uid) or 0)>=86400 then stock=nil end
+ if stock and stock.sold>=limit then return fail("stock")end
+ local ok,msg=I().spawn(sec,false);if not ok then return ok,msg end
+ if not stock then stock={uid=I().serial(),sold=0};state().stock[key]=stock;cczmp_ops.clock_start("gear_stock_"..stock.uid)end
+ stock.sold=stock.sold+1;db.actor:give_money(-price);I().record("purchase",sec,{price=price,name=trader:character_name()})
+ return true,"cczmp_gear_bought"
+end
+function reinforced(item)
+ local se=item and alife():object(item:id());local d=se and alife_storage_manager.get_se_obj_state(se,false)
+ return d and d.cczmp_reinforcement_name==item:name() and (d.cczmp_reinforcement or 0) or 0
+end
+function reinforce(item)
+ if not item or reinforced(item)>=.25 then return false end
+ local se=alife():object(item:id());if not se then return false end
+ local d=alife_storage_manager.get_se_obj_state(se,true);d.cczmp_reinforcement_name=item:name();d.cczmp_reinforcement=.25
+ return true
+end
+local function helmet()return db.actor:item_in_slot(12)end
+function filtered(kind)
+ local mask=helmet();if not mask or value(mask:section(),"filter_type","")~=kind or mask:condition()<.1 then return false end
+ local s=I().item_state(mask);return s.filter and (cczmp_ops.elapsed("gear_filter_"..s.filter) or 0)<3600
+end
+function replace_filter()
+ local mask=helmet();if not mask or value(mask:section(),"filter_type","")==""then return fail("mask")end
+ local f=db.actor:object("cczmp_filter");if not f then return false,"cczmp_items_need_materials"end
+ local ok,msg=I().consume({I().token(f)});if not ok then return ok,msg end
+ local s=I().item_state(mask);s.filter=I().serial();cczmp_ops.clock_start("gear_filter_"..s.filter)
+ return true,"cczmp_gear_filter_changed"
+end
+function filter_remaining()
+ local mask=helmet();local s=mask and I().item_state(mask)
+ return s and s.filter and math.max(0,3600-(cczmp_ops.elapsed("gear_filter_"..s.filter) or 0)) or 0
+end
+local function stun(npc,seconds)
+ if not cczmp_custody or not cczmp_custody.can_hold(npc)then return fail("protected")end
+ local key=cczmp_ops.person(npc);local operations=alife_storage_manager.get_state().cczmp_operations
+ if operations.holds[key] or state().stuns[key]then return false,"cczmp_ops_already_held"end
+ local r={uid=I().serial(),target=key,seconds=seconds}
+ local ok,msg=cczmp_custody.hold(npc,r);if not ok then return ok,msg end
+ state().stuns[key]=r;stun_applied[key]=npc:name();cczmp_ops.clock_start("gear_stun_"..r.uid)
+ I().record("stun",key,{name=npc:character_name()});return true,"cczmp_gear_stunned"
+end
+function use_special(id,target)
+ local item=I().owned(id);if not item then return fail("bad_item")end
+ local sec=item:section();if not access(sec)then return fail("organization")end
+ if sec=="cczmp_taser" or sec=="cczmp_spray"then
+  if sec=="cczmp_taser" and not cczmp_licenses.has("D")then return fail("license")end
+  local npc,msg=cczmp_ops.resolve(target,true);if not npc then return false,msg end
+  if npc:position():distance_to_sqr(db.actor:position())>(sec=="cczmp_spray" and 9 or 16)then return fail("range")end
+  local s=I().item_state(item);if sec=="cczmp_spray" and (s.uses or 0)>=5 then return fail("empty")end
+  if sec=="cczmp_taser"then local ok,err=I().usable(item,10);if not ok then return ok,err end end
+  local ok,err=stun(npc,sec=="cczmp_taser" and 10 or 5);if not ok then return ok,err end
+  if sec=="cczmp_spray"then s.uses=(s.uses or 0)+1;if s.uses>=5 then I().consume({I().token(item)})end else s.charge=s.charge-10 end
+  return ok,err
+ elseif sec=="cczmp_shield"then
+  local s=I().item_state(item);s.active=not s.active;return true,s.active and "cczmp_gear_shield_on" or "cczmp_gear_shield_off"
+ elseif sec=="cczmp_megaphone" or sec=="cczmp_radio"then
+  if cczmp_hacking.jammed()then return false,"cczmp_items_jammed"end
+  local ok,err=I().usable(item,1);if not ok then return ok,err end
+  local npc,msg=cczmp_ops.resolve(target,false);if not npc then return false,msg end
+  local radius=sec=="cczmp_megaphone" and 50 or 150
+  if npc:position():distance_to_sqr(db.actor:position())>radius*radius then return fail("range")end
+  I().item_state(item).charge=I().item_state(item).charge-1;I().record("call",target,{name=npc:character_name(),radius=radius})
+  return true,"cczmp_items_called"
+ elseif sec=="cczmp_dashcam" or sec=="cczmp_media_kit"then
+  local npc,msg=cczmp_ops.resolve(target,true);if not npc then return false,msg end
+  local key=cczmp_ops.person(npc);local uid=I().serial();local p=npc:position()
+  local r={uid=uid,source=I().token(item),target=key,name=npc:character_name(),level=level.name(),x=p.x,y=p.y,z=p.z}
+  local weapon=npc:active_item();r.visible_weapon=weapon and IsWeapon(weapon) and not npc:weapon_strapped() and weapon:section() or nil
+  r.incidents={}
+  local operations=alife_storage_manager.get_state().cczmp_operations
+  -- Only registered events with an offence can corroborate a criminal case.
+  -- A face, location or visible weapon by itself is not a new offence.
+  for _,e in pairs(operations and operations.incidents or {})do
+   if e.subject==key and e.offence and e.kind~="complaint"then
+    r.incidents[#r.incidents+1]={uid=e.uid,offence=e.offence,details=e.details}
+   end
+  end
+  local recordings=state().recordings;recordings[#recordings+1]=r;if #recordings>100 then table.remove(recordings,1)end
+  I().record("recording",key,{name=r.name,weapon=r.visible_weapon});return true,"cczmp_gear_recorded"
+ elseif sec=="cczmp_drone"then
+  local ok,msg=I().usable(item,20);if not ok then return ok,msg end
+  if cczmp_hacking.jammed()then return false,"cczmp_items_jammed"end
+  local found={};for _,n in ipairs(cczmp_ops.nearby(100))do if n.distance<=100 then found[#found+1]={key=n.key,name=n.name,distance=n.distance}end end
+  I().world().drone_report=found;I().item_state(item).charge=I().item_state(item).charge-20
+  I().record("recon","local",{level=level.name(),count=#found});return true,"cczmp_gear_recon_done"
+ end
+ return fail("bad_item")
+end
+function case_recordings(target,offence)
+ local out={}
+ for _,r in ipairs(state().recordings)do
+  if r.target==target then for _,e in ipairs(r.incidents or {})do
+   if e.offence==offence then
+    out[#out+1]={uid=r.uid,incident=e.uid,text=r.name.." / "..r.level.." / "..e.details,offence=e.offence}
+   end
+  end end
+ end
+ return out
+end
+function open_mchs(id)
+ local kit=I().owned(id)
+ if not kit or kit:section()~="cczmp_medkit_mchs"then return fail("bad_item")end
+ local outputs={}
+ for _,sec in ipairs({"cczmp_med_antidote","cczmp_med_strong_painkiller","cczmp_med_burn_gel","cczmp_med_bandage","cczmp_med_bandage","cczmp_med_adrenaline"})do
+  local ok,msg,nid=I().spawn(sec,false)
+  if not ok then
+   I().consume(outputs)
+   return ok,msg
+  end
+  local se=alife():object(nid);outputs[#outputs+1]={id=nid,name=se:name()}
+ end
+ local ok,msg=I().consume({I().token(kit)})
+ if not ok then
+  I().consume(outputs)
+  return ok,msg
+ end
+ return true,"cczmp_items_mchs_opened"
+end
+local function current_ammo(shooter)
+ local weapon=shooter and shooter:active_item();if not weapon or not IsWeapon(weapon)then return nil end
+ local f=system_ini();if not f:line_exist(weapon:section(),"ammo_class")then return nil end
+ return I().list(f:r_string(weapon:section(),"ammo_class"))[weapon:get_ammo_type()+1]
+end
+local function npc_hit(npc,h,bone,flags)
+ if not h or h.type~=hit.fire_wound then return end
+ local ammo=current_ammo(h.draftsman);local typ=ammo and value(ammo,"ammo_type","")
+ if typ=="blank" or typ=="rubber"then
+  h.power=0;if flags then flags.ret_value=false end
+  if typ=="rubber" and h.draftsman and h.draftsman:id()==db.actor:id() and access(ammo)then stun(npc,5)end
+ end
+end
+local function actor_hit(h,bone,flags)
+ if not h then return end
+ if h.type==hit.chemical_burn and filtered("chemical")then h.power=h.power*.3 end
+ if h.type~=hit.fire_wound then return end
+ local ammo=current_ammo(h.draftsman);local typ=ammo and value(ammo,"ammo_type","")
+ if typ=="blank" or typ=="rubber"then h.power=0;if flags then flags.ret_value=false end;return end
+ local head=false;for _,name in ipairs({"bip01_head","bip01_neck","eyelid_1","eye_left","eye_right","jaw_1"})do if db.actor:get_bone_id(name)==bone then head=true;break end end
+ local torso=false;for _,name in ipairs({"bip01_pelvis","bip01_spine","bip01_spine1","bip01_spine2"})do if db.actor:get_bone_id(name)==bone then torso=true;break end end
+ local armor=head and helmet() or torso and db.actor:item_in_slot(7)
+ if armor then
+  local protection=tonumber(value(armor:section(),"protection","0")) or 0
+  if protection>0 then
+   protection=math.min(.95,protection*(1+reinforced(armor)))
+   if typ=="ap"then
+    local grade=tonumber(value(armor:section(),"armor_class","0"))or 0
+    if grade>0 then
+     local grades=head and {[0]=0,[1]=.3,[2]=.5,[3]=.7} or {[0]=0,[1]=.4,[2]=.6,[3]=.75,[4]=.85}
+     local previous=grades[math.max(0,grade-1)]or 0
+     protection=math.min(protection,previous*(1+reinforced(armor)))
+    else protection=protection*.8 end
+   elseif typ=="hp"then protection=math.min(.95,protection*1.2)end
+   h.power=h.power*(1-protection*armor:condition())
+  elseif reinforced(armor)>0 then h.power=h.power*(1-reinforced(armor)*armor:condition())end
+ end
+ local shield=db.actor:object("cczmp_shield")
+ if shield and access(shield:section()) and I().item_state(shield).active and shield:condition()>.1 and h.draftsman then
+  local p=h.draftsman:position();local a=db.actor:position();local dir=db.actor:direction();local dx,dz=p.x-a.x,p.z-a.z;local len=math.sqrt(dx*dx+dz*dz)
+  if len>0 and (dir.x*dx+dir.z*dz)/len>.5 then h.power=h.power*.4;shield:set_condition(math.max(0,shield:condition()-.02))end
+ end
+end
+local function trade(item,sell,money)
+ if not sell or not item or not IsArtefact(item) or not db.actor:object("cczmp_cooler")then return end
+ if type(money)~="number" or money<=0 then return end
+ local bonus=math.floor(money*.2);if db.actor:money()+bonus>2147483647 then return end
+ db.actor:give_money(bonus);I().record("cooler_sale",item:section(),{price=bonus})
+end
+local function update()
+ if not db.actor or time_global()<next_scan then return end;next_scan=time_global()+500
+ for key,r in pairs(state().stuns)do
+  local npc=cczmp_ops.resolve(key,false);local elapsed=cczmp_ops.elapsed("gear_stun_"..r.uid)
+  if not elapsed or elapsed>=r.seconds or not npc then
+   if npc then cczmp_custody.restore(npc,r)end;state().stuns[key]=nil;stun_applied[key]=nil
+  elseif stun_applied[key]~=npc:name()then cczmp_custody.maintain(npc,r);stun_applied[key]=npc:name()end
+ end
+end
+function on_game_start()
+ RegisterScriptCallback("actor_on_before_hit",actor_hit)
+ RegisterScriptCallback("npc_on_before_hit",npc_hit)
+ RegisterScriptCallback("actor_on_trade",trade)
+ RegisterScriptCallback("actor_on_update",update)
+ RegisterScriptCallback("on_game_load",function()stun_applied={};next_scan=0 end)
+end

@@ -1,0 +1,176 @@
+-- Recipes consume actual ingredient instances only after result creation succeeds.
+local scan_at=0
+local function I() return cczmp_items end
+local function fail(k) return false,"cczmp_items_"..k end
+local function val(id,k,d) return I().value("recipe_"..id,k,d) end
+function recipes() return I().list(I().value("catalog","recipes","")) end
+function start(id)
+    if I().world().job then return fail("busy") end
+    if not val(id,"result",nil) then return fail("bad_item") end
+    if I().skill("engineer")<(tonumber(val(id,"skill","1")) or 1) then return fail("low_skill") end
+    local tools,err=I().toolset(val(id,"tools",""));if not tools then return false,err end
+    local materials;materials,err=I().select_materials(val(id,"materials",""));if not materials then return false,err end
+    local uid=I().serial()
+    I().world().job={uid=uid,kind="craft",operation=id,tools=tools,materials=materials,
+        seconds=tonumber(val(id,"seconds","1800")) or 1800}
+    cczmp_ops.clock_start("item_job_"..uid)
+    I().record("craft_start",id);return true,"cczmp_items_job_started"
+end
+function finish_job()
+    local job=I().world().job
+    if not job or job.kind~="craft" or (cczmp_ops.elapsed("item_job_"..job.uid) or 0)<job.seconds then return false end
+    local function finish()
+        if I().skill("engineer")<(tonumber(val(job.operation,"skill","1")) or 1) then return fail("low_skill") end
+        local ok,err=I().check_tokens(job.tools);if not ok then return ok,err end
+        ok,err=I().check_tokens(job.materials);if not ok then return ok,err end
+        local result;ok,err,result=I().spawn(val(job.operation,"result",""),false);if not ok then return ok,err end
+        ok,err=I().consume(job.materials);if not ok then
+            local se=alife():object(result);if se then alife():release(se,true) end
+            return ok,err
+        end
+        I().practice("engineer",tonumber(val(job.operation,"xp","5")) or 5)
+        return true,"cczmp_items_crafted"
+    end
+    local ok,msg=finish();I().world().job=nil;I().world().last_result=msg
+    I().record(ok and "crafted" or "craft_aborted",job.operation,{reason=msg})
+    return ok,msg
+end
+function repair(item_id,kit_id)
+    local item,kit=I().owned(item_id),I().owned(kit_id)
+    if not item or not kit or item:id()==kit:id() then return fail("bad_item") end
+    local category=I().value("item_"..kit:section(),"repair_type","")
+    local valid=category=="armor" and IsOutfit(item) or category=="weapon" and IsWeapon(item)
+        or category=="device" and I().electronic(item)
+    if not valid then return fail("bad_item") end
+    if I().skill("engineer")<1 then return fail("low_skill") end
+    if category=="device" then
+        local s=I().item_state(item);if not s.broken and not s.lock and item:condition()>=0.99 then return fail("already_done") end
+    elseif item:condition()>=0.99 and (category~="armor" or not cczmp_gear or cczmp_gear.reinforced(item)>=.25) then return fail("already_done") end
+    local ok,err=I().consume({I().token(kit)});if not ok then return ok,err end
+    item:set_condition(math.min(1,item:condition()+0.25))
+    if category=="armor" and cczmp_gear then cczmp_gear.reinforce(item)end
+    if category=="device" then local s=I().item_state(item);s.broken=nil;s.lock=nil end
+    I().practice("engineer",2);return true,"cczmp_items_repaired"
+end
+function repair_vehicle(vehicle_id,kit_id)
+    local kit=I().owned(kit_id)
+    if not kit or kit:section()~="cczmp_repair_mechanical" then return fail("bad_item") end
+    if I().skill("engineer")<1 then return fail("low_skill") end
+    local selected=nil
+    for _,r in ipairs(cczmp_vehicles.nearby(4)) do if r.id==tonumber(vehicle_id) then selected=r end end
+    local obj=selected and level.object_by_id(selected.id)
+    if not obj or obj:name()~=selected.name then return fail("bad_target") end
+    local car=obj:get_car();if not car then return fail("bad_target") end
+    local health=car:GetfHealth()
+    if health<=0 or health>=0.99 then return fail("already_done") end
+    local ok,err=I().consume({I().token(kit)});if not ok then return ok,err end
+    car:SetfHealth(math.min(1,health+0.25))
+    I().practice("engineer",2);return true,"cczmp_items_repaired"
+end
+function deploy_sign(id)
+ local item=I().owned(id)
+ if not item or item:section()~="cczmp_road_sign"then return fail("bad_item")end
+ if not cczmp_gear.access(item:section())then return fail("no_permission")end
+ local ok,msg,nid=I().spawn("cczmp_road_sign_placed",false);if not ok then return ok,msg end
+ ok,msg=I().consume({I().token(item)})
+ if not ok then local se=alife():object(nid);if se then alife():release(se,true)end;I().world().stations[tostring(nid)]=nil;return ok,msg end
+ return true,"cczmp_engineer_sign_placed"
+end
+function collect_sign(id)
+ local item=I().device(id)
+ if not item or item:section()~="cczmp_road_sign_placed"or not cczmp_gear.access("cczmp_road_sign")then return fail("bad_item")end
+ local ok,msg=I().spawn("cczmp_road_sign",false);if not ok then return ok,msg end
+ I().world().stations[tostring(item:id())]=nil;alife_release(item)
+ return true,"cczmp_engineer_sign_collected"
+end
+function diagnose(id)
+ local item=I().device(id);if not item or not I().electronic(item)then return fail("bad_item")end
+ if I().skill("engineer")<1 then return fail("low_skill")end
+ local tool=db.actor:object("cczmp_multimeter")
+ if not tool or not I().owned(tool:id(),tool:name())then return fail("need_tools")end
+ local s=I().item_state(item)
+ local r={uid=s.uid,charge=s.charge,condition=item:condition(),os=s.os,locked=s.lock==true,broken=s.broken==true}
+ if I().skill("engineer")>=2 and db.actor:object("cczmp_oscilloscope")then r.audited=s.audited==true;r.injected=s.injected==true;r.firmware=s.firmware or 0 end
+ I().world().diagnostic=r;I().record("diagnostic",item:section(),r)
+ return true,"cczmp_engineer_diagnosed",I().copy(r)
+end
+function salvage(id)
+ local item=I().owned(id)
+ if not item or not I().electronic(item)or item:section()=="cczmp_defibrillator"then return fail("bad_item")end
+ if I().skill("engineer")<1 then return fail("low_skill")end
+ local tool=db.actor:object("cczmp_precision_screwdrivers")
+ if not tool or not I().owned(tool:id(),tool:name())then return fail("need_tools")end
+ local outputs={}
+ local function rollback()
+  for _,t in ipairs(outputs)do local se=alife():object(t.id);if se and se:name()==t.name then alife():release(se,true)end end
+ end
+ for _,sec in ipairs({"cczmp_copper_wire","cczmp_components"})do
+  local ok,msg,nid=I().spawn(sec,false)
+  if not ok then rollback();return ok,msg end
+  local se=alife():object(nid);outputs[#outputs+1]={id=nid,name=se:name()}
+ end
+ local ok,msg=I().consume({I().token(item)});if not ok then rollback();return ok,msg end
+ I().practice("engineer",1);I().record("salvage",item:section())
+ return true,"cczmp_engineer_salvaged"
+end
+-- Workshop repair belongs to a real mechanic/service employee, not any trader.
+function workshop(id)
+ local item=I().owned(id)
+ if not item or not (IsWeapon(item)or IsOutfit(item)or IsHeadgear(item))then return fail("bad_item")end
+ if item:condition()>=.99 then return fail("already_done")end
+ local worker=nil
+ for _,entry in pairs(db.storage or {})do
+  local npc=entry.object
+  if npc and IsStalker(npc)and npc:alive()and npc:id()~=db.actor:id()
+   and npc:relation(db.actor)~=game_object.enemy and npc:position():distance_to_sqr(db.actor:position())<=16 then
+   local profile=(trade_manager.get_trade_profile(npc:id(),"cfg_ltx")or ""):lower()
+   if cczmp_factions.faction_of_object(npc)=="sto_kanban" or profile:find("mechanic",1,true)then worker=npc;break end
+  end
+ end
+ if not worker then return fail("workshop_need")end
+ local kit=db.actor:object("sewing_kit_b");if not kit or not I().owned(kit:id(),kit:name())then return fail("need_materials")end
+ local ini=system_ini();if not ini:line_exist(item:section(),"cost")then return fail("bad_item")end
+ local price=math.ceil(ini:r_u32(item:section(),"cost")*.3)
+ if price<=0 then return fail("bad_item")end
+ if db.actor:money()<price then return fail("no_money")end
+ local ok,msg=I().consume({I().token(kit)});if not ok then return ok,msg end
+ item:set_condition(1);db.actor:give_money(-price)
+ I().record("workshop",item:section(),{price=price,name=worker:character_name()})
+ return true,"cczmp_items_workshop_done"
+end
+function tuning(item_id,kind)
+ local item=I().owned(item_id)
+ local base=item and cczmp_gear.section(item:section())
+ if not item or not IsWeapon(item)or not base or I().value("item_"..base,"caliber","")==""then return fail("bad_item")end
+ if kind~="accuracy"and kind~="stabilizer"then return fail("bad_item")end
+ local worker=false
+ for _,entry in pairs(db.storage or {})do
+  local npc=entry.object
+  if npc and IsStalker(npc)and npc:alive()and npc:id()~=db.actor:id()
+   and npc:relation(db.actor)~=game_object.enemy and npc:position():distance_to_sqr(db.actor:position())<=16 then
+   local profile=(trade_manager.get_trade_profile(npc:id(),"cfg_ltx")or ""):lower()
+   if cczmp_factions.faction_of_object(npc)=="sto_kanban" or profile:find("mechanic",1,true)then worker=true;break end
+  end
+ end
+ if not worker then return fail("workshop_need")end
+ local uid="up_cczmp_"..base.."_"..kind
+ if not system_ini():section_exist(uid)then return fail("bad_item")end
+ if item:has_upgrade(uid)then return fail("already_done")end
+ local price=kind=="accuracy"and 10000 or 15000
+ if db.actor:money()<price then return fail("no_money")end
+ local before=inventory_upgrades.force_upgrade;inventory_upgrades.force_upgrade=true
+ local ok,err=pcall(function()item:install_upgrade(uid)end)
+ inventory_upgrades.force_upgrade=before
+ if not ok or not item:has_upgrade(uid)then return false,"cczmp_ui_engine_unavailable"end
+ db.actor:give_money(-price);I().record("tuning",base,{price=price,kind=kind})
+ if item_weapon then item_weapon.clear_cache(item)end
+ return true,"cczmp_items_operation_done"
+end
+local function update()
+    if not db.actor or time_global()<scan_at then return end
+    scan_at=time_global()+500;finish_job()
+end
+function on_game_start()
+    RegisterScriptCallback("actor_on_update",update)
+    RegisterScriptCallback("on_game_load",function() scan_at=0 end)
+end

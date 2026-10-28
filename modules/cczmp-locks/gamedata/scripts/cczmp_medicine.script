@@ -1,0 +1,299 @@
+-- Game-only disease progression, named prescriptions and controlled dispensing.
+-- CTime clocks, stable names and primitive tables survive save/load and ID reuse.
+local scan_at=0
+local original_eat=nil
+local pending={}
+local function I()return cczmp_items end
+local function fail(s)return false,"cczmp_medical_"..s end
+local function state()
+ local w=I().world();w.medical=w.medical or {diseases={},buffs={},courses={},prescriptions={},journal={},addiction=0};return w.medical
+end
+local function value(section,key,default)return I().value("medicine_"..section,key,default)end
+local function number(section,key,default)return tonumber(value(section,key,tostring(default))) or default end
+function medicines()return I().list(I().value("medical","medicines",""))end
+function diseases()return I().list(I().value("medical","diseases",""))end
+function valid_medicine(section)return value(section,"price",nil)~=nil end
+function buff(id)
+ local b=state().buffs[id]
+ if not b then return false end
+ if (cczmp_ops.elapsed("med_buff_"..b.uid) or 0)>=b.seconds then state().buffs[id]=nil;return false end
+ return true
+end
+local function set_buff(id,seconds)
+ local uid=I().serial();state().buffs[id]={uid=uid,seconds=seconds};cczmp_ops.clock_start("med_buff_"..uid)
+end
+function infect(id,stage)
+ if not I().value("disease_"..id,"progress",nil) then return fail("bad_disease")end
+ local s=state();if s.diseases[id]then return false end
+ local uid=I().serial();s.diseases[id]={uid=uid,stage=math.max(1,math.min(3,tonumber(stage) or 1))}
+ cczmp_ops.clock_start("med_disease_"..uid);I().record("infection",id,{grade=s.diseases[id].stage})
+ return true
+end
+function expose(id,percent)
+ if id=="spores" and cczmp_gear and cczmp_gear.filtered("spores")then percent=percent*.1 end
+ if buff("immunity")then percent=percent*.7 end
+ if math.random(1,10000)<=percent*100 then return infect(id)end
+ return false
+end
+local function cure(id)state().diseases[id]=nil end
+function health_info()
+ local s=state();local out={diseases={},temperature=36.6,addiction=s.addiction,buffs={}}
+ for id,d in pairs(s.diseases)do
+  out.diseases[#out.diseases+1]={id=id,stage=d.stage,elapsed=cczmp_ops.elapsed("med_disease_"..d.uid) or 0}
+  out.temperature=math.max(out.temperature,I().number("disease_"..id,"temperature",36.6))
+ end
+ if buff("fever")then out.temperature=math.max(35,out.temperature-2)end
+ for id in pairs(s.buffs)do if buff(id)then out.buffs[#out.buffs+1]=id end end
+ if s.tourniquet then out.tourniquet={elapsed=cczmp_ops.elapsed("med_tourniquet_"..s.tourniquet.uid)or 0}end
+ table.sort(out.diseases,function(a,b)return a.id<b.id end);return out
+end
+local function prescription(item,section,for_use)
+ local se=alife():object(item:id());local d=se and alife_storage_manager.get_se_obj_state(se,false)
+ local p=d and d.cczmp_prescription
+ if not p or p.name~=item:name() or p.owner~=cczmp_ops.person(db.actor) or p.medicine~=section then return nil end
+ local r=state().prescriptions[tostring(p.uid)]
+ if not r or r.name~=p.name or r.owner~=p.owner or r.medicine~=section or r.revoked then return nil end
+ if (cczmp_ops.elapsed("med_rx_"..r.uid) or 0)>=r.seconds then return nil end
+ if for_use and r.used>=r.doses then return nil end
+ return r
+end
+function find_prescription(section,for_use)
+ for _,item in ipairs(I().inventory())do
+  if item:section()=="cczmp_prescription" then local r=prescription(item,section,for_use);if r then return r end end
+ end
+end
+function prescriptions()
+ local out={}
+ for _,item in ipairs(I().inventory())do
+  local se=alife():object(item:id());local d=se and alife_storage_manager.get_se_obj_state(se,false);local p=d and d.cczmp_prescription
+  if p then local r=prescription(item,p.medicine,false);if r then out[#out+1]=I().copy(r)end end
+ end
+ return out
+end
+local function physician(section)
+ local rx=value(section,"rx","none");local roles=rx=="infectologist" and {"infectologist"} or rx=="restricted" and {"infectologist","radiologist"} or {"doctor","infectologist","radiologist"}
+ for _,role in ipairs(roles)do
+  local n=cczmp_professions.nearest(role)
+  if n and cczmp_factions.faction_of_object(n)=="minzdrav" and cczmp_factions.object_rank(n)>=2 then return n end
+ end
+end
+function request_prescription(section)
+ if not valid_medicine(section) or value(section,"rx","none")=="none" then return fail("bad_medicine")end
+ if find_prescription(section,true)then return fail("already_prescribed")end
+ local doctor=physician(section);if not doctor then return fail("need_doctor")end
+ local ok,msg,id=I().spawn("cczmp_prescription",false);if not ok then return ok,msg end
+ local se=alife():object(id);local uid=I().serial();local rx=value(section,"rx","ordinary")
+ local p={uid=uid,name=se:name(),owner=cczmp_ops.person(db.actor),holder=db.actor:character_name(),medicine=section,
+  doctor=cczmp_ops.person(doctor),doctor_name=doctor:character_name(),doses=number(section,"course",number(section,"doses",1)),
+  used=0,dispensed=0,seconds=(rx=="ordinary" and 7 or rx=="narcotic" and 1 or 3)*86400}
+ state().prescriptions[tostring(uid)]=p;alife_storage_manager.get_se_obj_state(se,true).cczmp_prescription=I().copy(p)
+ cczmp_ops.clock_start("med_rx_"..uid);I().record("prescription",section,{name=p.holder,level=p.doses})
+ return true,"cczmp_medical_prescribed"
+end
+function buy(section)
+ if not valid_medicine(section) then return fail("bad_medicine")end
+ local pharmacist=cczmp_professions.nearest("pharmacist")
+ if not pharmacist or cczmp_factions.faction_of_object(pharmacist)~="minzdrav" then return fail("need_pharmacist")end
+ local rx=value(section,"rx","none");local p=rx~="none" and find_prescription(section,false)
+ local doses=I().number("item_"..section,"doses",1)
+ if rx~="none" and (not p or p.dispensed+doses>p.doses)then return fail("need_prescription")end
+ local price=number(section,"price",0);if db.actor:money()<price then return false,"cczmp_items_no_money"end
+ local ok,msg=I().spawn(section,false);if not ok then return ok,msg end
+ db.actor:give_money(-price);if p then p.dispensed=p.dispensed+doses end
+ I().record("pharmacy",section,{price=price,name=pharmacist:character_name()})
+ return true,"cczmp_medical_dispensed"
+end
+function allowed(item)
+ if item and (item:section()=="cczmp_med_tourniquet" or item:section()=="jgut")and state().tourniquet then return fail("tourniquet_applied")end
+ if not item or not valid_medicine(item:section())then return true end
+ local section=item:section();local p=nil
+ if value(section,"rx","none")~="none" then p=find_prescription(section,true);if not p then return fail("need_prescription")end end
+ local course=number(section,"course",0)
+ if course>0 then
+  local c=state().courses[section]
+  if c and (cczmp_ops.elapsed("med_course_"..c.uid) or 0)<86400 then return fail("dose_too_soon")end
+ end
+ return true,nil,p
+end
+local function treat(section)
+ local required=number(section,"course",0);local complete=required==0
+ if required>0 then
+  local c=state().courses[section] or {taken=0}
+  c.taken=c.taken+1;c.uid=I().serial();state().courses[section]=c;cczmp_ops.clock_start("med_course_"..c.uid)
+  complete=c.taken>=required
+  if complete then state().courses[section]=nil end
+ end
+ if complete then for _,id in ipairs(I().list(value(section,"treat","")))do cure(id)end end
+ if number(section,"health",0)>0 then db.actor:set_health_ex(math.min(1,db.actor.health+number(section,"health",0)))end
+ if number(section,"power",0)>0 then db.actor.power=math.min(1,db.actor.power+number(section,"power",0))end
+ if number(section,"radiation",0)>0 then db.actor.radiation=math.max(0,db.actor.radiation-number(section,"radiation",0))end
+ if section=="cczmp_med_tourniquet"then
+  local uid=I().serial();state().tourniquet={uid=uid,bleeding=db.actor.bleeding}
+  cczmp_ops.clock_start("med_tourniquet_"..uid);db.actor.bleeding=0;cure("bleeding")
+ elseif number(section,"bleed",0)>0 then set_buff("bleed",number(section,"bleed",0));state().wound=nil;cure("bleeding")end
+ local b=value(section,"buff",nil);if b then set_buff(b,number(section,"seconds",0))end
+ state().addiction=math.min(1,state().addiction+number(section,"addiction",0))
+ I().record("medicine",section,{grade=complete and 1 or 0})
+end
+local function item_used(item)
+ if not item then return end
+ local section=item:section()
+ if valid_medicine(section)then
+  local p=pending[item:id()];pending[item:id()]=nil
+  if value(section,"rx","none")~="none" then
+   if not p or p.name~=item:name() then return end
+   local rx=state().prescriptions[tostring(p.rx)];if not rx then return end
+   rx.used=rx.used+1
+  end
+  treat(section)
+ elseif section=="jgut"then treat("cczmp_med_tourniquet")
+ elseif section=="bandage" then set_buff("bleed",30);state().wound=nil;cure("bleeding")
+ elseif section:match("^meat_[%w]+$") and not section:match("_b$") then expose("food_poison",I().number("medical","raw_food_percent",30))end
+end
+function use(id)
+ local item=I().owned(id);if not item or not valid_medicine(item:section())then return fail("bad_medicine")end
+ if CInventory__eat(item)==false then return false,"cczmp_medical_cannot_use"end
+ db.actor:eat(item);return true,"cczmp_medical_used"
+end
+function remove_tourniquet()
+ local s=state();local t=s.tourniquet;if not t then return fail("no_tourniquet")end
+ if (cczmp_ops.elapsed("med_tourniquet_"..t.uid)or 0)>=I().number("medical","tourniquet_limit",180)then infect("gangrene")end
+ s.tourniquet=nil
+ -- Bleeding resumes unless the wound was independently dressed.
+ if not buff("bleed")then db.actor.bleeding=math.max(db.actor.bleeding,t.bleeding or 0)end
+ return true,"cczmp_medical_tourniquet_removed"
+end
+function defibrillate(id,target)
+ local item=I().owned(id)
+ if not item or item:section()~="cczmp_defibrillator"then return fail("bad_medicine")end
+ local faction=cczmp_factions.faction()
+ if faction~="minzdrav"and faction~="mchs"then return false,"cczmp_items_no_permission"end
+ local patient=target and cczmp_ops.resolve(target,true)
+ if not patient or not IsStalker(patient)or not patient:alive()or patient:id()==db.actor:id()or patient.health>.2 then return fail("not_critical")end
+ local ok,msg=I().usable(item,25);if not ok then return ok,msg end
+ local s=I().item_state(item)
+ if s.defib and (cczmp_ops.elapsed("defib_"..s.defib)or 0)<120 then return fail("defib_cooldown")end
+ local uid=I().serial();patient:set_health_ex(.35);s.charge=s.charge-25;s.defib=uid
+ cczmp_ops.clock_start("defib_"..uid);I().record("stabilized",cczmp_ops.person(patient),{name=patient:character_name()})
+ return true,"cczmp_medical_stabilized"
+end
+function hospital(target)
+ local doctor=cczmp_professions.nearest("doctor") or cczmp_professions.nearest("infectologist") or cczmp_professions.nearest("radiologist") or cczmp_professions.nearest("field_surgeon")
+ if not doctor or cczmp_factions.faction_of_object(doctor)~="minzdrav" then return fail("need_doctor")end
+ local patient=db.actor
+ if target then patient=cczmp_ops.resolve(target,true)end
+ if not patient or not patient:alive() then return fail("bad_patient")end
+ local diseases=nil
+ if patient:id()==db.actor:id()then
+  diseases=I().copy(state().diseases)
+  -- Advanced conditions need the specialist explicitly specified by the catalog.
+  if (diseases.rad2 or diseases.rad3 or diseases.mutagen) and not cczmp_professions.nearest("radiologist")then return fail("need_radiologist")end
+  if diseases.spores and not cczmp_professions.nearest("infectologist")then return fail("need_infectologist")end
+  if diseases.gangrene and not cczmp_professions.nearest("field_surgeon")then return fail("need_surgeon")end
+  state().diseases={};state().courses={};state().wound=nil;state().tourniquet=nil;state().addiction=0
+ else
+  local se=alife():object(patient:id());local d=alife_storage_manager.get_se_obj_state(se,true)
+  diseases=I().copy(d.cczmp_infection or {});d.cczmp_infection=nil
+ end
+ patient:set_health_ex(1);patient.radiation=0
+ local key=cczmp_ops.person(patient)
+ I().record("hospital",key,{name=patient:character_name()})
+ if diseases and diseases.spores then cczmp_ops.add_incident("medical_spore_record",key,nil,"medical_hospital",nil)end
+ return true,"cczmp_medical_treated"
+end
+function infect_npc(npc,id)
+ if not npc or not IsStalker(npc) or not npc:alive() or (id~="uri" and id~="spores")then return false end
+ local se=alife():object(npc:id());local d=alife_storage_manager.get_se_obj_state(se,true)
+ if not d.cczmp_infection or d.cczmp_infection.name~=npc:name()then d.cczmp_infection={name=npc:name()}end
+ d.cczmp_infection[id]=true;return true
+end
+local function npc_population(npc)
+ if not npc or not IsStalker(npc)or not npc:alive()or npc:id()==db.actor:id()then return end
+ local sec=npc:section()
+ if not sec:match("^sim_")or sec:match("^sim_cczmp_service_")then return end
+ local se=alife():object(npc:id());local d=se and alife_storage_manager.get_se_obj_state(se,true)
+ if not d then return end
+ if d.cczmp_health_checked~=npc:name()then
+  d.cczmp_health_checked=npc:name()
+  if math.random(1,10000)<=I().number("medical","npc_uri_percent",3)*100 then infect_npc(npc,"uri")
+  elseif math.random(1,10000)<=I().number("medical","npc_spores_percent",1)*100 then infect_npc(npc,"spores")end
+  local infection=d.cczmp_infection
+  if infection then infection.uid=I().serial();cczmp_ops.clock_start("med_npc_"..infection.uid)end
+ end
+ local infection=d.cczmp_infection
+ if infection and infection.uid and (cczmp_ops.elapsed("med_npc_"..infection.uid)or 0)>=I().number("medical","npc_infectious_seconds",259200)then d.cczmp_infection=nil end
+end
+local function actor_hit(h)
+ if not h or h.power<=0 then return end
+ if h.type==hit.radiation and buff("iodine")then h.power=h.power*.5 end
+ if h.type==hit.telepatic then
+  if buff("psi")then h.power=h.power*.6 end
+  if h.power>.01 then expose("psi",10)end
+ elseif h.type==hit.chemical_burn then expose("chemical",30)
+ elseif h.type==hit.wound or h.type==hit.fire_wound then
+  if not buff("bleed")then
+   local s=state();if not s.wound then s.wound={uid=I().serial()};cczmp_ops.clock_start("med_wound_"..s.wound.uid)end
+  end
+  if h.draftsman and IsMonster(h.draftsman)then
+   expose("spores",I().number("medical","mutant_spores_percent",10));expose("mutagen",I().number("medical","mutant_mutagen_percent",2))
+  end
+ end
+end
+local function update()
+ if not db.actor or time_global()<scan_at then return end
+ scan_at=time_global()+1000;local s=state()
+ if s.tourniquet then
+  db.actor.bleeding=0;cure("bleeding")
+  if (cczmp_ops.elapsed("med_tourniquet_"..s.tourniquet.uid)or 0)>=I().number("medical","tourniquet_limit",180)then infect("gangrene")end
+ elseif buff("bleed")then db.actor.bleeding=0 elseif db.actor.bleeding>.1 then infect("bleeding")else cure("bleeding")end
+ if s.wound and (cczmp_ops.elapsed("med_wound_"..s.wound.uid) or 0)>=I().number("medical","dirty_wound_delay",21600)then
+  expose("sepsis",I().number("medical","dirty_wound_percent",20));s.wound=nil
+ end
+ local rad=db.actor.radiation
+ if rad>=.8 then infect("rad3");cure("rad1");cure("rad2")elseif rad>=.5 and not s.diseases.rad3 then infect("rad2");cure("rad1")elseif rad>=.2 and not s.diseases.rad2 and not s.diseases.rad3 then infect("rad1")end
+ if not s.tick then s.tick=I().serial();cczmp_ops.clock_start("med_tick_"..s.tick)end
+ local dt=cczmp_ops.elapsed("med_tick_"..s.tick) or 0
+ if dt>=60 then
+  -- Bound a load/sleep update: progression uses full game time; drain stays gradual.
+  local loss=0
+  for id,d in pairs(s.diseases)do
+   loss=loss+I().number("disease_"..id,"loss",0)*d.stage*math.min(dt,600)/3600
+   local progress=I().number("disease_"..id,"progress",86400)
+   if (cczmp_ops.elapsed("med_disease_"..d.uid) or 0)>=progress then
+    if id=="uri"then expose("pneumonia",I().number("medical","pneumonia_percent",10))end
+    d.stage=math.min(3,d.stage+1);cczmp_ops.clock_start("med_disease_"..d.uid)
+   end
+  end
+  if loss>0 then db.actor:set_health_ex(math.max(0,db.actor.health-loss))end
+  if #health_info().diseases>0 and not buff("pain")then db.actor.power=math.max(0,db.actor.power-.005)end
+  cczmp_ops.clock_start("med_tick_"..s.tick)
+ end
+ if not s.contact or (cczmp_ops.elapsed("med_contact_"..s.contact) or 0)>=I().number("medical","contact_cooldown",3600)then
+  s.contact=I().serial();cczmp_ops.clock_start("med_contact_"..s.contact)
+  for _,entry in pairs(db.storage or {})do
+   local n=entry.object
+   if n and n:id()~=db.actor:id() and IsStalker(n) and n:alive() and n:position():distance_to_sqr(db.actor:position())<=9 then
+    local se=alife():object(n:id());local d=se and alife_storage_manager.get_se_obj_state(se,false);local infection=d and d.cczmp_infection
+    if infection and infection.name==n:name()then
+     for _,id in ipairs({"uri","spores"})do if infection[id]then expose(id,I().number("medical","infection_"..id.."_percent",10))end end
+    end
+   end
+  end
+ end
+end
+function on_game_start()
+ if not original_eat then
+  original_eat=_G.CInventory__eat
+  _G.CInventory__eat=function(item)
+   local ok,msg,rx=allowed(item)
+   if not ok then actor_menu.set_msg(1,game.translate_string(msg),3);return false end
+   local result=original_eat(item)
+   if result~=false and valid_medicine(item:section())and rx then pending[item:id()]={name=item:name(),rx=rx.uid}end
+   return result
+  end
+ end
+ RegisterScriptCallback("actor_on_item_use",item_used)
+ RegisterScriptCallback("actor_on_before_hit",actor_hit)
+ RegisterScriptCallback("actor_on_update",update)
+ RegisterScriptCallback("on_game_load",function()pending={};scan_at=0 end)
+end

@@ -1,0 +1,122 @@
+; Offline organization powers. Rank values are ZERO BASED.
+; Defaults for prototype ranges/cooldowns are tunables, not new laws.
+[settings]
+interaction_distance = 4
+target_list_distance = 15
+robbery_cooldown_seconds = 86400
+sonic_radius = 15
+sonic_duration_seconds = 5
+sonic_cooldown_seconds = 60
+repair_step = 0.25
+heal_step = 0.35
+repair_supply = sewing_kit_b
+power_supply = batteries_dead
+communications_supply = batteries_dead
+construction_supply = duct_tape
+contract_reward_max = 5000
+medical_supplies = medkit, medkit_army, medkit_scientic
+
+[f_zonastroy]
+actions = build, repair_structure
+[f_chernenergo]
+actions = restore_power
+[f_comnet]
+actions = restore_communications, dossier
+[f_sud]
+actions = dossier, issue_arrest, issue_search, revoke_warrant, convict, acquit, return_case, release, suspend
+issue_arrest_rank = 7
+issue_search_rank = 7
+revoke_warrant_rank = 7
+convict_rank = 7
+acquit_rank = 7
+return_case_rank = 7
+release_rank = 7
+suspend_rank = 7
+[f_sk]
+actions = dossier, open_case, statement, observe, search, submit_case, arrest, interrogate
+open_case_rank = 1
+submit_case_rank = 2
+arrest_rank = 2
+[f_schs]
+actions = dossier, open_case, statement, observe, search, submit_case, arrest, interrogate, escort
+[f_prokuratura]
+actions = dossier, open_case, statement, observe, endorse_case, return_case, suspend
+[f_sto_kanban]
+actions = repair_item, delivery, dossier
+[f_sabbers]
+actions = sonic_pulse, delivery
+[f_operators]
+actions = delivery, escort, end_escort
+[f_barrikada]
+actions = rob, kidnap, ransom, free_hostage, sabotage
+kidnap_rank = 8
+rob_rank = 8
+[f_fanatiki]
+actions = rob, kidnap, ransom, free_hostage, research
+[f_pmc]
+actions = escort, end_escort, guard
+[f_snipers]
+actions = escort, end_escort, guard
+[f_chetkie]
+actions = rob, kidnap, ransom, free_hostage
+[f_stalkers]
+actions = research, delivery, escort, end_escort
+[f_karateli]
+actions = rob, kidnap, ransom, free_hostage
+[f_zona_vlasti]
+actions = rob, kidnap, ransom, free_hostage, prison_break
+[f_korrsyndikat]
+actions = rob, kidnap, ransom, free_hostage, bribe
+[f_tehno]
+actions = rob, kidnap, ransom, free_hostage, steal_artifact, research
+[f_cobra]
+actions = rob, kidnap, ransom, free_hostage, sabotage
+[f_sector0]
+actions = rob, kidnap, ransom, free_hostage, hack_pda, sabotage
+[f_iskra]
+actions = rob, kidnap, ransom, free_hostage, sabotage
+[f_militsiya]
+actions = dossier, open_case, statement, observe, arrest, search, interrogate, submit_case, escort
+[f_mvd]
+actions = dossier, open_case, statement, observe, arrest, search, interrogate, submit_case, escort
+arrest_rank = 6
+submit_case_rank = 9
+[f_fsin]
+actions = dossier, arrest, search, escort, prison_site, admit_prisoner, release
+[f_scientists]
+actions = research, heal, dossier
+[f_mchs]
+actions = heal, rescue, repair_structure, escort, end_escort
+[f_minzdrav]
+actions = heal, decontaminate, medical_record, rescue
+[f_killers]
+actions = contract, dossier
+[f_omon]
+actions = dossier, arrest, search, escort, rescue
+[f_vympel]
+actions = dossier, arrest, search, escort, rescue, guard
+[f_alfa]
+actions = dossier, arrest, search, escort, rescue, guard
+[f_civilians]
+actions = complaint, delivery, medical_record
+
+[f_minjust]
+actions = dossier
+
+[f_mid]
+actions = dossier
+
+[f_mintechnology]
+actions = dossier, restore_communications
+
+[f_minenergy]
+actions = restore_power, repair_structure
+
+[f_mineducation]
+actions = dossier
+
+[f_mo]
+actions = dossier, escort, end_escort, guard
+
+[f_mineconomy]
+actions = dossier

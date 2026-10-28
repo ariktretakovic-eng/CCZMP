@@ -1,0 +1,499 @@
+-- Uses the established terminal/modal, including its Escape cleanup.
+local function I() return cczmp_items end
+local function H() return cczmp_hacking end
+local function text(k) return I().label(k) end
+local function row(k,action,arg) return {text="cczmp_items_"..k,act=action or "noop",arg=arg} end
+local function literal(s,action) return {text=s,act=action or "noop"} end
+local function go(c,page) c.page=page;c.sel=1 end
+local function result(ok,msg) return msg or (ok and "cczmp_items_operation_done" or "cczmp_items_bad_item") end
+function is_prompt(page)return page=="items_message_prompt"or page=="items_pin_prompt"end
+function owns(page) return type(page)=="string" and page:find("^items_")~=nil end
+local function format_materials(spec)
+    local out={};for s,n in (spec or ""):gmatch("([%w_]+):(%d+)") do out[#out+1]=I().name(s).." x"..n end
+    return table.concat(out,", ")
+end
+local function format_tools(spec)
+    local out={};for _,s in ipairs(I().list(spec)) do out[#out+1]=I().name(s) end;return table.concat(out,", ")
+end
+local function device_info(out,item)
+    local s=I().item_state(item);if not s then return end
+    out[#out+1]=literal(I().name(item:section()).." #"..s.uid)
+    out[#out+1]=literal(text("state")..": "..s.charge.."% / "..text("os_"..s.os).." / "..s.grade)
+    if s.lock then out[#out+1]=row("locked") end
+    if s.sim then out[#out+1]=literal("SIM: "..s.sim) end
+end
+function build(c)
+    local out={}
+    if c.page=="items_home" then
+        for _,v in ipairs({{"devices","items_devices"},{"hacking","items_hacks"},{"engineering","items_recipes"},
+            {"training","items_training"},{"licenses","items_licenses"},{"medical","items_medical"},{"catalog","items_catalog"},{"transport","items_transport"},{"workshop","items_workshop"},{"journal","items_journal"}}) do out[#out+1]=row(v[1],"goto:"..v[2]) end
+        local j=H().active()
+        if j then
+            out[#out+1]=literal(text("job")..": "..text((j.kind=="hack" and "hack_" or "recipe_")..j.operation).." / "..math.ceil(j.remaining/60).." min")
+            out[#out+1]=row("cancel","items_cancel")
+        elseif I().world().last_result then out[#out+1]=literal(game.translate_string(I().world().last_result)) end
+    elseif c.page=="items_catalog" or c.page=="items_debug" then
+        if c.page=="items_debug" and (not c.debug_mode or not DEV_DEBUG) then return {row("no_permission")} end
+        if c.page=="items_debug" then
+            out[#out+1]=row("debug_skills","items_debug_skills")
+            for _,r in ipairs(cczmp_transport.catalog())do if r.available then out[#out+1]=literal(r.name,"items_debug_vehicle:"..r.id)end end
+            for _,r in ipairs(cczmp_professions.list())do out[#out+1]=literal(game.translate_string("cczmp_prof_"..r.id),"items_spawn_role:"..r.id)end
+            for _,grade in ipairs({"D","C","B","A","certificate"})do out[#out+1]=literal(text("debug_license").." "..grade,"items_debug_license:"..grade)end
+        end
+        for _,s in ipairs(I().list(I().value("catalog","items",""))) do
+            out[#out+1]=literal(I().name(s).." / "..I().number("item_"..s,"price",0).." RUB",(c.page=="items_debug" and "items_spawn:" or "items_catalog_item:")..s)
+        end
+    elseif c.page=="items_catalog_item" then
+        local s=c.items_catalog_section
+        out[#out+1]=literal(I().name(s));out[#out+1]=literal(game.translate_string("cczmp_item_"..s.."_descr"))
+        out[#out+1]=literal(text("price")..": "..I().number("item_"..s,"price",0).." RUB")
+        if s=="cczmp_pc_desktop" then out[#out+1]=row("spawn_station","items_buy_station") end
+        if cczmp_gear and cczmp_gear.purchasable(s)then out[#out+1]=row("buy_gear","items_buy_gear")end
+    elseif c.page=="items_transport" then
+        for _,r in ipairs(cczmp_transport.catalog())do
+            out[#out+1]=literal(r.name,"items_transport_product:"..r.id)
+            out[#out+1]=literal(text("transport_prices"):format(r.price,r.rent))
+        end
+        out[#out+1]=row("transport_owned","goto:items_transport_owned")
+    elseif c.page=="items_transport_product" then
+        for _,r in ipairs(cczmp_transport.catalog())do if r.id==c.items_vehicle then
+            out[#out+1]=literal(r.name)
+            if r.available then
+                out[#out+1]=literal(text("transport_specs"):format(r.tank,r.power))
+                out[#out+1]=literal(text("transport_consumption"):format(r.consumption))
+                if r.price>0 then out[#out+1]=row("transport_buy","items_vehicle_buy")end
+                if r.rent>0 then out[#out+1]=row("transport_rent","items_vehicle_rent")end
+                if r.access~=""then out[#out+1]=row("transport_issue","items_vehicle_issue")end
+            else
+                out[#out+1]=literal(game.translate_string("cczmp_transport_assets_missing"))
+                if r.seats>0 then out[#out+1]=literal(game.translate_string("cczmp_transport_seats"):format(r.seats))end
+                if r.source_maxspeed>0 then out[#out+1]=literal(game.translate_string("cczmp_transport_source_specs"):format(r.tank,r.source_maxspeed,r.source_consumption))end
+            end
+        end end
+    elseif c.page=="items_transport_owned" then
+        for _,r in ipairs(cczmp_transport.contracts())do
+            out[#out+1]=literal(game.translate_string("cczmp_vehicle_"..r.product).." #"..r.uid)
+            if r.health then out[#out+1]=literal(text("transport_state"):format(math.floor(r.health*100),math.floor(r.fuel),math.floor(r.distance)))end
+            if r.remaining then
+                out[#out+1]=literal(text("transport_time"):format(math.ceil(r.remaining/60)),"items_vehicle_renew:"..r.uid)
+                out[#out+1]=row("transport_return","items_vehicle_return:"..r.uid)
+                if r.remaining<=0 then out[#out+1]=row("transport_expired")end
+            end
+            out[#out+1]=row("transport_fuel","items_vehicle_fuel:"..r.uid)
+            if r.kind~="rent"then
+                out[#out+1]=literal(game.translate_string("cczmp_transport_gps"),"items_vehicle_upgrade:gps:"..r.uid)
+                out[#out+1]=literal(game.translate_string("cczmp_transport_alarm"),"items_vehicle_upgrade:alarm:"..r.uid)
+                if r.tuning and r.tuning.alarm then out[#out+1]=literal(game.translate_string(r.locked and "cczmp_transport_unlock"or "cczmp_transport_lock"),"items_vehicle_lock:"..r.uid)end
+            end
+        end
+    elseif c.page=="items_workshop" then
+        out[#out+1]=row("workshop")
+        for _,item in ipairs(I().inventory())do
+            if (IsWeapon(item)or IsOutfit(item)or IsHeadgear(item))and item:condition()<.99 then
+                local ini=system_ini();local price=ini:line_exist(item:section(),"cost")and ini:r_u32(item:section(),"cost")or 0
+                out[#out+1]=literal(item:name().." / "..math.ceil(price*.3).." RUB","items_workshop_repair:"..item:id())
+            end
+        end
+    elseif c.page=="items_devices" then
+        for _,item in ipairs(I().inventory()) do
+            if I().definition(item:section()) then out[#out+1]=literal(I().name(item:section()).." #"..item:id(),"items_device:"..item:id()) end
+        end
+        for _,station in pairs(I().world().stations) do
+            local n=I().device(station.id,station.name)
+            if n then out[#out+1]=row("station","items_device:"..station.id) end
+        end
+    elseif c.page=="items_device" then
+        local item=I().device(c.items_selected)
+        if not item then return {row("bad_item"),row("back","goto:items_devices")} end
+        device_info(out,item)
+        local cat=I().definition(item:section())
+        if item:section()=="cczmp_taser" or item:section()=="cczmp_spray" or item:section()=="cczmp_megaphone"
+          or item:section()=="cczmp_radio" or item:section()=="cczmp_dashcam" or item:section()=="cczmp_media_kit" then
+            out[#out+1]=row("select_target","goto:items_gear_targets");out[#out+1]=row("use_special","items_special")
+        elseif item:section()=="cczmp_shield" or item:section()=="cczmp_drone" then out[#out+1]=row("use_special","items_special")end
+        if item:section()=="cczmp_drone" then out[#out+1]=row("recon","goto:items_recon")end
+        if item:section()=="cczmp_filter" or I().value("item_"..item:section(),"filter_type","")~="" then
+            out[#out+1]=row("replace_filter","items_replace_filter")
+            out[#out+1]=literal(text("filter_time")..": "..math.floor(cczmp_gear.filter_remaining()))
+        end
+        if item:section()=="cczmp_road_sign"then out[#out+1]=literal(game.translate_string("cczmp_engineer_deploy_sign"),"items_deploy_sign")end
+        if item:section()=="cczmp_road_sign_placed"then out[#out+1]=literal(game.translate_string("cczmp_engineer_collect_sign"),"items_collect_sign")end
+        if item:section()=="cczmp_medkit_mchs"then out[#out+1]=row("open_mchs","items_open_mchs")end
+        if cat=="weapon"and I().value("item_"..item:section(),"caliber","")~=""then
+            out[#out+1]=row("tuning_accuracy","items_tuning:accuracy")
+            out[#out+1]=row("tuning_stabilizer","items_tuning:stabilizer")
+        end
+        if cat=="medicine" then out[#out+1]=row("take_medicine","items_take_medicine");out[#out+1]=row("medical","goto:items_medical")end
+        if I().electronic(item)then
+            out[#out+1]=row("recharge","items_recharge")
+            out[#out+1]=literal(game.translate_string("cczmp_engineer_diagnose"),"items_diagnose")
+            out[#out+1]=literal(game.translate_string("cczmp_engineer_salvage"),"goto:items_salvage_confirm")
+        end
+        if item:section()=="cczmp_code_case"then out[#out+1]=literal(game.translate_string("cczmp_locks_open"),"goto:items_case")end
+        if item:section()=="cczmp_code_pick"then out[#out+1]=literal(game.translate_string("cczmp_locks_select"),"goto:items_lock_targets")end
+        if item:section()=="cczmp_cooler"then out[#out+1]=literal(game.translate_string("cczmp_cooler_open"),"goto:items_cooler")end
+        if cat=="phone" then
+            out[#out+1]=row("sim","items_sim")
+            out[#out+1]=literal(game.translate_string("cczmp_comms_plans"),"goto:items_plans")
+            out[#out+1]=row("contacts","goto:items_contacts")
+            out[#out+1]=literal(game.translate_string("cczmp_comms_inbox"),"goto:items_inbox")
+            out[#out+1]=literal(game.translate_string("cczmp_comms_outbox"),"goto:items_outbox")
+        end
+        local ds=I().item_state(item)
+        if I().value("item_"..item:section(),"multiboot","false")=="true" or
+           (cat=="phone" and I().value("item_"..item:section(),"secure","false")=="true")then
+            for _,os in ipairs({"civil","linux","ghost","government"})do
+                if ds.installed_oses[os]then out[#out+1]=literal(game.translate_string("cczmp_comms_switch")..": "..text("os_"..os),"items_os:"..os)end
+            end
+        end
+        if item:section()=="cczmp_sdr"then out[#out+1]=literal(game.translate_string("cczmp_comms_signals"),"goto:items_signals")end
+        if item:section()=="cczmp_defibrillator"then
+            out[#out+1]=row("select_target","goto:items_gear_targets")
+            out[#out+1]=literal(game.translate_string("cczmp_medical_defib_use"),"items_defib")
+        end
+        if cat=="phone" or cat=="pda" or cat=="kpk" or cat=="laptop" or cat=="tablet" or cat=="pc" then
+            out[#out+1]=row("bank","items_bank");out[#out+1]=row("news","goto:items_news")
+            out[#out+1]=row("map","items_map");out[#out+1]=row("hacking","goto:items_hacks")
+            local state=I().item_state(item)
+            if state.os=="government" then out[#out+1]=row("government_registry","items_registry") end
+        end
+        if item:section()=="cczmp_jammer" or item:section()=="cczmp_jammer_makeshift" then out[#out+1]=row("toggle_jammer","items_jammer") end
+        if I().value("item_"..item:section(),"repair_type",nil) then out[#out+1]=row("repair","goto:items_repair") end
+        if item:section()=="cczmp_cloned_card" then out[#out+1]=row("bank","items_cloned_bank") end
+    elseif c.page=="items_salvage_confirm" then
+        out[#out+1]=literal(game.translate_string("cczmp_engineer_salvage_warning"))
+        out[#out+1]=literal(game.translate_string("cczmp_engineer_salvage"),"items_salvage")
+    elseif c.page=="items_diagnostic" then
+        local r=I().world().diagnostic
+        if r then
+            out[#out+1]=literal("#"..r.uid.." / "..r.charge.."% / "..math.floor(r.condition*100).."% / "..text("os_"..r.os))
+            for _,k in ipairs({"locked","broken","audited","injected","firmware"})do
+                if r[k]~=nil then out[#out+1]=literal(game.translate_string("cczmp_engineer_"..k)..": "..tostring(r[k]))end
+            end
+        end
+    elseif c.page=="items_case"then
+        local info=cczmp_locks.info(c.items_selected)
+        if not info then return {literal(game.translate_string("cczmp_locks_bad"))}end
+        local function yes(v)return game.translate_string(v and "cczmp_locks_yes"or "cczmp_locks_no")end
+        out[#out+1]=literal(game.translate_string("cczmp_locks_state"):format(yes(info.armed),yes(info.open),math.ceil(info.cooldown)))
+        out[#out+1]=literal(game.translate_string("cczmp_locks_capacity"))
+        if info.armed and not info.open then
+            out[#out+1]=literal(game.translate_string("cczmp_locks_pin"),"items_pin:unlock")
+            out[#out+1]=literal(game.translate_string("cczmp_locks_hack"),"items_case_hack")
+        else
+            out[#out+1]=literal(game.translate_string("cczmp_locks_set_pin"),"items_pin:configure")
+            if info.armed then out[#out+1]=literal(game.translate_string("cczmp_locks_close"),"items_case_close")end
+            local contents,msg=cczmp_locks.contents(c.items_selected)
+            if msg then out[#out+1]=literal(game.translate_string(msg))end
+            for _,v in ipairs(contents)do out[#out+1]=literal(game.translate_string(system_ini():r_string(v.section,"inv_name")),"items_case_take:"..v.id)end
+            for _,v in ipairs(I().inventory())do if cczmp_locks.storable(v)then out[#out+1]=literal(game.translate_string("cczmp_locks_store")..": "..game.translate_string(system_ini():r_string(v:section(),"inv_name")),"items_case_store:"..v:id())end end
+        end
+    elseif c.page=="items_pin_prompt"then
+        out[#out+1]=literal(game.translate_string(c.items_pin_mode=="configure"and "cczmp_locks_set_pin"or "cczmp_locks_pin"),"items_pin_confirm")
+    elseif c.page=="items_lock_targets"then
+        for _,item in ipairs(I().inventory())do if item:section()=="cczmp_code_case"then
+            out[#out+1]=literal(I().name(item:section()).." #"..item:id(),"items_lock_target:"..item:id())
+        end end
+    elseif c.page=="items_cooler" then
+        out[#out+1]=literal(game.translate_string("cczmp_cooler_capacity"))
+        local contents,msg=cczmp_cooler.contents(c.items_selected)
+        if msg then out[#out+1]=literal(game.translate_string(msg))end
+        for _,t in ipairs(contents)do
+            out[#out+1]=literal(game.translate_string(system_ini():r_string(t.section,"inv_name")),"items_cooler_take:"..t.id)
+        end
+        for _,art in ipairs(I().inventory())do if IsArtefact(art)then
+            out[#out+1]=literal(game.translate_string("cczmp_cooler_store")..": "..game.translate_string(system_ini():r_string(art:section(),"inv_name")),"items_cooler_store:"..art:id())
+        end end
+    elseif c.page=="items_gear_targets" then
+        for _,n in ipairs(cczmp_ops.nearby())do out[#out+1]=literal(n.name.." / "..math.floor(n.distance).." m","items_gear_target:"..n.key)end
+    elseif c.page=="items_recon" then
+        for _,n in ipairs(I().world().drone_report or {})do out[#out+1]=literal(n.name.." / "..math.floor(n.distance).." m")end
+    elseif c.page=="items_hacks" then
+        out[#out+1]=row("select_target","goto:items_targets")
+        local info=c.ops_target and cczmp_ops.target_info(c.ops_target)
+        if info then out[#out+1]=literal(info.name) end
+        for _,id in ipairs(H().operations()) do out[#out+1]=row("hack_"..id,"items_hack:"..id) end
+    elseif c.page=="items_hack_detail" then
+        local id=c.items_operation
+        out[#out+1]=row("hack_"..id)
+        out[#out+1]=literal(text("time")..": "..I().number("hack_"..id,"seconds",0)/60 .." min")
+        out[#out+1]=literal(text("risk")..": "..I().number("hack_"..id,"failure",0).."% / "..I().number("hack_"..id,"detection",0).."%")
+        local skill=I().value("hack_"..id,"skill","")
+        if skill~="" then out[#out+1]=literal(text("requirements")..": "..text(skill).." "..I().number("hack_"..id,"skill_level",0)) end
+        out[#out+1]=literal(text("tools")..": "..format_tools(I().value("hack_"..id,"tools","")))
+        out[#out+1]=literal(text("materials")..": "..format_materials(I().value("hack_"..id,"materials","")))
+        if id=="code_pick"then
+            out[#out+1]=literal(game.translate_string("cczmp_locks_select"),"goto:items_lock_targets")
+            if c.items_lock_target then out[#out+1]=literal("#"..c.items_lock_target)end
+        end
+        out[#out+1]=row("begin","items_begin_hack")
+        out[#out+1]=row("devices","goto:items_devices")
+    elseif c.page=="items_plans" then
+        local item=I().owned(c.items_selected);local info=cczmp_comms.plan_info(item)
+        out[#out+1]=literal(game.translate_string("cczmp_comms_plan_info"):format(math.ceil(info.remaining/3600),info.calls,info.messages))
+        for _,id in ipairs({"basic","pro"})do
+            local d=cczmp_comms.definition(id)
+            out[#out+1]=literal(game.translate_string("cczmp_comms_plan_"..id).." / "..d.price.." RUB / "..d.calls.." / "..d.messages,"items_subscribe:"..id)
+        end
+    elseif c.page=="items_contacts" or c.page=="items_signals" then
+        local report=c.page=="items_contacts" and cczmp_comms.contacts(100)or I().world().signal_report or {}
+        for _,n in ipairs(report)do
+            out[#out+1]=literal(n.name.." / "..n.number.." / "..math.floor(n.distance).." m","items_contact:"..n.number)
+        end
+    elseif c.page=="items_contact" then
+        out[#out+1]=literal(c.items_number or "-")
+        local item=I().owned(c.items_selected)
+        if item and I().definition(item:section())=="phone" then
+            out[#out+1]=literal(game.translate_string("cczmp_comms_call"),"items_call:"..c.items_number)
+            out[#out+1]=literal(game.translate_string("cczmp_comms_send"),"items_write")
+        end
+        if cczmp_factions.faction()=="schs"then out[#out+1]=literal(game.translate_string("cczmp_comms_intercept"),"items_intercept")end
+    elseif c.page=="items_message_prompt" then
+        out[#out+1]=literal(game.translate_string("cczmp_comms_send")..": "..(c.items_number or "-"),"items_send")
+    elseif c.page=="items_inbox" or c.page=="items_outbox" or c.page=="items_interception" then
+        local box=c.page=="items_inbox" and cczmp_comms.inbox(c.items_selected)or c.page=="items_outbox" and cczmp_comms.outbox(c.items_selected)or I().world().interception or {}
+        for i=#box,1,-1 do
+            local m=box[i]
+            out[#out+1]=literal("#"..m.uid.." "..m.from_name.." > "..m.to_name.." / "..game.translate_string("cczmp_comms_"..m.kind))
+            if m.text~=""then out[#out+1]=literal(m.text)end
+        end
+    elseif c.page=="items_targets" then
+        for _,n in ipairs(cczmp_ops.nearby()) do
+            out[#out+1]=literal(n.name.." / "..math.floor(n.distance).." m",(c.page=="items_contacts" and "items_call:" or "items_target:")..n.key)
+        end
+    elseif c.page=="items_recipes" then
+        local level,xp=I().skill("engineer");out[#out+1]=literal(text("engineer")..": "..level.." / XP "..xp)
+        for _,id in ipairs(cczmp_engineering.recipes()) do out[#out+1]=row("recipe_"..id,"items_recipe:"..id) end
+    elseif c.page=="items_recipe_detail" then
+        local id=c.items_recipe;local section="recipe_"..id
+        out[#out+1]=row("recipe_"..id)
+        out[#out+1]=literal(text("engineer")..": "..I().number(section,"skill",1))
+        out[#out+1]=literal(text("tools")..": "..format_tools(I().value(section,"tools","")))
+        out[#out+1]=literal(text("materials")..": "..format_materials(I().value(section,"materials","")))
+        out[#out+1]=literal(text("result")..": "..I().name(I().value(section,"result","")))
+        out[#out+1]=row("begin","items_begin_craft")
+    elseif c.page=="items_repair" then
+        local kit=I().owned(c.items_selected)
+        if kit and kit:section()=="cczmp_repair_mechanical" then
+            for _,r in ipairs(cczmp_vehicles.nearby(4)) do out[#out+1]=literal(r.section.." / "..math.floor(r.health*100).."%","items_repair_vehicle:"..r.id) end
+        else
+            for _,item in ipairs(I().inventory()) do
+                if item:id()~=c.items_selected then out[#out+1]=literal(item:name(),"items_repair:"..item:id()) end
+            end
+        end
+    elseif c.page=="items_training" then
+        for _,s in ipairs({"engineer","technology","radio"}) do
+            local grade,xp=I().skill(s)
+            out[#out+1]=literal(text(s)..": "..grade.." / XP "..xp,"items_train:"..s)
+            if grade<3 then out[#out+1]=literal(text("price")..": "..({5000,15000,40000})[grade+1].." RUB") end
+        end
+    elseif c.page=="items_licenses" then
+        out[#out+1]=literal(game.translate_string("cczmp_license_check_visible"),"goto:items_license_targets")
+        for _,grade in ipairs({"D","C","B","A","certificate"}) do
+            local rule=cczmp_licenses.definition(grade)
+            local owned=cczmp_licenses.has(grade)
+            local issuer=cczmp_licenses.nearest_issuer(grade)
+            local title=grade=="certificate" and I().name("cczmp_sk_certificate") or text("category").." "..grade
+            out[#out+1]=literal(title.." / "..rule.price.." RUB / "..(owned and text("licensed") or text("unlicensed")),"items_license:"..grade)
+            out[#out+1]=literal(cczmp_factions.get_name(rule.issuer).." / "..(issuer and issuer:character_name() or text("issuer_missing")))
+        end
+    elseif c.page=="items_license_targets" then
+        for _,n in ipairs(cczmp_ops.nearby())do out[#out+1]=literal(n.name,"items_inspect_carry:"..n.key)end
+    elseif c.page=="items_medical" then
+        local h=cczmp_medicine.health_info()
+        out[#out+1]=literal(text("temperature")..": "..string.format("%.1f",h.temperature))
+        for _,d in ipairs(h.diseases)do out[#out+1]=literal(text("disease_"..d.id).." / "..text("stage").." "..d.stage)end
+        if h.tourniquet then
+            out[#out+1]=literal(game.translate_string("cczmp_medical_tourniquet_time"):format(math.floor(h.tourniquet.elapsed)),"items_remove_tourniquet")
+        end
+        out[#out+1]=row("pharmacy","goto:items_pharmacy")
+        out[#out+1]=row("prescriptions","goto:items_prescriptions")
+        out[#out+1]=row("hospital","items_hospital")
+        out[#out+1]=row("treat_target","items_hospital_target")
+        out[#out+1]=row("select_target","goto:items_targets")
+    elseif c.page=="items_pharmacy" then
+        for _,section in ipairs(cczmp_medicine.medicines())do
+            out[#out+1]=literal(I().name(section).." / "..I().number("item_"..section,"price",0).." RUB","items_medical_detail:"..section)
+        end
+    elseif c.page=="items_medicine_detail" then
+        local section=c.items_medicine
+        out[#out+1]=literal(I().name(section));out[#out+1]=literal(game.translate_string("cczmp_item_"..section.."_descr"))
+        out[#out+1]=literal(text("doses")..": "..I().number("item_"..section,"doses",1))
+        out[#out+1]=row("buy_medicine","items_buy_medicine")
+        if I().value("item_"..section,"rx","none")~="none"then out[#out+1]=row("request_prescription","items_request_prescription")end
+    elseif c.page=="items_prescriptions" then
+        for _,r in ipairs(cczmp_medicine.prescriptions())do
+            local remaining=math.ceil(math.max(0,r.seconds-(cczmp_ops.elapsed("med_rx_"..r.uid) or 0))/3600)
+            out[#out+1]=literal("#"..r.uid.." "..I().name(r.medicine).." / "..r.holder)
+            out[#out+1]=literal(r.doctor_name.." / "..text("doses").." "..r.used.."/"..r.doses.." / "..remaining.." h")
+        end
+    elseif c.page=="items_news" then
+        for _,id in ipairs(cczmp_factions.all()) do out[#out+1]=literal(cczmp_factions.get_name(id).." / "..(cczmp_factions.get_location(id) or "-")) end
+        local node=cczmp_services.facility_info()
+        if node then out[#out+1]=literal(node.id.." / "..node.structure.." / "..node.power.." / "..node.communications) end
+    elseif c.page=="items_journal" then
+        local j=I().world().journal
+        for n=#j,math.max(1,#j-24),-1 do
+            local r=j[n];local operation=text("hack_"..r.text)
+            if operation=="cczmp_items_hack_"..r.text then
+                operation=text("recipe_"..r.text)
+                if operation=="cczmp_items_recipe_"..r.text then
+                    local disease=text("disease_"..r.text)
+                    operation=I().definition(r.text) and I().name(r.text) or disease~="cczmp_items_disease_"..r.text and disease or r.text
+                end
+            end
+            out[#out+1]=literal("#"..r.id.." "..text("journal_"..r.kind).." / "..operation)
+            if r.extra then
+                local data={}
+                for _,k in ipairs({"name","faction","money","reason","os","grade","level","price"}) do
+                    if r.extra[k]~=nil then
+                        local value=tostring(r.extra[k])
+                        if k=="reason" then value=game.translate_string(value) elseif k=="os" then value=text("os_"..value) end
+                        data[#data+1]=text("field_"..k)..": "..value
+                    end
+                end
+                if #data>0 then out[#out+1]=literal(table.concat(data," / ")) end
+            end
+        end
+    end
+    out[#out+1]=row("refresh","items_refresh")
+    out[#out+1]=row("back","items_back")
+    return out
+end
+function handle(c,act)
+    local command,arg=act:match("^([%w_]+):?(.*)$")
+    if command=="items_device" then c.items_selected=tonumber(arg);go(c,"items_device")
+    elseif command=="items_target" then c.ops_target=arg;go(c,"items_hacks")
+    elseif command=="items_hack" then c.items_operation=arg;go(c,"items_hack_detail")
+    elseif command=="items_recipe" then c.items_recipe=arg;go(c,"items_recipe_detail")
+    elseif command=="items_catalog_item" then c.items_catalog_section=arg;go(c,"items_catalog_item")
+    elseif command=="items_transport_product" then c.items_vehicle=arg;go(c,"items_transport_product")
+    elseif command=="items_debug_vehicle" then
+        if not c.debug_mode or not DEV_DEBUG then return "cczmp_items_no_permission"end
+        return result(cczmp_transport.acquire(arg,"debug",true))
+    elseif command=="items_vehicle_buy" then return result(cczmp_transport.acquire(c.items_vehicle,"buy",false))
+    elseif command=="items_vehicle_rent" then return result(cczmp_transport.acquire(c.items_vehicle,"rent",false))
+    elseif command=="items_vehicle_issue" then return result(cczmp_transport.acquire(c.items_vehicle,"issue",false))
+    elseif command=="items_vehicle_renew" then return result(cczmp_transport.renew(tonumber(arg)))
+    elseif command=="items_vehicle_return" then return result(cczmp_transport.return_rental(tonumber(arg)))
+    elseif command=="items_vehicle_upgrade"then
+        local kind,uid=arg:match("^([%w_]+):(%d+)$");return result(cczmp_transport.install(tonumber(uid),kind))
+    elseif command=="items_vehicle_lock"then return result(cczmp_transport.toggle_lock(tonumber(arg)))
+    elseif command=="items_vehicle_fuel" then return result(cczmp_transport.refuel(tonumber(arg)))
+    elseif command=="items_workshop_repair" then return result(cczmp_engineering.workshop(tonumber(arg)))
+    elseif command=="items_begin_hack" then return result(H().start(c.items_operation,c.items_selected,c.items_operation=="code_pick"and c.items_lock_target or c.ops_target))
+    elseif command=="items_begin_craft" then return result(cczmp_engineering.start(c.items_recipe))
+    elseif command=="items_recharge" then return result(I().recharge(c.items_selected))
+    elseif command=="items_tuning" then return result(cczmp_engineering.tuning(c.items_selected,arg))
+    elseif command=="items_open_mchs" then return result(cczmp_gear.open_mchs(c.items_selected))
+    elseif command=="items_buy_gear" then return result(cczmp_gear.buy(c.items_catalog_section))
+    elseif command=="items_replace_filter" then return result(cczmp_gear.replace_filter())
+    elseif command=="items_special" then return result(cczmp_gear.use_special(c.items_selected,c.ops_target))
+    elseif command=="items_gear_target" then c.ops_target=arg;go(c,"items_device")
+    elseif command=="items_buy_station" then return result(I().purchase_station())
+    elseif command=="items_cancel" then return result(H().cancel())
+    elseif command=="items_train" then return result(I().train(arg))
+    elseif command=="items_inspect_carry"then return result(cczmp_ops.inspect_carry(arg))
+    elseif command=="items_license" then return result(cczmp_licenses.buy(arg))
+    elseif command=="items_medical_detail" then c.items_medicine=arg;go(c,"items_medicine_detail")
+    elseif command=="items_buy_medicine" then return result(cczmp_medicine.buy(c.items_medicine))
+    elseif command=="items_request_prescription" then return result(cczmp_medicine.request_prescription(c.items_medicine))
+    elseif command=="items_take_medicine" then return result(cczmp_medicine.use(c.items_selected))
+    elseif command=="items_hospital" then return result(cczmp_medicine.hospital())
+    elseif command=="items_hospital_target" then
+        if not c.ops_target then return "cczmp_items_bad_target"end
+        return result(cczmp_medicine.hospital(c.ops_target))
+    elseif command=="items_spawn_role" or command=="items_debug_license" then
+        if not c.debug_mode or not DEV_DEBUG then return "cczmp_items_no_permission" end
+        if command=="items_spawn_role" then return result(cczmp_professions.spawn(arg))end
+        return result(cczmp_licenses.debug_issue(arg))
+    elseif command=="items_repair" then return result(cczmp_engineering.repair(tonumber(arg),c.items_selected))
+    elseif command=="items_repair_vehicle" then return result(cczmp_engineering.repair_vehicle(tonumber(arg),c.items_selected))
+    elseif command=="items_jammer" then return result(H().activate_jammer(c.items_selected))
+    elseif command=="items_registry" then
+        local item=I().device(c.items_selected);local s=item and I().item_state(item)
+        if not s or s.os~="government" or not cczmp_factions.is_state(cczmp_factions.faction()) then return "cczmp_items_no_permission" end
+        local ok,err=I().usable(item,1);if not ok then return err end
+        ok,err=cczmp_ops.can("dossier");if not ok then return err end
+        go(c,"ops_home")
+    elseif command=="items_spawn" then
+        if not c.debug_mode or not DEV_DEBUG then return "cczmp_items_no_permission" end
+        return result(I().spawn(arg,true))
+    elseif command=="items_debug_skills" then
+        if not c.debug_mode or not DEV_DEBUG then return "cczmp_items_no_permission" end
+        for _,s in ipairs({"engineer","technology","radio"}) do I().world().skills[s]={level=3,xp=150} end
+        return "cczmp_items_trained"
+    elseif command=="items_sim" then
+return result(cczmp_comms.install_sim(c.items_selected))
+    elseif command=="items_deploy_sign"then return result(cczmp_engineering.deploy_sign(c.items_selected))
+    elseif command=="items_collect_sign"then return result(cczmp_engineering.collect_sign(c.items_selected))
+    elseif command=="items_diagnose" then
+        local ok,msg=cczmp_engineering.diagnose(c.items_selected);if ok then go(c,"items_diagnostic")end;return result(ok,msg)
+    elseif command=="items_salvage" then
+        local ok,msg=cczmp_engineering.salvage(c.items_selected);if ok then go(c,"items_devices")end;return result(ok,msg)
+    elseif command=="items_pin"then
+        local item=I().owned(c.items_selected)
+        if not item or item:section()~="cczmp_code_case"then return "cczmp_locks_bad"end
+        c.items_pin_token=I().token(item);c.items_pin_mode=arg;c.input="";go(c,"items_pin_prompt")
+    elseif command=="items_pin_confirm"then
+        local item=I().resolve(c.items_pin_token)
+        if not item then c.input="";return "cczmp_locks_changed"end
+        local ok,msg
+        if c.items_pin_mode=="configure"then ok,msg=cczmp_locks.configure(item:id(),c.input or "")
+        else ok,msg=cczmp_locks.unlock(item:id(),c.input or "")end
+        c.input="";if ok then go(c,"items_case")end;return result(ok,msg)
+    elseif command=="items_case_close"then return result(cczmp_locks.close(c.items_selected))
+    elseif command=="items_case_store"then return result(cczmp_locks.store(c.items_selected,tonumber(arg)))
+    elseif command=="items_case_take"then return result(cczmp_locks.take(c.items_selected,tonumber(arg)))
+    elseif command=="items_case_hack"then
+        local pick=db.actor:object("cczmp_code_pick")
+        if not pick then return "cczmp_items_need_device"end
+        return result(H().start("code_pick",pick:id(),c.items_selected))
+    elseif command=="items_lock_target"then
+        c.items_lock_target=tonumber(arg);c.items_operation="code_pick";go(c,"items_hack_detail")
+    elseif command=="items_cooler_store" then return result(cczmp_cooler.store(c.items_selected,tonumber(arg)))
+    elseif command=="items_cooler_take" then return result(cczmp_cooler.take(c.items_selected,tonumber(arg)))
+    elseif command=="items_os" then return result(I().switch_os(c.items_selected,arg))
+    elseif command=="items_subscribe" then return result(cczmp_comms.subscribe(c.items_selected,arg))
+    elseif command=="items_contact" then c.items_number=arg;go(c,"items_contact")
+    elseif command=="items_call" then return result(cczmp_comms.call(c.items_selected,arg))
+    elseif command=="items_write" then c.input="";go(c,"items_message_prompt")
+    elseif command=="items_send" then
+        local ok,msg=cczmp_comms.send(c.items_selected,c.items_number,c.input or "")
+        if ok then c.input="";go(c,"items_contact")end
+        return result(ok,msg)
+    elseif command=="items_intercept" then
+        local ok,msg=cczmp_comms.intercept(c.items_number);if ok then go(c,"items_interception")end;return result(ok,msg)
+    elseif command=="items_defib" then return result(cczmp_medicine.defibrillate(c.items_selected,c.ops_target))
+    elseif command=="items_remove_tourniquet" then return result(cczmp_medicine.remove_tourniquet())
+    elseif command=="items_bank" or command=="items_map" then
+        local item=I().device(c.items_selected);if not item then return "cczmp_items_bad_item" end
+        local ok,msg=I().usable(item,1);if not ok then return msg end
+        local s=I().item_state(item)
+        if I().definition(item:section())=="phone" and not s.sim then return "cczmp_items_need_sim" end
+        if H().jammed() then return "cczmp_items_jammed" end
+        if command=="items_bank" then go(c,"main")
+        elseif command=="items_map" then
+            cczmp_ui.terminal_close()
+            local menu=ActorMenu.get_pda_menu();menu:ShowDialog(true)
+            menu:GetTabControl():SetActiveTab("eptTasks");menu:SetActiveSubdialog("eptTasks")
+            return "close"
+        end
+    elseif command=="items_cloned_bank" then
+        local item=I().owned(c.items_selected)
+        if not item or item:section()~="cczmp_cloned_card" then return "cczmp_items_bad_item" end
+        cczmp_bank.apply_block("interfere")
+        cczmp_ops.add_incident("bank_interference",cczmp_ops.person(db.actor),nil,item:name(),nil)
+        return "cczmp_items_clone_rejected"
+    elseif command=="items_back" then return back(c)
+    elseif command=="items_refresh" then H().finish_job();cczmp_engineering.finish_job() end
+    return nil
+end
+function back(c)
+    if c.page=="items_pin_prompt"then c.input="";c.items_pin_token=nil end
+    if c.page=="items_debug" then return "close" end
+    local parent={items_transport_product="items_transport",items_transport_owned="items_transport",items_home="main",items_device="items_devices",items_hack_detail="items_hacks",items_recipe_detail="items_recipes",
+        items_case="items_device",items_pin_prompt="items_case",items_lock_targets="items_device",items_license_targets="items_licenses",items_cooler="items_device",items_diagnostic="items_device",items_salvage_confirm="items_device",items_plans="items_device",items_signals="items_device",items_contact="items_contacts",items_message_prompt="items_contact",items_inbox="items_device",items_outbox="items_device",items_interception="items_contact",items_gear_targets="items_device",items_recon="items_device",items_catalog_item="items_catalog",items_repair="items_device",items_contacts="items_device",items_medicine_detail="items_pharmacy",
+        items_pharmacy="items_medical",items_prescriptions="items_medical"}
+    go(c,parent[c.page] or "items_home");return nil
+end

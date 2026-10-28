@@ -1,0 +1,79 @@
+-- Capacity-limited portable storage. Original artifact instances remain in ALife.
+local next_tick=0
+local function I()return cczmp_items end
+local function fail(k)return false,"cczmp_cooler_"..k end
+local function cooler(id)
+ local item=I().owned(id)
+ return item and item:section()=="cczmp_cooler"and item or nil
+end
+local function box(item,create)
+ local s=I().item_state(item);local r=s.container
+ if r then
+  local se=alife():object(r.id)
+  if not se or se:name()~=r.name or se:section_name()~="hidden_box"then return nil,"cczmp_cooler_lost_box"end
+  if r.level~=level.name()then
+   alife():teleport_object(r.id,db.actor:game_vertex_id(),db.actor:level_vertex_id(),vector():set(db.actor:position().x,db.actor:position().y+50,db.actor:position().z))
+   r.level=level.name()
+  end
+  alife():set_switch_online(r.id,true);alife():set_switch_offline(r.id,false)
+  local obj=level.object_by_id(r.id)
+  if obj and obj:name()==r.name then return obj,nil,r end
+  return nil,"cczmp_cooler_loading"
+ end
+ if not create then return nil,nil,nil end
+ local p=vector():set(db.actor:position());p.y=p.y+50
+ local se=alife_create("hidden_box",p,db.actor:level_vertex_id(),db.actor:game_vertex_id())
+ if not se then return nil,"cczmp_ui_engine_unavailable"end
+ s.container={id=se.id,name=se:name(),level=level.name(),contents={}}
+ alife():set_switch_online(se.id,true);alife():set_switch_offline(se.id,false)
+ return nil,"cczmp_cooler_loading"
+end
+local function valid_artifact(b,t)
+ local item=level.object_by_id(t.id)
+ return item and item:name()==t.name and item:section()==t.section and IsArtefact(item)
+  and item:parent()and item:parent():id()==b:id()and item or nil
+end
+local function weight(item,r)
+ local ini=system_ini();local base=ini:line_exist(item:section(),"inv_weight")and ini:r_float(item:section(),"inv_weight")or 2
+ for _,t in ipairs(r and r.contents or {})do base=base+(t.weight or 0)end
+ item:set_weight(base)
+end
+function contents(id)
+ local item=cooler(id);if not item then return {}end
+ local b,msg,r=box(item,false);local out={}
+ if r then for _,t in ipairs(r.contents)do
+  local art=valid_artifact(b,t)
+  if art then out[#out+1]=I().copy(t)end
+ end end
+ return out,msg
+end
+function store(id,artifact_id)
+ local item=cooler(id);local art=I().owned(artifact_id)
+ if not item or not art or not IsArtefact(art)then return fail("bad_item")end
+ local b,msg,r=box(item,true);if not b then return false,msg end
+ if #r.contents>=2 then return fail("full")end
+ -- Store the same object: condition, research marks and identity are preserved.
+ local t=I().token(art);t.weight=art:weight()
+ db.actor:transfer_item(art,b);r.contents[#r.contents+1]=t;weight(item,r)
+ I().record("storage",art:section());return true,"cczmp_cooler_stored"
+end
+function take(id,artifact_id)
+ local item=cooler(id);if not item then return fail("bad_item")end
+ local b,msg,r=box(item,false);if not b then return false,msg or "cczmp_cooler_bad_item"end
+ for i,t in ipairs(r.contents)do if t.id==tonumber(artifact_id)then
+  local art=valid_artifact(b,t);if not art then return fail("bad_item")end
+  b:transfer_item(art,db.actor);table.remove(r.contents,i);weight(item,r)
+  return true,"cczmp_cooler_taken"
+ end end
+ return fail("bad_item")
+end
+function on_game_start()
+ RegisterScriptCallback("on_game_load",function()next_tick=0 end)
+ RegisterScriptCallback("actor_on_update",function()
+  if not db.actor or time_global()<next_tick then return end;next_tick=time_global()+2000
+  for _,item in ipairs(I().inventory())do if item:section()=="cczmp_cooler"then
+   local s=I().item_state(item)
+   if s.container then box(item,false);weight(item,s.container)end
+  end end
+ end)
+end

@@ -1,0 +1,224 @@
+-- Fictional in-game device jobs; all time is game time, all state is marshal-safe.
+local scan_at=0
+local function I() return cczmp_items end
+local function fail(s) return false,"cczmp_items_"..s end
+local function jobcfg(id,k,d) return I().value("hack_"..id,k,d) end
+local function jnum(id,k,d) return tonumber(jobcfg(id,k,tostring(d))) or d end
+function operations() return I().list(I().value("catalog","hacks","")) end
+local function first_device(min_grade)
+    local best,score=nil,-1
+    for _,item in ipairs(I().inventory()) do
+        local cat=I().definition(item:section())
+        local s=cat=="pda" and I().item_state(item)
+        if s and s.grade>=min_grade and s.grade>score and I().usable(item,5) then best=item;score=s.grade end
+    end
+    return best
+end
+local function target_pda(npc)
+    return npc:object("device_pda_3") or npc:object("device_pda_2") or npc:object("device_pda_1") or npc:object("device_pda")
+end
+function start(id,item_id,target_key)
+    if I().world().job then return fail("busy") end
+    if not jobcfg(id,"seconds",nil) then return fail("bad_item") end
+    local needskill=jobcfg(id,"skill","")
+    local faction=cczmp_factions.faction()
+    if needskill~="" and I().skill(needskill)<jnum(id,"skill_level",0)
+        and not (id=="clone_card" and cczmp_factions.is_criminal(faction)) then return fail("low_skill") end
+    if jobcfg(id,"criminal_only","false")=="true" and not cczmp_factions.is_criminal(faction) then return fail("no_permission") end
+    local primary=I().device(item_id)
+    local target=nil
+    if id=="code_pick"then
+        primary=I().owned(item_id)
+        if not primary or primary:section()~="cczmp_code_pick"then return fail("need_device")end
+        local lock,err=cczmp_locks.target(tonumber(target_key));if not lock then return false,err end
+        target={lock=lock}
+    elseif id=="pda_1" or id=="pda_2" then
+        primary=first_device(id=="pda_1" and 2 or 3)
+        if not primary then return fail("need_device") end
+        local npc,err=cczmp_ops.resolve(target_key,true)
+        if not npc or npc:id()==db.actor:id() then return false,err or "cczmp_items_bad_target" end
+        local pda=target_pda(npc);if not pda then return fail("bad_target") end
+        local target_grade=I().number("item_"..pda:section(),"grade",1)
+        if id=="pda_1" and target_grade>1 then return fail("target_protected") end
+        if id=="pda_2" and target_grade>2 then return fail("target_protected") end
+        target={key=target_key,item=I().token(pda)}
+    elseif id=="signals" then
+        primary=db.actor:object("cczmp_sdr");if not primary then return fail("need_device") end
+    elseif id=="clone_card" then
+        primary=I().owned(item_id)
+        if not primary or primary:section()~="cczmp_bank_card" then return fail("bad_target") end
+    else
+        if not primary then return fail("bad_item") end
+        local category=I().definition(primary:section())
+        local found=false;for _,cat in ipairs(I().list(jobcfg(id,"categories",""))) do if cat==category then found=true end end
+        if not found then return fail("bad_item") end
+        if (id=="os_laptop" or id=="gov_os") and I().value("item_"..primary:section(),"multiboot","false")~="true" then return fail("fixed_os") end
+        if id=="ghost" and I().value("item_"..primary:section(),"secure","false")~="true" then return fail("need_secure_phone") end
+        if id=="gov_os" and not cczmp_factions.is_state(faction) then return fail("no_permission") end
+    end
+    local ok,err=I().usable(primary,jnum(id,"energy",5));if not ok then return ok,err end
+    if jammed() and (id=="signals" or target and not target.lock) then return fail("jammed") end
+    local tools;tools,err=I().toolset(jobcfg(id,"tools",""));if not tools then return false,err end
+    local materials;materials,err=I().select_materials(jobcfg(id,"materials",""));if not materials then return false,err end
+    local uid=I().serial()
+    local job={uid=uid,kind="hack",operation=id,primary=I().token(primary),target=target,
+        tools=tools,materials=materials,seconds=jnum(id,"seconds",60),
+        fail_roll=math.random(1,10000),detect_roll=math.random(1,10000)}
+    I().world().job=job;cczmp_ops.clock_start("item_job_"..uid)
+    I().record("start",id,{uid=uid,target=target and target.key})
+    return true,"cczmp_items_job_started"
+end
+function cancel()
+    local job=I().world().job;if not job then return fail("no_job") end
+    I().record("cancel",job.operation);I().world().job=nil
+    return true,"cczmp_items_cancelled"
+end
+function active()
+    local j=I().copy(I().world().job);if not j then return nil end
+    j.remaining=math.max(0,j.seconds-(cczmp_ops.elapsed("item_job_"..j.uid) or 0));return j
+end
+local function detected(job,primary)
+    local chance=jnum(job.operation,"detection",0)
+    local s=I().item_state(primary)
+    local anonymous=s and s.os=="ghost"
+    for _,item in ipairs(I().inventory()) do
+        if I().definition(item:section())=="phone" then
+            local phone=I().item_state(item)
+            if phone.os=="ghost" and phone.sim and I().usable(item,1) then anonymous=true end
+        end
+    end
+    if anonymous then chance=chance*0.25 end
+    if job.detect_roll<=chance*100 then
+        cczmp_ops.add_incident("device_intrusion_detected",cczmp_ops.person(db.actor),
+            job.target and job.target.key,job.operation,nil)
+        I().record("detected",job.operation)
+    end
+end
+local function finish(job)
+    local primary=I().resolve_device(job.primary)
+    if not primary then return fail("lost_equipment") end
+    local ok,err=I().check_tokens(job.tools);if not ok then return ok,err end
+    ok,err=I().check_tokens(job.materials);if not ok then return ok,err end
+    local skill=jobcfg(job.operation,"skill","")
+    if skill~="" and I().skill(skill)<jnum(job.operation,"skill_level",0)
+        and not (job.operation=="clone_card" and cczmp_factions.is_criminal(cczmp_factions.faction())) then return fail("low_skill") end
+    if jobcfg(job.operation,"criminal_only","false")=="true" and not cczmp_factions.is_criminal(cczmp_factions.faction()) then return fail("no_permission") end
+    if job.operation=="gov_os" and not cczmp_factions.is_state(cczmp_factions.faction()) then return fail("no_permission") end
+    ok,err=I().usable(primary,jnum(job.operation,"energy",5));if not ok then return ok,err end
+    local npc=nil
+    if job.target and job.target.lock then
+        ok,err=cczmp_locks.check_job(job.target.lock);if not ok then return ok,err end
+    elseif job.target then
+        npc,err=cczmp_ops.resolve(job.target.key,true);if not npc then return false,err end
+        local t=npc:object_id(job.target.item.id)
+        if not t or t:name()~=job.target.item.name then return fail("lost_equipment") end
+    end
+    if jammed() and (npc or job.operation=="signals") then return fail("jammed") end
+    local failed=job.fail_roll<=jnum(job.operation,"failure",0)*100
+    local result=nil
+    -- Create outputs first: failed ALife creation never eats ingredients.
+    if not failed and job.operation=="clone_card" then
+        local id;ok,err,id=I().spawn("cczmp_cloned_card",false);if not ok then return ok,err end
+        local se=alife():object(id);local s=alife_storage_manager.get_se_obj_state(se,true)
+        s.cczmp_card_clone={source=job.primary.name,owner=cczmp_ops.person(db.actor),uid=job.uid}
+        result=id
+    end
+    ok,err=I().consume(job.materials);if not ok then return ok,err end
+    local s=I().item_state(primary);s.charge=math.max(0,s.charge-jnum(job.operation,"energy",5))
+    detected(job,primary)
+    if job.operation=="code_pick"then
+        local done,message=cczmp_locks.hack_result(job.target.lock,not failed)
+        I().record(done and "success"or "failed",job.operation,{device=s.uid})
+        return done,message
+    end
+    if failed then
+        s.lock=true;cczmp_ops.clock_start("device_lock_"..s.uid)
+        if I().definition(primary:section())=="pda" then s.grade=math.max(0,s.grade-1) end
+        I().record("failed",job.operation,{device=s.uid});return fail("operation_failed")
+    end
+    if npc then
+        local data={name=npc:character_name(),faction=cczmp_factions.faction_of_object(npc),money=npc:money(),level=job.operation=="pda_2" and 2 or 1}
+        cczmp_ops.service_state().services["hacked_"..job.target.key]=data
+        cczmp_ops.add_incident("pda_hack",cczmp_ops.person(db.actor),job.target.key,job.operation,nil)
+        I().record("pda_data",job.operation,data)
+    elseif job.operation=="flash_phone" then s.firmware=(s.firmware or 0)+1
+    elseif job.operation=="os_laptop" then s.os="linux";s.installed_oses.linux=true
+    elseif job.operation=="ghost" then s.os="ghost";s.installed_oses.ghost=true
+    elseif job.operation=="gov_os" then s.os="government";s.installed_oses.government=true
+    elseif job.operation=="signals" then
+        local data={level=level.name(),targets={}}
+        data.targets=cczmp_comms.scan(150);I().world().signal_report=I().copy(data.targets)
+        I().record("signals",job.operation,data)
+    elseif job.operation=="pentest" then
+        s.audited=true;I().record("audit",job.operation,{device=s.uid,os=s.os,grade=s.grade,encrypted=s.os=="ghost" or s.os=="government"})
+    elseif job.operation=="inject" then s.injected=true;I().record("injection",job.operation,{device=s.uid}) end
+    if skill~="" then I().practice(skill,2) end
+    I().record("success",job.operation,{result=result});return true,"cczmp_items_operation_done"
+end
+function finish_job()
+    local job=I().world().job;if not job or job.kind~="hack" then return false end
+    if (cczmp_ops.elapsed("item_job_"..job.uid) or 0)<job.seconds then return false end
+    local ok,msg=finish(job)
+    I().world().last_result=msg;I().world().job=nil
+    if not ok then I().record("aborted",job.operation,{reason=msg}) end
+    return ok,msg
+end
+function activate_jammer(id)
+    local item=I().owned(id);if not item then return fail("bad_item") end
+    local section=item:section()
+    if section~="cczmp_jammer" and section~="cczmp_jammer_makeshift" then return fail("bad_item") end
+    local s=I().item_state(item)
+    if s.jammer then s.jammer=nil;return true,"cczmp_items_jammer_off" end
+    if section=="cczmp_jammer" and (not cczmp_factions.is_state(cczmp_factions.faction())
+        or not cczmp_licenses or not cczmp_licenses.has("A")) then return fail("no_permission") end
+    local ok,err=I().usable(item,10);if not ok then return ok,err end
+    s.charge=s.charge-10
+    if section=="cczmp_jammer_makeshift" and math.random(1,100)<=50 then s.charge=0;s.broken=true;return fail("operation_failed") end
+    if s.broken then return fail("bad_item") end
+    s.jammer=true
+    local world=I().world();world.jammers=world.jammers or {}
+    world.jammers[tostring(item:id())]={id=item:id(),name=item:name(),section=section,uid=s.uid}
+    cczmp_ops.clock_start("jammer_"..s.uid)
+    return true,"cczmp_items_jammer_on"
+end
+function jammed(position)
+    if not db.actor then return false end
+    position=position or db.actor:position()
+    local world=I().world();world.jammers=world.jammers or {}
+    -- Migrate active inventory jammers from older saves.
+    for _,item in ipairs(I().inventory())do
+        if item:section()=="cczmp_jammer" or item:section()=="cczmp_jammer_makeshift"then
+            local s=I().item_state(item)
+            if s.jammer then world.jammers[tostring(item:id())]={id=item:id(),name=item:name(),section=item:section(),uid=s.uid}end
+        end
+    end
+    local blocked=false
+    for id,r in pairs(world.jammers)do
+        local se=alife():object(r.id)
+        if not se or se:name()~=r.name then world.jammers[id]=nil else
+            local item=level.object_by_id(r.id)
+            if item and item:name()==r.name and item:section()==r.section then
+                local s=I().item_state(item);local age=cczmp_ops.elapsed("jammer_"..r.uid)
+                if not s or not s.jammer or not age or age>=600 or not I().usable(item,0)then
+                    if s then s.jammer=nil end;world.jammers[id]=nil
+                else
+                    local parent=item:parent()
+                    local source=parent and parent:position()or item:position()
+                    local radius=r.section=="cczmp_jammer"and 50 or 15
+                    if source:distance_to_sqr(position)<=radius*radius then blocked=true end
+                end
+            end
+        end
+    end
+    return blocked
+end
+local function update()
+    if not db.actor or time_global()<scan_at then return end
+    scan_at=time_global()+500
+    finish_job()
+    jammed()
+end
+function on_game_start()
+    RegisterScriptCallback("actor_on_update",update)
+    RegisterScriptCallback("on_game_load",function() scan_at=0 end)
+end

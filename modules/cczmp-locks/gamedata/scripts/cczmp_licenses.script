@@ -1,0 +1,85 @@
+-- Physical named permits backed by a persistent government register.
+local function I()return cczmp_items end
+local function registry()
+ local w=I().world();w.licenses=w.licenses or {records={}};return w.licenses.records
+end
+local categories={D={price=5000,issuer="mvd",rank=1},C={price=15000,issuer="mvd",rank=1},B={price=50000,issuer="minjust",rank=2},A={price=150000,issuer="mo",rank=2},certificate={price=0,issuer="sk",rank=2}}
+function definition(category)return I().copy(categories[category])end
+local function proof(item)
+ local se=alife():object(item:id());local data=se and alife_storage_manager.get_se_obj_state(se,false)
+ local p=data and data.cczmp_license
+ if not p or p.name~=item:name() or p.owner~=cczmp_ops.person(db.actor) then return nil end
+ local r=registry()[tostring(p.uid)]
+ if not r or r.revoked or r.name~=p.name or r.owner~=p.owner or r.category~=p.category then return nil end
+ return r
+end
+function has(category)
+ if not categories[category] or not db.actor then return false end
+ for _,item in ipairs(I().inventory())do local r=proof(item);if r and r.category==category then return true end end
+ return false
+end
+function permits()
+ local out={}
+ for _,item in ipairs(I().inventory())do local r=proof(item);if r then out[#out+1]=I().copy(r)end end
+ return out
+end
+function nearest_issuer(category)
+ local rule=categories[category];if not rule then return nil end
+ local best,dist=nil,16
+ for _,entry in pairs(db.storage or {})do
+  local npc=entry.object
+  if npc and IsStalker(npc) and npc:alive() and npc:id()~=db.actor:id()
+    and npc:relation(db.actor)~=game_object.enemy and cczmp_factions.faction_of_object(npc)==rule.issuer
+    and cczmp_factions.object_rank(npc)>=rule.rank then
+   local d=npc:position():distance_to_sqr(db.actor:position());if d<=dist then best=npc;dist=d end
+  end
+ end
+ return best
+end
+local function issue(category,npc,debug_mode)
+ local rule=categories[category];if not rule then return false,"cczmp_items_bad_item" end
+ if has(category) then return false,"cczmp_license_already" end
+ if not debug_mode and category=="A" and not has("certificate") then return false,"cczmp_license_need_certificate" end
+ local price=debug_mode and 0 or rule.price
+ if db.actor:money()<price then return false,"cczmp_items_no_money" end
+ local section=category=="certificate" and "cczmp_sk_certificate" or "cczmp_license_"..category:lower()
+ local ok,msg,id=I().spawn(section,false);if not ok then return ok,msg end
+ local se=alife():object(id)
+ local uid=I().serial();local p={uid=uid,category=category,owner=cczmp_ops.person(db.actor),name=se:name(),
+  holder=db.actor:character_name(),issuer=npc and cczmp_ops.person(npc) or "debug",issuer_name=npc and npc:character_name() or "F7",price=price}
+ alife_storage_manager.get_se_obj_state(se,true).cczmp_license=I().copy(p)
+ registry()[tostring(uid)]=p;cczmp_ops.clock_start("license_"..uid)
+ db.actor:give_money(-price);I().record("license",section,{name=p.holder,grade=category,price=price})
+ return true,"cczmp_license_issued"
+end
+function buy(category)
+ local npc=nearest_issuer(category);if not npc then return false,"cczmp_license_need_issuer" end
+ return issue(category,npc,false)
+end
+function debug_issue(category)
+ if not DEV_DEBUG then return false,"cczmp_items_no_permission" end
+ return issue(category,nil,true)
+end
+function inspect(npc)
+ if not npc or not IsStalker(npc) or not npc:alive() then return nil end
+ local out={};local owner=cczmp_ops.person(npc)
+ npc:inventory_for_each(function(item)
+  local se=alife():object(item:id());local data=se and alife_storage_manager.get_se_obj_state(se,false);local p=data and data.cczmp_license
+  if p and p.owner==owner and p.name==item:name()then
+   local r=registry()[tostring(p.uid)]
+   if r and not r.revoked and r.owner==owner and r.name==p.name and r.category==p.category then out[p.category]=true end
+  end
+ end)
+ return out
+end
+
+-- Visible-item inspection is separate from a warrant-controlled inventory search.
+function visible_violation(npc)
+ if not npc or not npc:alive()then return nil end
+ local item=npc:active_item()
+ if not item or not IsWeapon(item)or npc:weapon_strapped()then return nil end
+ local grade=I().value("item_"..item:section(),"license","")
+ if grade~="D"and grade~="C"and grade~="B"and grade~="A"then return nil end
+ local permits=inspect(npc);if permits and permits[grade]then return nil end
+ return {item=I().token(item),category=grade,offence=grade=="A"and "uk_11_2"or "ak_items_carry"}
+end

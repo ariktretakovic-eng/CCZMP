@@ -1,0 +1,125 @@
+-- Specialized service NPCs retain explicit organization ranks across save/load.
+local roles={
+ mvd_licensing={faction="mvd",rank=1},justice_licensing={faction="minjust",rank=2},
+ defense_licensing={faction="mo",rank=2},sk_certification={faction="sk",rank=2},
+ instructor={faction="mineducation",rank=1},doctor={faction="minzdrav",rank=2},
+ infectologist={faction="minzdrav",rank=2},radiologist={faction="minzdrav",rank=3},
+ field_surgeon={faction="minzdrav",rank=3},pharmacist={faction="minzdrav",rank=1},vehicle_dealer={faction="civilians",rank=0},
+}
+local next_scan=0
+function list()
+ local out={};for id,r in pairs(roles)do out[#out+1]={id=id,faction=r.faction,rank=r.rank}end
+ table.sort(out,function(a,b)return a.id<b.id end);return out
+end
+local function data(npc)
+ local se=npc and alife():object(npc:id());return se and alife_storage_manager.get_se_obj_state(se,true)
+end
+local function initialize(npc)
+ if not npc or not IsStalker(npc) or not npc:alive() then return end
+ local id=npc:section():match("^sim_cczmp_service_(.+)$");local r=id and roles[id];if not r then return end
+ local d=data(npc);if not d or d.cczmp_profession_name==npc:name()then return end
+ d.cczmp_faction_object_name=npc:name();d.cczmp_faction_id=r.faction;d.cczmp_organization_rank=r.rank
+ d.cczmp_profession_name=npc:name();d.cczmp_profession=id
+end
+function role(npc)
+ initialize(npc);local d=data(npc)
+ return d and d.cczmp_profession_name==npc:name() and d.cczmp_profession or nil
+end
+function nearest(id)
+ local best,dist=nil,16
+ for _,entry in pairs(db.storage or {})do
+  local n=entry.object
+  if n and IsStalker(n) and n:alive() and n:id()~=db.actor:id() and role(n)==id
+    and n:relation(db.actor)~=game_object.enemy then
+   local d=n:position():distance_to_sqr(db.actor:position());if d<=dist then best=n;dist=d end
+  end
+ end
+ return best
+end
+local function spawn_at(id,anchor,debug_mode)
+ if (debug_mode and not DEV_DEBUG) or not roles[id] or not db.actor then return false,"cczmp_items_no_permission" end
+ local sec="sim_cczmp_service_"..id
+ if not system_ini():section_exist(sec) then return false,"cczmp_ui_engine_unavailable" end
+ local origin=(anchor or db.actor):position();local order=list();local index=0
+ for i,r in ipairs(order)do if r.id==id then index=i-1;break end end
+ local heading=index*math.pi*2/#order
+ local vertex=nil;local p=nil
+ for _,radius in ipairs({2.5,2,1.5,3})do
+  for i=0,19 do
+   local angle=heading+i*math.pi/10
+   local candidate=vector():set(origin.x+math.cos(angle)*radius,origin.y,origin.z+math.sin(angle)*radius)
+   local v=level.vertex_id(candidate)
+   if v and v>=0 and v~=4294967295 then
+    local floor=level.vertex_position(v)
+    if floor:distance_to_sqr(origin)<=16 and math.abs(floor.y-origin.y)<1 then vertex=v;p=floor;break end
+   end
+  end
+  if vertex then break end
+ end
+ if not vertex then return false,"cczmp_items_bad_placement" end
+ local se=alife_create(sec,p,vertex,(anchor or db.actor):game_vertex_id())
+ if not se then return false,"cczmp_ui_engine_unavailable" end
+ local d=alife_storage_manager.get_se_obj_state(se,true);local r=roles[id]
+ d.cczmp_faction_object_name=se:name();d.cczmp_faction_id=r.faction;d.cczmp_organization_rank=r.rank
+ d.cczmp_profession_name=se:name();d.cczmp_profession=id
+ return true,"cczmp_items_spawned",se.id
+end
+function spawn(id)return spawn_at(id,db.actor,true)end
+local station_applied={}
+local population_enabled=true
+local points={
+ mvd_licensing={level="l01_escape",anchor="esc_2_12_stalker_trader"},
+ defense_licensing={level="l01_escape",anchor="esc_3_16_military_trader"},
+ justice_licensing={level="l05_bar",anchor="bar_dolg_leader"},
+ sk_certification={level="l05_bar",anchor="bar_duty_security_squad_leader"},
+ doctor={level="l05_bar",anchor="bar_dolg_medic"},
+ field_surgeon={level="l05_bar",anchor="bar_dolg_medic"},
+ pharmacist={level="l05_bar",anchor="bar_dolg_medic"},
+ vehicle_dealer={level="l05_bar",anchor="bar_visitors_barman_stalker_trader"},
+ instructor={level="l08_yantar",anchor="yan_stalker_sakharov"},
+ infectologist={level="l08_yantar",anchor="yan_stalker_sakharov"},
+ radiologist={level="l11_pripyat",anchor="pri_medic_stalker"},
+}
+local function population()
+ if not population_enabled then return end
+ local world=cczmp_items.world();world.service_points=world.service_points or {}
+ for id,point in pairs(points)do
+  if level.name()==point.level and not world.service_points[id]then
+   for _,entry in pairs(db.storage or {})do
+    local n=entry.object
+    if n and n:alive() and n:section()==point.anchor then
+     local ok,msg,nid=spawn_at(id,n,false)
+     if ok then
+      local se=alife():object(nid)
+      world.service_points[id]={id=nid,name=se:name(),level=point.level,anchor=point.anchor}
+     end
+     break
+    end
+   end
+  end
+ end
+end
+local function stationary(npc)
+ local id=role(npc)
+ if not id or station_applied[npc:id()]==npc:name()then return end
+ local operations=alife_storage_manager.get_state().cczmp_operations
+ local person=operations and cczmp_ops.person(npc)
+ if person and operations.holds[person]then return end
+ if not xr_logic or type(xr_logic.set_new_scheme_and_logic)~="function" or not db.storage[npc:id()]then return end
+ xr_logic.set_new_scheme_and_logic(npc,"remark","remark@cczmp_service","logic","","cczmp\\professions.ltx")
+ station_applied[npc:id()]=npc:name()
+end
+function debug_population()
+ if not DEV_DEBUG then return false end
+ population_enabled=true;population();return true
+end
+function on_game_start()
+ RegisterScriptCallback("on_game_load",function()station_applied={};next_scan=0 end)
+ RegisterScriptCallback("npc_on_net_spawn",initialize)
+ RegisterScriptCallback("actor_on_update",function()
+  if not db.actor or time_global()<next_scan then return end
+  next_scan=time_global()+1500
+  population()
+  for _,entry in pairs(db.storage or {})do if entry.object then initialize(entry.object);stationary(entry.object)end end
+ end)
+end

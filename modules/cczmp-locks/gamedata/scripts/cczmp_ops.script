@@ -1,0 +1,740 @@
+-- CCZMP offline organization actions. All commands enforce role/state on server side.
+-- State contains primitives only; engine objects are resolved again on each command.
+local config=nil
+local cache=nil
+local acting=nil
+local function agent() return acting or db.actor end
+local function agent_faction() return acting and cczmp_factions.faction_of_object(acting) or cczmp_factions.faction() end
+local function agent_rank() return acting and cczmp_factions.object_rank(acting) or cczmp_factions.rank() end
+
+-- Online state is discarded by Anomaly when an NPC goes offline. Migrate once.
+local function identity_storage(npc,create)
+    local se=alife():object(npc:id())
+    if not se then return nil end
+    local data=alife_storage_manager.get_se_obj_state(se,create)
+    if not data then return nil end
+    local old=alife_storage_manager.get_game_object_state(npc)
+    if not data.cczmp_person_key and old and old.cczmp_person_key
+        and old.cczmp_person_name==npc:name() and old.cczmp_person_section==npc:section() then
+        for _,k in ipairs({"cczmp_person_key","cczmp_person_name","cczmp_person_section","cczmp_identity_dead"}) do data[k]=old[k] end
+    end
+    return data
+end
+local function cfg()
+    if not config then config=ini_file("cczmp\\operations.ltx") end
+    return config
+end
+local function setting(section,key,default)
+    local f=cfg()
+    if not f:section_exist(section) or not f:line_exist(section,key) then return default end
+    return f:r_string(section,key)
+end
+function tuning(key,default) return tonumber(setting("settings",key,tostring(default))) or default end
+function supply(key,default) return setting("settings",key,default) end
+
+local function state()
+    if not db.actor then return nil end
+    if not cache then
+        local world=alife_storage_manager.get_state()
+        if not world then return nil end
+        world.cczmp_operations=world.cczmp_operations or {}
+        cache=world.cczmp_operations
+        for _,key in ipairs({"people","cases","warrants","incidents","holds","facilities","services","contracts"}) do
+            cache[key]=cache[key] or {}
+        end
+        cache.serial=cache.serial or 0
+        cache.treasury=cache.treasury or 0
+        cache.version=1
+    end
+    return cache
+end
+local function serial()
+    local st=state(); st.serial=st.serial+1; return st.serial
+end
+local function copy(t)
+    if type(t)~="table" then return t end
+    local out={};for k,v in pairs(t) do out[k]=copy(v) end;return out
+end
+local function start_clock(key) save_ctime(db.actor,"ccz_ops_"..key,game.get_game_time()) end
+local function age(key)
+    local ct=load_ctime(db.actor,"ccz_ops_"..key)
+    if not ct then return nil end
+    local ok,n=pcall(function() return game.get_game_time():diffSec(ct) end)
+    return ok and type(n)=="number" and math.max(0,n) or nil
+end
+local function fail(key) return false,"cczmp_ops_"..key end
+local function finite(v) return type(v)=="number" and v==v and math.abs(v)<math.huge end
+
+function person(npc)
+    local st=state()
+    if not st or not npc or not IsStalker(npc) then return nil end
+    local key="actor"
+    if npc:id()~=db.actor:id() then
+        local data=identity_storage(npc,true)
+        if not data then return nil end
+        key=data.cczmp_person_key
+        if not key or data.cczmp_person_name~=npc:name() or data.cczmp_person_section~=npc:section() or data.cczmp_identity_dead then
+            key="p"..serial();data.cczmp_person_key=key
+            data.cczmp_person_name=npc:name();data.cczmp_person_section=npc:section();data.cczmp_identity_dead=nil
+        end
+    end
+    st.people[key]=st.people[key] or {key=key,convictions={},records={}}
+    local p=st.people[key]
+    p.object_id=npc:id();p.object_name=npc:name();p.section=npc:section()
+    p.name=npc:character_name()
+    p.faction=cczmp_factions.faction_of_object(npc)
+    p.rank=npc:id()==db.actor:id() and cczmp_factions.rank() or cczmp_factions.object_rank(npc)
+    return key
+end
+
+function resolve(key,near)
+    local st=state();local p=st and st.people[key]
+    if not p then return nil,"cczmp_ops_target_missing" end
+    local npc=key=="actor" and db.actor or level.object_by_id(p.object_id)
+    if not npc or not IsStalker(npc) or not npc:alive()
+        or npc:name()~=p.object_name or npc:section()~=p.section then
+        return nil,"cczmp_ops_target_missing"
+    end
+    if npc:id()~=db.actor:id() then
+        local data=identity_storage(npc,false)
+        if not data or data.cczmp_person_key~=key then return nil,"cczmp_ops_target_missing" end
+    end
+    if near and npc:position():distance_to_sqr(agent():position())>tuning("interaction_distance",4)^2 then
+        return nil,"cczmp_ops_too_far"
+    end
+    person(npc)
+    return npc
+end
+
+function target_info(key)
+    local st=state();return st and copy(st.people[key]) or nil
+end
+
+function nearby(radius)
+    local out={}
+    if not state() then return out end
+    for _,storage in pairs(db.storage or {}) do
+        local npc=storage.object
+        if npc and npc:id()~=db.actor:id() and IsStalker(npc) and npc:alive() then
+            local distance=npc:position():distance_to_sqr(db.actor:position())
+            if distance<=(math.min(150,math.max(1,tonumber(radius)or tuning("target_list_distance",15))))^2 then
+                out[#out+1]={key=person(npc),name=npc:character_name(),distance=math.sqrt(distance)}
+            end
+        end
+    end
+    table.sort(out,function(a,b) return a.distance<b.distance end)
+    return out
+end
+
+function can(action)
+    if type(action)~="string" or not state() then return fail("no_membership") end
+    local id=agent_faction()
+    if not id then return fail("no_membership") end
+    local found=false
+    for name in setting("f_"..id,"actions",""):gmatch("[^,%s]+") do
+        if name==action then found=true;break end
+    end
+    local gang={rob=true,kidnap=true,ransom=true,free_hostage=true}
+    if not found and not (gang[action] and cczmp_factions.is_criminal(id)) then return fail("no_power") end
+    if not acting and get_actor_true_community()~=cczmp_factions.actor_community(id) then return fail("no_membership") end
+    if acting and acting:character_community()~=cczmp_factions.actor_community(id) then return fail("no_membership") end
+    local pkey=person(agent())
+    if state().people[pkey].suspended and cczmp_factions.is_state(id) then return fail("suspended") end
+    local required=tonumber(setting("f_"..id,action.."_rank","0")) or 0
+    if agent_rank()<required then return fail("low_rank") end
+    return true
+end
+
+function powers(id)
+    id=id or cczmp_factions.faction()
+    local out={}
+    for name in setting("f_"..tostring(id),"actions",""):gmatch("[^,%s]+") do
+        out[#out+1]={id=name,rank=tonumber(setting("f_"..tostring(id),name.."_rank","0")) or 0}
+    end
+    if cczmp_factions.is_criminal(id) then
+        for _,action in ipairs({"rob","kidnap","ransom","free_hostage"}) do
+            local found=false
+            for _,power in ipairs(out) do if power.id==action then found=true end end
+            if not found then out[#out+1]={id=action,rank=0} end
+        end
+    end
+    return out
+end
+
+local function author()
+    return {person=person(agent()),faction=agent_faction(),rank=agent_rank()}
+end
+local function log(entry,action,details)
+    entry.history=entry.history or {}
+    local record={uid=serial(),action=action,author=author(),details=details or ""}
+    start_clock("event_"..record.uid)
+    entry.history[#entry.history+1]=record
+    if printe then printe("[CCZMP operations] "..action.." #"..entry.uid.." by "..tostring(record.author.faction)) end
+end
+
+function add_incident(kind,subject,victim,details,offence)
+    if not state() then return nil end
+    local id=serial()
+    state().incidents[tostring(id)]={uid=id,kind=kind,subject=subject,victim=victim,
+        details=details or "",offence=offence,author=author()}
+    start_clock("incident_"..id)
+    return id
+end
+
+local function case_get(id)
+    local st=state();return st and st.cases[tostring(id)] or nil
+end
+local function mutable(c)
+    return c and (c.status=="investigation" or c.status=="returned")
+end
+function cases()
+    if not can("dossier") then return {} end
+    local out={};for _,c in pairs(state().cases) do out[#out+1]=copy(c) end
+    table.sort(out,function(a,b)return a.uid>b.uid end);return out
+end
+function case_info(id)
+    if not can("dossier") then return nil end
+    return copy(case_get(id))
+end
+function incident_list(key)
+    if not can("dossier") then return {} end
+    local out={}
+    for _,e in pairs(state().incidents) do
+        if e.subject==key then out[#out+1]=copy(e) end
+    end
+    table.sort(out,function(a,b)return a.uid>b.uid end);return out
+end
+
+function open_case(key,offence)
+    local ok,err=can("open_case");if not ok then return ok,err end
+    local def=cczmp_law.offence_definition(offence)
+    if not def or not state().people[key] then return fail("bad_case") end
+    -- Variable financial claims require an amount/evidence workflow; unavailable in this stage.
+    for _,penalty in ipairs(def.penalties) do
+        if offence=="fp_4_low" or offence=="fp_4_high" then return fail("bad_case") end
+    end
+    for _,c in pairs(state().cases) do
+        if c.target==key and c.offence==offence and c.status~="closed" then return fail("duplicate_case") end
+    end
+    local c={uid=serial(),target=key,offence=offence,status="investigation",evidence={},history={}}
+    state().cases[tostring(c.uid)]=c;log(c,"open_case")
+    return true,"cczmp_ops_case_opened",c.uid
+end
+
+function statement(id,text)
+    local ok,err=can("statement");if not ok then return ok,err end
+    local c=case_get(id)
+    if not mutable(c) then return fail("bad_case") end
+    if type(text)~="string" or #text:gsub("%s","")<6 or #text>1000 then return fail("need_statement") end
+    c.evidence[#c.evidence+1]={uid=serial(),kind="statement",text=text,author=author()}
+    log(c,"statement");return true,"cczmp_ops_evidence_added"
+end
+
+function complaint(key,text)
+    local ok,err=can("complaint");if not ok then return ok,err end
+    if not state().people[key] or type(text)~="string" or #text:gsub("%s","")<6 or #text>1000 then
+        return fail("need_statement")
+    end
+    add_incident("complaint",key,nil,text,nil)
+    return true,"cczmp_ops_complaint_filed"
+end
+
+local function evidence(c,kind,text,offence,source)
+    for _,e in ipairs(c.evidence) do
+        if e.kind==kind and e.source==source then return fail("already_done") end
+    end
+    c.evidence[#c.evidence+1]={uid=serial(),kind=kind,text=text,offence=offence,source=source,author=author()}
+    log(c,kind);return true,"cczmp_ops_evidence_added"
+end
+
+function inspect_carry(key)
+    local ok,msg=can("observe");if not ok then return ok,msg end
+    local npc;npc,msg=resolve(key,true);if not npc then return false,msg end
+    local r=cczmp_licenses.visible_violation(npc)
+    if not r then return true,"cczmp_license_visible_clear" end
+    local records=cczmp_items.world();records.carry_inspections=records.carry_inspections or {}
+    local token=key..":"..r.item.name
+    local last=records.carry_inspections[token]
+    if last and (elapsed("carry_inspect_"..last)or 0)<3600 then return fail("already_done")end
+    local uid=cczmp_items.serial();records.carry_inspections[token]=uid;clock_start("carry_inspect_"..uid)
+    add_incident("unlicensed_visible_weapon",key,nil,r.item.section.." / "..r.category,r.offence)
+    return true,"cczmp_license_violation_recorded",r.offence
+end
+function observe(id)
+    local ok,err=can("observe");if not ok then return ok,err end
+    local c=case_get(id);if not mutable(c) then return fail("bad_case") end
+    local npc; npc,err=resolve(c.target,true);if not npc then return false,err end
+    local added=false
+    for _,e in pairs(state().incidents) do
+        if e.subject==c.target and e.kind~="complaint" and e.offence==c.offence then
+            if evidence(c,"incident",e.details,e.offence,tostring(e.uid)) then added=true end
+        end
+    end
+    local item=npc:active_item()
+    if cczmp_licenses and (c.offence=="ak_items_carry"or c.offence=="uk_11_2")then
+        local r=cczmp_licenses.visible_violation(npc)
+        if r and r.offence==c.offence then
+            if evidence(c,"visible_unlicensed_weapon",r.item.section.." / "..r.category,r.offence,r.item.name)then added=true end
+        end
+    end
+    if c.offence=="uk_3_3" and item and IsWeapon(item) and not npc:weapon_strapped() then
+        if evidence(c,"visible_weapon",item:section(),"uk_3_3",tostring(item:id())) then added=true end
+    end
+    if cczmp_gear and cczmp_gear.case_recordings then
+        for _,r in ipairs(cczmp_gear.case_recordings(c.target,c.offence))do
+            if evidence(c,"recording",r.text,r.offence,"media_"..r.uid.."_"..r.incident)then added=true end
+        end
+    end
+    if not added then return fail("no_evidence") end
+    return true,"cczmp_ops_evidence_added"
+end
+
+function submit_case(id)
+    local ok,err=can("submit_case");if not ok then return ok,err end
+    local c=case_get(id)
+    if not mutable(c) or #c.evidence==0 then return fail("no_evidence") end
+    c.status="prosecutor_review";log(c,"submit_case");return true,"cczmp_ops_submitted"
+end
+function endorse_case(id)
+    local ok,err=can("endorse_case");if not ok then return ok,err end
+    local c=case_get(id)
+    if not c or (c.status~="prosecutor_review" and not mutable(c)) or #c.evidence==0 then return fail("bad_case") end
+    c.status="court_review";c.prosecutor=author();log(c,"endorse_case")
+    return true,"cczmp_ops_endorsed"
+end
+function return_case(id)
+    local ok,err=can("return_case");if not ok then return ok,err end
+    local c=case_get(id)
+    if not c or (c.status~="prosecutor_review" and c.status~="court_review") then return fail("bad_case") end
+    c.status="returned";c.prosecutor=nil;log(c,"return_case");return true,"cczmp_ops_returned"
+end
+
+local function immune(p)
+    return p and ((p.faction=="sud" and p.rank>=7) or
+        (cczmp_factions.is_state(p.faction) and p.rank>=9))
+end
+local function court(c)
+    if not c or c.status~="court_review" or not c.prosecutor then return fail("not_endorsed") end
+    local def=cczmp_law.offence_definition(c.offence)
+    if not def then return fail("bad_case") end
+    if def.code=="uk" and agent_rank()<8 then return fail("low_rank") end
+    if immune(state().people[c.target]) and agent_rank()<14 then return fail("immunity") end
+    return true
+end
+local function active_warrant(key,kind)
+    for _,w in pairs(state().warrants) do
+        if w.target==key and w.kind==kind and w.status=="active" then return w end
+    end
+end
+function issue_warrant(id,kind)
+    if kind~="arrest" and kind~="search" then return fail("bad_case") end
+    local ok,err=can("issue_"..kind);if not ok then return ok,err end
+    local c=case_get(id);ok,err=court(c);if not ok then return ok,err end
+    if #c.evidence==0 then return fail("no_evidence") end
+    if active_warrant(c.target,kind) then return fail("already_done") end
+    local w={uid=serial(),case_id=c.uid,target=c.target,kind=kind,status="active",issuer=author()}
+    state().warrants[tostring(w.uid)]=w;log(c,"issue_"..kind,tostring(w.uid))
+    return true,"cczmp_ops_warrant_issued"
+end
+function warrants(key)
+    if not can("dossier") then return {} end
+    local out={}
+    for _,w in pairs(state().warrants) do if not key or w.target==key then out[#out+1]=copy(w) end end
+    table.sort(out,function(a,b)return a.uid>b.uid end);return out
+end
+function revoke_warrant(id)
+    local ok,err=can("revoke_warrant");if not ok then return ok,err end
+    local w=state().warrants[tostring(id)]
+    if not w or w.status~="active" then return fail("no_warrant") end
+    if agent_rank()<w.issuer.rank then return fail("low_rank") end
+    w.status="revoked";log(case_get(w.case_id),"revoke_warrant",tostring(w.uid))
+    return true,"cczmp_ops_warrant_revoked"
+end
+
+local function vulnerable(npc)
+    return npc:wounded() or npc:critically_wounded() or not npc:best_enemy()
+end
+local function threat(npc)
+    if npc:wounded() or npc:critically_wounded() then return true end
+    local gun=db.actor:active_item()
+    return gun and IsWeapon(gun) and not db.actor:weapon_strapped() and vulnerable(npc)
+end
+function hold_info(key)
+    local st=state();return st and copy(st.holds[key]) or nil
+end
+local function hold(key,kind,case_id)
+    local npc,err=resolve(key,true);if not npc then return false,err end
+    if state().holds[key] then return fail("already_held") end
+    if state().services.sonic_targets and state().services.sonic_targets[key] then return fail("already_held") end
+    if not vulnerable(npc) then return fail("resisting") end
+    local h={uid=serial(),target=key,kind=kind,case_id=case_id,owner=author(),status="held"}
+    local ok;ok,err=cczmp_custody.hold(npc,h);if not ok then return false,err end
+    state().holds[key]=h;start_clock("hold_"..h.uid)
+    return true,nil,h
+end
+function arrest(key)
+    local ok,err=can("arrest");if not ok then return ok,err end
+    local w=active_warrant(key,"arrest")
+    if not w then return fail("no_warrant") end
+    if immune(state().people[key]) and w.issuer.rank<14 then return fail("immunity") end
+    local h;ok,err,h=hold(key,"arrest",w.case_id);if not ok then return ok,err end
+    w.status="executed";w.executor=author();h.warrant_id=w.uid
+    log(case_get(w.case_id),"arrest",tostring(w.uid))
+    return true,"cczmp_ops_arrested"
+end
+function search(id)
+    local ok,err=can("search");if not ok then return ok,err end
+    local c=case_get(id);if not c or c.status=="closed" then return fail("bad_case") end
+    local w=active_warrant(c.target,"search")
+    if not w or w.case_id~=c.uid then return fail("no_warrant") end
+    local npc;npc,err=resolve(c.target,true);if not npc then return false,err end
+    if not state().holds[c.target] and not vulnerable(npc) then return fail("resisting") end
+    local found={}
+    npc:inventory_for_each(function(item)
+        -- inventory_for_each supplies ONE item (unlike iterate_inventory).
+        if item then found[#found+1]=item:section() end
+    end)
+    w.status="executed";w.executor=author()
+    evidence(c,"inventory",table.concat(found,", "),nil,tostring(w.uid))
+    return true,"cczmp_ops_search_complete"
+end
+function interrogate(id,text)
+    local ok,err=can("interrogate");if not ok then return ok,err end
+    local c=case_get(id)
+    if not c or c.status=="closed" or not state().holds[c.target] then return fail("not_held") end
+    local npc;npc,err=resolve(c.target,true);if not npc then return false,err end
+    if type(text)~="string" or #text:gsub("%s","")<6 or #text>1000 then return fail("need_statement") end
+    return evidence(c,"interrogation",text,nil,tostring(serial()))
+end
+
+local function has_proof(c)
+    for _,e in ipairs(c.evidence) do
+        if e.kind~="statement" and e.offence==c.offence then return true end
+    end
+    return false
+end
+-- Pure preview shared with sentencing: does not debit money or alter case state.
+function sentence_preview(offence,severity)
+    if not finite(severity) or severity<0 or severity>1 then return nil end
+    local def=cczmp_law.offence_definition(offence)
+    if not def then return nil end
+    local duration,fine=0,0
+    for _,p in ipairs(def.penalties) do
+        if p.kind=="arrest" then duration=math.max(duration,math.min(p.amount,def.arrest_max_hours)*3600)
+        elseif p.kind=="freedom" then
+            local years=p.amount or math.floor(p.min+(p.max-p.min)*severity)
+            duration=math.max(duration,math.max(def.freedom_min_days,
+                math.min(def.freedom_max_days,years*def.freedom_year_days))*86400)
+        elseif p.kind=="fine" then fine=fine+p.amount end
+    end
+    local ranged=false
+    for _,p in ipairs(def.penalties) do if p.kind=="freedom" and p.min and p.max and p.min~=p.max then ranged=true end end
+    return {duration=duration,fine=fine,ranged=ranged,penalties=copy(def.penalties)}
+end
+function convict(id,severity)
+    local ok,err=can("convict");if not ok then return ok,err end
+    local c=case_get(id);ok,err=court(c);if not ok then return ok,err end
+    if not has_proof(c) then return fail("no_verified_evidence") end
+    if not finite(severity) or severity<0 or severity>1 then return fail("bad_amount") end
+    local npc;npc,err=resolve(c.target,false);if not npc then return false,err end
+    local def=cczmp_law.offence_definition(c.offence)
+    local preview=sentence_preview(c.offence,severity)
+    local duration,fine=preview.duration,preview.fine
+    local p=state().people[c.target]
+    if c.target=="actor" then
+        local result;ok,err,result=cczmp_law.report(c.offence,nil,severity)
+        if not ok then return ok,err end
+        c.actor_conviction=result.uid
+    else
+        local paid=math.min(fine,math.max(0,math.floor(npc:money())))
+        npc:give_money(-paid);state().treasury=state().treasury+paid
+        p.debt=(p.debt or 0)+fine-paid
+        for _,penalty in ipairs(def.penalties) do
+            if penalty.kind=="dismissal" then p.suspended=true;p.dismissed=true
+            elseif penalty.kind=="blacklist" then p.blacklisted=true
+            elseif penalty.kind=="seize_license" then p.license_seized=true
+            elseif penalty.kind=="demotion" then cczmp_factions.set_object_rank(npc,math.max(0,p.rank-1))
+            elseif penalty.kind=="reprimand" then p.reprimands=(p.reprimands or 0)+1 end
+        end
+    end
+    c.status="closed";c.verdict="guilty";c.judge=author();c.sentence_seconds=duration
+    p.convictions[#p.convictions+1]={case_id=c.uid,offence=c.offence,duration=duration,fine=fine}
+    log(c,"convict",tostring(duration))
+    return true,"cczmp_ops_convicted"
+end
+
+local function unhold(key,reason)
+    local h=state().holds[key];if not h then return fail("not_held") end
+    local npc=resolve(key,false)
+    if npc then
+        local ok,err=cczmp_custody.restore(npc,h);if not ok then return ok,err end
+    else
+        local p=state().people[key]
+        local se=p and alife():object(p.object_id)
+        if se and se:name()==p.object_name then
+            -- Restore on the next online spawn, never drop an offline restraint silently.
+            h.pending_release=reason;return true,"cczmp_ops_release_pending"
+        end
+    end
+    state().holds[key]=nil
+    if h.case_id then log(case_get(h.case_id),reason) end
+    return true,"cczmp_ops_released"
+end
+function acquit(id)
+    local ok,err=can("acquit");if not ok then return ok,err end
+    local c=case_get(id);ok,err=court(c);if not ok then return ok,err end
+    c.status="closed";c.verdict="not_guilty";c.judge=author()
+    for _,w in pairs(state().warrants) do if w.case_id==c.uid and w.status=="active" then w.status="revoked" end end
+    if state().holds[c.target] then unhold(c.target,"acquit") end
+    log(c,"acquit");return true,"cczmp_ops_acquitted"
+end
+function appeal(id)
+    local ok,err=can("appeal");if not ok then return ok,err end
+    local c=case_get(id)
+    if not c or c.status~="closed" or not c.judge or c.judge.rank>=14 then return fail("bad_case") end
+    if agent_rank()<=c.judge.rank then return fail("low_rank") end
+    c.previous_verdicts=c.previous_verdicts or {}
+    c.previous_verdicts[#c.previous_verdicts+1]={verdict=c.verdict,judge=copy(c.judge),duration=c.sentence_seconds}
+    c.verdict=nil;c.sentence_seconds=nil;c.judge=nil;c.status="returned";c.prosecutor=nil
+    for _,w in pairs(state().warrants) do if w.case_id==c.uid and w.status=="active" then w.status="revoked" end end
+    if state().holds[c.target] then unhold(c.target,"appeal") end
+    log(c,"appeal");return true,"cczmp_ops_returned"
+end
+function release(key)
+    local ok,err=can("release");if not ok then return ok,err end
+    if agent_faction()=="fsin" then
+        local h=state().holds[key]
+        local elapsed=h and h.sentence_seconds and age("sentence_"..h.uid)
+        if not elapsed or elapsed<h.sentence_seconds then return fail("sentence_active") end
+    end
+    return unhold(key,"release")
+end
+function suspend(key)
+    local ok,err=can("suspend");if not ok then return ok,err end
+    local p=state().people[key]
+    if not p or not cczmp_factions.is_state(p.faction) then return fail("bad_target") end
+    if immune(p) and cczmp_factions.faction()~="sud" then return fail("immunity") end
+    if immune(p) and agent_rank()<14 then return fail("immunity") end
+    local basis=false
+    for _,c in pairs(state().cases) do if c.target==key and c.status~="closed" and #c.evidence>0 then basis=true end end
+    if not basis then return fail("no_evidence") end
+    p.suspended=true;add_incident("suspension",key,nil,"",nil)
+    return true,"cczmp_ops_suspended_done"
+end
+
+function rob(key)
+    local ok,err=can("rob");if not ok then return ok,err end
+    local npc;npc,err=resolve(key,true);if not npc or npc:id()==db.actor:id() then return false,err or "cczmp_ops_bad_target" end
+    if not threat(npc) then return fail("resisting") end
+    local p=state().people[key]
+    local elapsed=p.robbery_uid and age("rob_"..p.robbery_uid)
+    if elapsed and elapsed<tuning("robbery_cooldown_seconds",86400) then return fail("cooldown") end
+    local amount=math.max(0,math.floor(npc:money()))
+    if amount<1 then return fail("no_money") end
+    if db.actor:money()+amount>2147483647 then return fail("bad_amount") end
+    npc:transfer_money(amount,db.actor)
+    p.robbery_uid=serial();start_clock("rob_"..p.robbery_uid)
+    add_incident("robbery",person(db.actor),key,tostring(amount),nil)
+    npc:change_goodwill(-500,db.actor)
+    return true,"cczmp_ops_robbed",amount
+end
+function kidnap(key)
+    local ok,err=can("kidnap");if not ok then return ok,err end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    if not threat(npc) then return fail("resisting") end
+    -- The Barrikada charter forbids raids on allied gangs.
+    if cczmp_factions.faction()=="barrikada" then
+        local target=cczmp_factions.faction_of_object(npc)
+        if target=="barrikada" or cczmp_factions.is_ally("barrikada",target) then return fail("allied_target") end
+    end
+    ok,err=hold(key,"hostage",nil);if not ok then return ok,err end
+    add_incident("kidnapping",person(db.actor),key,npc:character_name(),"uk_3_1")
+    return true,"cczmp_ops_kidnapped"
+end
+function free_hostage(key)
+    local ok,err=can("free_hostage");if not ok then return ok,err end
+    local h=state().holds[key]
+    if not h or h.kind~="hostage" or h.owner.faction~=cczmp_factions.faction() then return fail("not_your_hostage") end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    return unhold(key,"free_hostage")
+end
+function ransom(key,amount)
+    local ok,err=can("ransom");if not ok then return ok,err end
+    local h=state().holds[key]
+    if not h or h.kind~="hostage" or h.owner.faction~=cczmp_factions.faction() then return fail("not_your_hostage") end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    if not finite(amount) or amount<1 or amount~=math.floor(amount) or amount>2147483647 then return fail("bad_amount") end
+    if npc:money()<amount then return fail("no_money") end
+    if db.actor:money()+amount>2147483647 then return fail("bad_amount") end
+    ok,err=cczmp_custody.restore(npc,h);if not ok then return ok,err end
+    npc:transfer_money(amount,db.actor);state().holds[key]=nil
+    add_incident("ransom",person(db.actor),key,tostring(amount),"uk_3_1")
+    return true,"cczmp_ops_ransom_paid",amount
+end
+function rescue(key)
+    local ok,err=can("rescue");if not ok then return ok,err end
+    local h=state().holds[key]
+    if not h or h.kind~="hostage" then return fail("not_held") end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    return unhold(key,"rescue")
+end
+function prison_break(key)
+    local ok,err=can("prison_break");if not ok then return ok,err end
+    local h=state().holds[key]
+    if not h or h.kind~="arrest" then return fail("not_held") end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    ok,err=unhold(key,"prison_break");if not ok then return ok,err end
+    add_incident("prison_break",person(db.actor),key,"",nil)
+    return true,"cczmp_ops_released"
+end
+function escort(key)
+    local ok,err=can("escort");if not ok then return ok,err end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    local h=state().holds[key]
+    if h and h.kind=="hostage" and h.owner.faction~=cczmp_factions.faction() then return fail("not_your_hostage") end
+    if not h then
+        if npc:relation(db.actor)==game_object.enemy then return fail("resisting") end
+        h={uid=serial(),target=key,owner=author(),status="escorted"}
+    end
+    ok,err=cczmp_custody.escort(npc,h);if not ok then return ok,err end
+    state().holds[key]=h;return true,"cczmp_ops_escorting"
+end
+function end_escort(key)
+    local ok,err=can("end_escort");if not ok then return ok,err end
+    local h=state().holds[key]
+    if not h or h.kind or h.owner.faction~=cczmp_factions.faction() then return fail("not_held") end
+    return unhold(key,"end_escort")
+end
+function prison_site()
+    local ok,err=can("prison_site");if not ok then return ok,err end
+    local pos=db.actor:position()
+    state().prison={level=level.name(),x=pos.x,y=pos.y,z=pos.z,lvid=db.actor:level_vertex_id(),gvid=db.actor:game_vertex_id()}
+    return true,"cczmp_ops_prison_marked"
+end
+function admit_prisoner(key)
+    local ok,err=can("admit_prisoner");if not ok then return ok,err end
+    local h=state().holds[key];local c=h and case_get(h.case_id)
+    if not h or h.kind~="arrest" or not c or c.verdict~="guilty" or (c.sentence_seconds or 0)<1 then return fail("need_sentence") end
+    if h.status=="prison" then return fail("already_done") end
+    local site=state().prison
+    if not site or site.level~=level.name() then return fail("need_prison") end
+    local pos=vector():set(site.x,site.y,site.z)
+    if agent():position():distance_to_sqr(pos)>25 then return fail("need_prison") end
+    local npc;npc,err=resolve(key,true);if not npc then return false,err end
+    if h.escorting then axr_companions.remove_from_actor_squad(npc);h.escorting=false end
+    ok,err=cczmp_custody.hold(npc,h);if not ok then return ok,err end
+    npc:set_npc_position(pos)
+    h.status="prison";h.sentence_seconds=c.sentence_seconds
+    start_clock("sentence_"..h.uid);log(c,"admit_prisoner")
+    return true,"cczmp_ops_prisoner_admitted"
+end
+
+function item_list(key)
+    local obj=resolve(key,false);if not obj then return {} end
+    local out={}
+    obj:inventory_for_each(function(item)
+        if item then out[#out+1]={id=item:id(),section=item:section(),name=item:name(),condition=item:condition()} end
+    end)
+    table.sort(out,function(a,b)return a.id<b.id end);return out
+end
+
+-- Service commands are dispatched to a separate native inventory/world adapter.
+function perform(action,key,argument)
+    local ok,err=can(action);if not ok then return ok,err end
+    local commands={rob=rob,kidnap=kidnap,ransom=ransom,free_hostage=free_hostage,
+        rescue=rescue,prison_break=prison_break,arrest=arrest,release=release,suspend=suspend,
+        escort=escort,end_escort=end_escort,prison_site=prison_site,admit_prisoner=admit_prisoner}
+    if commands[action] then return commands[action](key,argument) end
+    return cczmp_services.perform(action,key,argument)
+end
+
+function service_state() return state() end -- internal adapters; UI uses detached queries
+function elapsed(key) return age(key) end
+function clock_start(key) start_clock(key) end
+
+local function update_npc(npc)
+    if not cache or not npc or not npc:alive() then return end
+    local data=identity_storage(npc,false)
+    local key=data and data.cczmp_person_key
+    local h=key and cache.holds[key]
+    if not h then return end
+    if h.pending_release then unhold(key,h.pending_release);return end
+    if h.sentence_seconds then
+        local elapsed=age("sentence_"..h.uid)
+        if elapsed and elapsed>=h.sentence_seconds then unhold(key,"sentence_complete");return end
+    elseif h.kind=="arrest" then
+        local c=case_get(h.case_id)
+        local elapsed=age("hold_"..h.uid)
+        if elapsed and elapsed>=86400 and not (c and c.verdict=="guilty") then unhold(key,"pretrial_timeout");return end
+    end
+    cczmp_custody.maintain(npc,h)
+end
+local function reset() cache=nil;acting=nil end
+local function died(npc,killer)
+    if not cache then return end
+    local data=identity_storage(npc,false)
+    local key=data and data.cczmp_person_key
+    if key then cache.holds[key]=nil;data.cczmp_identity_dead=true end
+    if cczmp_services then cczmp_services.on_death(npc,killer,key) end
+end
+-- Some Anomaly deaths (no killer / simulation) omit the stock death callback.
+local function update_actor()
+    if not cache then state() end
+    if not cache then return end
+    for key,h in pairs(cache.holds) do
+        local p=cache.people[key]
+        local npc=p and level.object_by_id(p.object_id)
+        if npc and npc:name()==p.object_name and npc:section()==p.section and not npc:alive() then
+            local data=identity_storage(npc,false)
+            if data and data.cczmp_person_key==key then
+                cache.holds[key]=nil;data.cczmp_identity_dead=true;p.deceased=true
+                cczmp_custody.forgotten(npc)
+                for _,w in pairs(cache.warrants) do
+                    if w.target==key and w.status=="active" then w.status="revoked";w.reason="target_deceased" end
+                end
+            end
+        end
+    end
+end
+function actor_update() update_actor() end
+function on_game_start()
+    RegisterScriptCallback("on_game_load",reset)
+    RegisterScriptCallback("npc_on_update",update_npc)
+    RegisterScriptCallback("npc_on_net_destroy",cczmp_custody.forgotten)
+    RegisterScriptCallback("npc_on_death_callback",died)
+    RegisterScriptCallback("actor_on_update",function() actor_update() end)
+end
+
+-- Only hub employees may perform this bounded list. Membership is never changed.
+local official_actions={inspect_carry=true,dossier=true,open_case=true,statement=true,observe=true,submit_case=true,
+    endorse_case=true,return_case=true,issue_arrest=true,issue_search=true,revoke_warrant=true,
+    convict=true,acquit=true,arrest=true,search=true,admit_prisoner=true,release=true}
+function official_call(npc,action,...)
+    if acting or not npc or not npc:alive() or not IsStalker(npc) or npc:id()==db.actor:id()
+        or not official_actions[action] or not cczmp_civic or not cczmp_civic.is_officer(npc) then return fail("no_power") end
+    local args={...};acting=npc
+    local function packed(...) return {n=select("#",...),...} end
+    local result=packed(pcall(function()
+        if action=="dossier" then
+            local ok,err=can(action);if not ok then return ok,err end
+            return true,nil,{cases=cases(),warrants=warrants()}
+        end
+        if action=="issue_arrest" then return issue_warrant(args[1],"arrest") end
+        if action=="issue_search" then return issue_warrant(args[1],"search") end
+        local handlers={inspect_carry=inspect_carry,open_case=open_case,statement=statement,observe=observe,submit_case=submit_case,endorse_case=endorse_case,return_case=return_case,revoke_warrant=revoke_warrant,convict=convict,acquit=acquit,arrest=arrest,search=search,admit_prisoner=admit_prisoner,release=release}
+        return handlers[action](unpack(args))
+    end))
+    acting=nil
+    if not result[1] then
+        printe("[CCZMP civic] official action failed: "..tostring(result[2]))
+        return fail("engine_unavailable")
+    end
+    return unpack(result,2,result.n)
+end
+function registry_status(key)
+    if not can("dossier") then return nil end
+    local p=target_info(key);if not p then return nil end
+    local out={person=p,warrants=warrants(key),hold=hold_info(key),cases={}}
+    for _,c in ipairs(cases()) do if c.target==key then out.cases[#out.cases+1]=c end end
+    return out
+end

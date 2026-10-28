@@ -1,0 +1,214 @@
+-- Physical CCar contracts. Every reference includes the server object's name.
+local config=nil
+local tick=0
+local function cfg()if not config then config=ini_file("cczmp\\transport.ltx")end;return config end
+local function v(id,k,d)
+ local f=cfg();local s="vehicle_"..id
+ if not f:section_exist(s)or not f:line_exist(s,k)then return d end
+ return f:r_string(s,k)
+end
+local function n(id,k,d)return tonumber(v(id,k,tostring(d)))or d end
+local function state()
+ local w=cczmp_items.world();w.transport=w.transport or {contracts={}};return w.transport
+end
+local function fail(k)return false,"cczmp_items_transport_"..k end
+function catalog()
+ local f=cfg();if not f:section_exist("catalog")then return {}end
+ if not f:line_exist("catalog","list")then return {}end
+ local out={}
+ for _,id in ipairs(cczmp_items.list(f:r_string("catalog","list")))do
+  out[#out+1]={id=id,name=game.translate_string("cczmp_vehicle_"..id),section=v(id,"section",""),
+   available=v(id,"available","true")=="true"and v(id,"section","")~="",seats=n(id,"seats",0),source_maxspeed=n(id,"source_maxspeed",0),source_consumption=n(id,"source_consumption_100km",0),
+   price=n(id,"price",0),rent=n(id,"rent",0),access=v(id,"access",""),tank=n(id,"tank",0),power=n(id,"power",0),consumption=n(id,"consumption",0)}
+ end
+ return out
+end
+local function valid(id)
+ for _,r in ipairs(catalog())do if r.id==id then return r end end
+end
+local function dealer()
+ return cczmp_professions.nearest("vehicle_dealer")
+end
+local function alive_contract(r)
+ local se=r and alife():object(r.id)
+ return se and se:name()==r.name and se:section_name()==r.section and se or nil
+end
+function contracts()
+ local out={}
+ for _,r in pairs(state().contracts)do
+  if alive_contract(r)then
+   local view=cczmp_items.copy(r)
+   view.remaining=r.kind=="rent" and math.max(0,r.seconds-(cczmp_ops.elapsed("transport_"..r.uid)or 0))or nil
+   local obj=level.object_by_id(r.id)
+   if obj and obj:name()==r.name and obj:get_car()then
+    view.distance=obj:position():distance_to(db.actor:position());view.health=obj:get_car():GetfHealth();view.fuel=obj:get_car():GetfFuel()
+   end
+   out[#out+1]=view
+  end
+ end
+ table.sort(out,function(a,b)return a.uid<b.uid end);return out
+end
+local function placement(id)
+ local width=n(id,"half_x",2);local length=n(id,"half_z",4);local radius=math.max(width,length)
+ local a=db.actor:position();local dir=db.actor:direction();local heading=math.atan2(dir.x,dir.z)
+ for _,distance in ipairs({radius+4,radius+8,radius+12,32,40,48,56})do
+  for i=0,15 do
+   local angle=heading+i*math.pi/8
+   local q=vector():set(a.x+math.sin(angle)*distance,a.y,a.z+math.cos(angle)*distance)
+   local vid=level.vertex_id(q)
+   if vid and vid>=0 and vid~=4294967295 then
+    local p=level.vertex_position(vid)
+    local flat=math.abs(p.y-a.y)<2 and p:distance_to_sqr(a)>=(radius+2)^2 and p:distance_to_sqr(q)<4
+    for _,d in ipairs({{width,0},{-width,0},{0,length},{0,-length},{width,length},{width,-length},{-width,length},{-width,-length}})do
+     if flat then
+      local check=vector():set(p.x+d[1],p.y,p.z+d[2]);local vi=level.vertex_id(check)
+      if not vi or vi<0 or vi==4294967295 then flat=false else
+       local pp=level.vertex_position(vi)
+       if math.abs(pp.y-p.y)>.25 or pp:distance_to_sqr(check)>1.5 then flat=false end
+      end
+     end
+    end
+    if flat then
+     -- Check online dynamic objects too; navmesh alone does not represent cars.
+     for _,entry in pairs(db.storage or {})do
+      local o=entry.object
+      if o and o:position():distance_to_sqr(p)<(radius+2)^2 then flat=false;break end
+     end
+    end
+    if flat then
+     for _,r in ipairs(cczmp_vehicles.nearby(100))do
+      local o=level.object_by_id(r.id)
+      if o and o:position():distance_to_sqr(p)<(radius+6)^2 then flat=false;break end
+     end
+    end
+    if flat then return vector():set(p.x,p.y+.4,p.z),vid end
+   end
+  end
+ end
+end
+function acquire(id,kind,debug_mode)
+ local product=valid(id);if not product or not db.actor then return fail("bad")end
+ if not product.available then return false,"cczmp_transport_assets_missing"end
+ if debug_mode and not DEV_DEBUG then return false,"cczmp_items_no_permission"end
+ if not debug_mode then
+  if kind=="issue"then
+   local faction=cczmp_factions.faction();local allowed=false
+   for _,f in ipairs(cczmp_items.list(product.access))do if f==faction then allowed=true end end
+   if not allowed then return fail("org")end
+   local last=cczmp_factions.rank_count(faction)-1
+   local leader=cczmp_factions.rank()>=last
+   for _,entry in pairs(db.storage or {})do
+    local npc=entry.object
+    if npc and IsStalker(npc)and npc:alive()and npc:id()~=db.actor:id()
+     and npc:relation(db.actor)~=game_object.enemy and npc:position():distance_to_sqr(db.actor:position())<=16
+     and cczmp_factions.faction_of_object(npc)==faction and cczmp_factions.object_rank(npc)>=last then leader=true end
+   end
+   if not leader then return fail("org")end
+  elseif kind~="buy" and kind~="rent"then return fail("bad")
+  elseif not dealer()then return fail("need_dealer")end
+  if kind~="issue" and product.access~=""then return fail("org")end
+ end
+ local price=debug_mode and 0 or kind=="buy" and product.price or kind=="rent" and product.rent or 0
+ if not debug_mode and kind~="issue" and price<=0 then return fail("bad")end
+ if not debug_mode then
+  for _,r in ipairs(contracts())do if r.product==id then return fail("limit")end end
+ end
+ if db.actor:money()<price then return false,"cczmp_items_no_money"end
+ local p,vertex=placement(id);if not p then return fail("no_place")end
+ if not system_ini():section_exist(product.section)then return false,"cczmp_ui_engine_unavailable"end
+ local se=alife_create(product.section,p,vertex,db.actor:game_vertex_id())
+ if not se then return false,"cczmp_ui_engine_unavailable"end
+ local uid=cczmp_items.serial()
+ local r={uid=uid,id=se.id,name=se:name(),section=product.section,product=id,kind=debug_mode and "debug" or kind,owner=cczmp_ops.person(db.actor),seconds=86400,level=level.name()}
+ state().contracts[tostring(uid)]=r;cczmp_ops.clock_start("transport_"..uid)
+ db.actor:give_money(-price);cczmp_items.record("vehicle",id,{price=price,id=se.id,kind=r.kind})
+ return true,"cczmp_items_transport_done",se.id
+end
+local function selected(uid,near)
+ local r=state().contracts[tostring(uid)]
+ if not r or r.owner~=cczmp_ops.person(db.actor)or not alive_contract(r)then return nil,"cczmp_items_transport_bad"end
+ local obj=level.object_by_id(r.id)
+ if near and (not obj or obj:name()~=r.name or obj:position():distance_to_sqr(db.actor:position())>64)then return nil,"cczmp_items_transport_near"end
+ return r,nil,obj
+end
+function renew(uid)
+ local r,msg=selected(uid,false);if not r then return false,msg end
+ if r.kind~="rent" or not dealer()then return fail("need_dealer")end
+ local price=n(r.product,"rent",0);if price<=0 then return fail("bad")end
+ if db.actor:money()<price then return false,"cczmp_items_no_money"end
+ local remaining=math.max(0,r.seconds-(cczmp_ops.elapsed("transport_"..r.uid)or 0))
+ r.seconds=remaining+86400;cczmp_ops.clock_start("transport_"..r.uid);db.actor:give_money(-price)
+ return true,"cczmp_items_operation_done"
+end
+function return_rental(uid)
+ local r,msg,obj=selected(uid,true);if not r then return false,msg end
+ if r.kind~="rent" or not dealer()then return fail("need_dealer")end
+ if db.actor:get_current_holder()then return fail("busy")end
+ obj:get_car():StopEngine();alife_release(obj)
+ state().contracts[tostring(r.uid)]=nil;return true,"cczmp_items_transport_returned"
+end
+function refuel(uid)
+ local r,msg,obj=selected(uid,true);if not r then return false,msg end
+ if not dealer() and not cczmp_items.nearest_trader()then return fail("need_dealer")end
+ local car=obj:get_car();if not car or car:GetfHealth()<=0 then return fail("bad")end
+ local liters=math.min(20,car:GetfFuelTank()-car:GetfFuel())
+ if liters<.1 then return false,"cczmp_items_already_done"end
+ local price=math.ceil(liters*100);if db.actor:money()<price then return false,"cczmp_items_no_money"end
+ car:SetfFuel(car:GetfFuel()+liters);db.actor:give_money(-price);return true,"cczmp_items_transport_refueled"
+end
+local function workshop()
+ local mop=dealer();if mop then return mop end
+ for _,entry in pairs(db.storage or {})do
+  local npc=entry.object
+  if npc and IsStalker(npc)and npc:alive()and npc:id()~=db.actor:id()and npc:relation(db.actor)~=game_object.enemy
+    and npc:position():distance_to_sqr(db.actor:position())<=16 then
+   local profile=(trade_manager.get_trade_profile(npc:id(),"cfg_ltx")or ""):lower()
+   if cczmp_factions.faction_of_object(npc)~="sto_kanban"and profile:find("mechanic",1,true)then return npc end
+  end
+ end
+end
+function install(uid,kind)
+ local r,msg,obj=selected(uid,true);if not r then return false,msg end
+ if kind~="gps"and kind~="alarm"then return fail("bad")end
+ if r.kind=="rent"or not obj:get_car()or obj:get_car():GetfHealth()<=0 then return fail("bad")end
+ if db.actor:get_current_holder()or obj:get_car():IsActiveEngine()then return fail("busy")end
+ if not workshop()then return false,"cczmp_items_workshop_need"end
+ r.tuning=r.tuning or {};if r.tuning[kind]then return false,"cczmp_items_already_done"end
+ local price=kind=="gps"and 6000 or 8000
+ if db.actor:money()<price then return false,"cczmp_items_no_money"end
+ r.tuning[kind]=true;db.actor:give_money(-price)
+ cczmp_items.record("vehicle_tuning",r.product,{price=price,kind=kind})
+ return true,"cczmp_items_operation_done"
+end
+function toggle_lock(uid)
+ local r,msg,obj=selected(uid,true);if not r then return false,msg end
+ if not r.tuning or not r.tuning.alarm or not obj:get_car()then return fail("bad")end
+ if db.actor:get_current_holder()then return fail("busy")end
+ r.locked=not r.locked
+ if r.locked then obj:get_car():StopEngine();obj:get_car():HandBreak()else obj:get_car():ReleaseHandBreak()end
+ return true,r.locked and "cczmp_transport_locked"or "cczmp_transport_unlocked"
+end
+local function update()
+ if not db.actor or time_global()<tick then return end;tick=time_global()+500
+ for _,r in pairs(state().contracts)do
+  local obj=level.object_by_id(r.id)
+  if obj and obj:name()==r.name and obj:get_car()and alive_contract(r)then
+   if r.locked then obj:get_car():StopEngine();obj:get_car():HandBreak()end
+   if r.tuning and r.tuning.gps then
+    local jammed=cczmp_hacking.jammed(obj:position())
+    if jammed then level.map_remove_object_spot(r.id,"primary_object")
+    elseif level.map_has_object_spot(r.id,"primary_object")==0 then
+     level.map_add_object_spot(r.id,"primary_object",game.translate_string("cczmp_vehicle_"..r.product).." / GPS #"..r.uid)
+    end
+   end
+  end
+  if r.kind=="rent" and (cczmp_ops.elapsed("transport_"..r.uid)or 0)>=r.seconds then
+   local obj=level.object_by_id(r.id)
+   if obj and obj:name()==r.name and obj:get_car()then obj:get_car():StopEngine()end
+  end
+ end
+end
+function on_game_start()
+ RegisterScriptCallback("actor_on_update",update)
+ RegisterScriptCallback("on_game_load",function()tick=0 end)
+end
