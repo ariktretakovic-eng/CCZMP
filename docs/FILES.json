@@ -1,0 +1,744 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-29",
+  "scope": "Tracked public repository files; not the full installed game or dependency graph.",
+  "file_count": 182,
+  "counts_by_root": {
+    "(корень)": 10,
+    "CCZMP": 36,
+    "docs": 72,
+    "gamedata": 32,
+    "modules": 31,
+    "tools": 1
+  },
+  "files": [
+    {
+      "path": "CCZMP/Concept/Группировки/Описание.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Concept/Механики/Банковские услуги.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Concept/Механики/Законы.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 1) Основной сюжет.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 2) Основной сюжет.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 3) Основной сюжет.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Concept/Сюжет/Основной/Сюжет проекта CCZMP для оффлайн режима (часть 4) Основной сюжет.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/README.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/character_desc_escape.xml",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/death_items_by_communities.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/death_manager.script",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/game_relations.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/se_respawn.script",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/smart_terrain_presets.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/string_table_general.xml",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/ui_pda.xml",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/ui_pda_nchg.script",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/by fractions for stalker TCH/xr_statistic.script",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/cczmp_deepseekV4.1.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/cczmp_deepseekV4.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/cczmp_site_2.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/cczmp_site_v3.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/escape_pda.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/game_relations.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/hack_pda.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/cczmp_pda_system_v2.0.0.zip",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/character_desc_nchg_factions.xml",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/dialogs_nchg_factions.xml",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/files.zip",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/game_relations.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/gulag_nchg_factions.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/nchg_spawn_waypoints.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/squad_descr_nchg.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/ИИ наработки/string_table_nchg_dialogs.xml",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/Сайт/cczmp_news.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP/Прототип/Сайт/cczmp_site.html",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CCZMP_полный_файл.ltx",
+      "category": "Ранние концепции и прототипы"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "INDEX.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "LICENSE",
+      "category": "Прочее"
+    },
+    {
+      "path": "README.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "build.py",
+      "category": "Инструменты локального графа Anomaly"
+    },
+    {
+      "path": "docs/CHANGES_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/FILES.json",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/INDEX.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/INDEXING_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/README.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/ROADMAP_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/STATUS_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/SYSTEMS_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/TECHNICAL_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/TRANSPORT_RU.md",
+      "category": "Текущая документация и навигация"
+    },
+    {
+      "path": "docs/archive/INDEX-legacy-2026-10-02.md",
+      "category": "Исторический индекс установки"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/00_Технические_руководства/CCZMP_technical_guide.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/00_Технические_руководства/OPERATIONS.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/01_Общий_концепт/STALKER_X_CCZMP_MASTER_CONCEPT-1.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/02_Экономика_промышленность/CCZMP_ECONOMY_INDUSTRY_TECH_SPEC_v1.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/CCZMP_items_hacking_guide.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/ELECTRONICS_SK_GUIDE_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/LOCKS_NEXT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/PDA_SLOT_NEXT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/TUNING_NEXT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/__README_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/cczmp_items_continuation_20261009.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/cczmp_items_locks_20261009.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/03_Предметы_гаджеты_механики/cczmp_items_tuning_20261010.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/README_AIRCRAFT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/README_taxi.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/TANK_GUIDE_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/VEHICLE_SIGNALS_README_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/armor_20261016__README_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/taxi_world_20261015__README_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/vehicles_work__HANDOFF_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/vehicles_work__README.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/04_Транспорт_бронетехника_авиация/Транспорт.txt",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/05_Организации_документы_мир/CIVIC.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/05_Организации_документы_мир/CRIME_DISTRICT_GUIDE_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/05_Организации_документы_мир/DOCUMENTS.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/05_Организации_документы_мир/STATE_UNIFORMS.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/06_Радио_звук/README_radio.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/06_Радио_звук/README_radio_air.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/06_Радио_звук/README_радио.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/06_Радио_звук/Голос Припяти.txt",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/06_Радио_звук/Документы и закон.txt",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/06_Радио_звук/Мастерская.txt",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/CCZMP_STABILIZATION_PLAN.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/README_STABILIZATION.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/stabilization_work_20261012__TEST_REPORT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/07_Стабилизация_проверки/verification__results.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/11_Обновления_2026-10-28/Документы/AUDIT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/11_Обновления_2026-10-28/Документы/LATEST_INTEGRATION_WORKLIST.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/11_Обновления_2026-10-28/Документы/STATUS_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/12_Аудит_проекта_2026-10-28/CCZMP_SYSTEMS_REGISTER_2026-10-28.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/12_Аудит_проекта_2026-10-28/CCZMP_TRANSPORT_CURRENT_2026-10-28.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/API_CONTRACTS.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/CONFIG.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/FILES.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/KNOWN_LIMITATIONS.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/PERFORMANCE.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/README.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/REPORT_RU.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/ROLLBACK.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/TEST_REPORT.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/WARM_LOAD.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/13_Autonomous_Life_V1/integration_map.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_AUTONOMOUS_LIFE_V1_TECH_SPEC_RU_2026-10-28.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_CITY_SYSTEMS_2026-10-19.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_DONOR_COMPLETION_2026-10-18.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_GADGETS_111_2026-10-19.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_PROJECT_FULL_REPORT_2026-10-28.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_TRANSPORT_STATUS_2026-10-18.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/CCZMP_VEHICLE_FIX_2026-10-18.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/README.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "docs/snapshot-2026-10-28/START_HERE_2026-10-28.md",
+      "category": "Исходные документы и отчёты этапов"
+    },
+    {
+      "path": "gamedata/configs/axr_options.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cache_dbg.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/bank/accounts.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/bank/blocks.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/bank/credits.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/bank/deposits.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/bank/insurance.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/bank/settings.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/factions/accounts.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/factions/factions.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/factions/ranks.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/factions/relations.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/factions/settings.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/law/ak.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/law/constitution.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/law/fp.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/law/settings.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/cczmp/law/uk.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/localization.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/eng/st_cczmp_bank.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/eng/st_cczmp_factions.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/eng/st_cczmp_law.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/eng/st_cczmp_ui.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/rus/st_cczmp_bank.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/rus/st_cczmp_factions.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/rus/st_cczmp_law.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/text/rus/st_cczmp_ui.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/configs/ui/cczmp_terminal.xml",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/scripts/cczmp_bank.script",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/scripts/cczmp_factions.script",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/scripts/cczmp_law.script",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "gamedata/scripts/cczmp_ui.script",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "items.ltx",
+      "category": "Ранний опубликованный фрагмент gamedata"
+    },
+    {
+      "path": "lib.py",
+      "category": "Инструменты локального графа Anomaly"
+    },
+    {
+      "path": "modules/README.md",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/INTEGRATION.md",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/README.md",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/TEST_REPORT.md",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/items.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/law/ak.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/law/constitution.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/law/fp.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/law/settings.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/law/uk.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/operations.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/configs/cczmp/transport.ltx",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_comms.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_cooler.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_engineering.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_gear.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_hacking.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_items.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_items_ui.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_law.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_licenses.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_locks.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_medicine.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_ops.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_professions.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_transport.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/gamedata/scripts/cczmp_ui.script",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/tools/items_work_20261009/test_continuation.py",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/tools/items_work_20261009/test_items.py",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/tools/items_work_20261009/test_locks.py",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "modules/cczmp-locks/tools/tests/test_cczmp_operations.py",
+      "category": "Публичные исходные модули"
+    },
+    {
+      "path": "q.py",
+      "category": "Инструменты локального графа Anomaly"
+    },
+    {
+      "path": "report.py",
+      "category": "Инструменты локального графа Anomaly"
+    },
+    {
+      "path": "tools/update_docs_index.py",
+      "category": "Инструменты публичной документации"
+    }
+  ]
+}

@@ -43,4 +43,4 @@ F7 → CCZMP → организация → вступить → «Выбрат�
 
 
 ## Agency pilot, 2026-10-08
-Real SK/prosecutor/judge/MVD/FSIN employees, bounded NPC authority context, patrol custody and native AI escort are implemented for l05_bar. See [CIVIC.md](CIVIC.md) for controls and limits. Legal NPC identities now persist in ALife server storage. Warfare custom-community squad buckets are initialized safely; this does not add territorial agency spawning.
+Real SK/prosecutor/judge/MVD/FSIN employees, bounded NPC authority context, patrol custody and native AI escort are implemented for l05_bar. See [CIVIC.md](../05_Организации_документы_мир/CIVIC.md) for controls and limits. Legal NPC identities now persist in ALife server storage. Warfare custom-community squad buckets are initialized safely; this does not add territorial agency spawning.
